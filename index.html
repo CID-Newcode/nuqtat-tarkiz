@@ -1,0 +1,4280 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="navy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>نقطة تركيز | Nuqtat Tarkiz</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <style>
+    /* =========================================
+       1. CSS VARIABLES & 3 BUILT-IN THEMES
+       ========================================= */
+    :root,
+    [data-theme="navy"] {
+      --bg-primary: #0b1320;
+      --bg-card: #131e30;
+      --bg-elevated: #19273e;
+      --bg-input: #0e1828;
+      --border-color: #1f304a;
+      --border-focus: #38bdf8;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --accent-text: #082f49;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --success: #22c55e;
+      --success-bg: rgba(34, 197, 94, 0.14);
+      --danger: #f87171;
+      --danger-bg: rgba(248, 113, 113, 0.14);
+      --warning: #fbbf24;
+      --warning-bg: rgba(251, 191, 36, 0.14);
+      --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.45);
+      --shadow-dropdown: 0 14px 34px -6px rgba(0, 0, 0, 0.65);
+      --overlay-bg: rgba(5, 9, 17, 0.78);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #000000;
+      --bg-card: #121212;
+      --bg-elevated: #1c1c1c;
+      --bg-input: #0a0a0a;
+      --border-color: #262626;
+      --border-focus: #60a5fa;
+      --text-primary: #f5f5f5;
+      --text-secondary: #a3a3a3;
+      --text-muted: #737373;
+      --accent: #60a5fa;
+      --accent-hover: #3b82f6;
+      --accent-text: #0a0a0a;
+      --accent-glow: rgba(96, 165, 250, 0.35);
+      --success: #4ade80;
+      --success-bg: rgba(74, 222, 128, 0.14);
+      --danger: #f87171;
+      --danger-bg: rgba(248, 113, 113, 0.14);
+      --warning: #fbbf24;
+      --warning-bg: rgba(251, 191, 36, 0.14);
+      --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.85);
+      --shadow-dropdown: 0 14px 34px -6px rgba(0, 0, 0, 0.9);
+      --overlay-bg: rgba(0, 0, 0, 0.85);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-elevated: #f1f5f9;
+      --bg-input: #f8fafc;
+      --border-color: #e2e8f0;
+      --border-focus: #0284c7;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --accent: #0284c7;
+      --accent-hover: #0369a1;
+      --accent-text: #ffffff;
+      --accent-glow: rgba(2, 132, 199, 0.28);
+      --success: #16a34a;
+      --success-bg: rgba(22, 163, 74, 0.12);
+      --danger: #dc2626;
+      --danger-bg: rgba(220, 38, 38, 0.1);
+      --warning: #d97706;
+      --warning-bg: rgba(217, 119, 6, 0.12);
+      --shadow-card: 0 10px 28px -6px rgba(15, 23, 42, 0.08);
+      --shadow-dropdown: 0 14px 34px -6px rgba(15, 23, 42, 0.14);
+      --overlay-bg: rgba(15, 23, 42, 0.55);
+    }
+
+    /* =========================================
+       2. RESET & BASE STYLES
+       ========================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans Arabic", sans-serif;
+      line-height: 1.5;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+
+    body.menu-scroll-locked {
+      overflow: hidden !important;
+      touch-action: none;
+    }
+
+    body.menu-scroll-locked .focus-stage {
+      overflow: hidden !important;
+      touch-action: none;
+      pointer-events: none;
+    }
+
+    button, input, textarea, select {
+      font-family: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+      min-height: 44px;
+      min-width: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    /* =========================================
+       3. SINGLE-ROW TOP BAR, BACKDROP & COMPACT MENU (☰)
+       ========================================= */
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      display: none;
+      z-index: 55;
+    }
+
+    .drawer-backdrop.open {
+      display: block;
+      animation: fadeIn 0.16s ease;
+    }
+
+    .top-bar {
+      width: 100%;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0.65rem 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      position: relative;
+      z-index: 60;
+    }
+
+    .top-end-group {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 40;
+    }
+
+    .menu-trigger-wrap {
+      position: relative;
+      flex-shrink: 0;
+      z-index: 65;
+    }
+
+    .hamburger-btn {
+      width: 44px;
+      height: 44px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      position: relative;
+      z-index: 66;
+    }
+
+    .hamburger-btn:hover {
+      border-color: var(--accent);
+      background-color: var(--bg-elevated);
+    }
+
+    .hamburger-btn.is-open {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .status-dot {
+      position: absolute;
+      top: 7px;
+      inset-inline-end: 7px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--bg-card);
+      display: none;
+    }
+
+    .hamburger-btn.has-alert .status-dot {
+      display: block;
+    }
+
+    .one-tap-slots {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 3px;
+      height: 44px;
+      flex-shrink: 0;
+    }
+
+    .slot-pill-btn {
+      min-width: 34px;
+      min-height: 36px;
+      padding: 0 0.5rem;
+      border-radius: 9px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .slot-pill-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .slot-pill-btn.active {
+      background-color: var(--accent);
+      color: var(--accent-text);
+    }
+
+    .vault-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0 0.9rem;
+      font-size: 0.88rem;
+      height: 44px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .vault-btn:hover {
+      border-color: var(--accent);
+      background-color: var(--bg-elevated);
+    }
+
+    /* Compact Single-Screen Drawer Menu */
+    .drawer-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      inset-inline-start: 0;
+      width: min(334px, calc(100vw - 1.25rem));
+      max-height: calc(100dvh - 72px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 0.55rem 0.65rem;
+      box-shadow: var(--shadow-dropdown);
+      display: none;
+      flex-direction: column;
+      gap: 0.42rem;
+      z-index: 70;
+    }
+
+    .drawer-menu.open {
+      display: flex;
+      animation: dropReveal 0.16s ease;
+    }
+
+    @keyframes dropReveal {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .drawer-brand {
+      padding: 0 0.25rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+
+    .drawer-brand-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.25;
+    }
+
+    .drawer-brand-subtitle {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      line-height: 1.25;
+    }
+
+    .profile-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .profile-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.55rem;
+      padding: 0.38rem 0.5rem;
+      border-radius: 13px;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+    }
+
+    .profile-left {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .avatar-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      color: var(--accent-text);
+      font-weight: 800;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 2px solid var(--border-color);
+    }
+
+    .avatar-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .profile-name-wrap {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .profile-name-input {
+      width: 100%;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 0.15rem 0.3rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      outline: none;
+      min-height: 36px;
+      unicode-bidi: plaintext;
+    }
+
+    .profile-name-input:focus {
+      background-color: var(--bg-input);
+      border-color: var(--border-focus);
+    }
+
+    .profile-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex-shrink: 0;
+    }
+
+    .profile-mini-btn {
+      min-width: 38px;
+      min-height: 38px;
+      padding: 0 0.45rem;
+      border-radius: 10px;
+      font-size: 0.76rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    .profile-mini-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--accent);
+    }
+
+    .profile-mini-btn.remove-avatar:hover {
+      color: var(--danger);
+      border-color: var(--danger);
+      background-color: var(--danger-bg);
+    }
+
+    .drawer-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.24rem;
+    }
+
+    .drawer-section-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      padding: 0 0.25rem;
+    }
+
+    .drawer-divider {
+      height: 1px;
+      background-color: var(--border-color);
+      margin: 0.02rem 0;
+    }
+
+    /* Horizontal Pill Rows for Themes & Visual Glitch */
+    .pills-row-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.3rem;
+    }
+
+    .pills-row-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.25rem;
+    }
+
+    .pill-choice-btn {
+      min-height: 38px;
+      min-width: 0;
+      padding: 0.25rem 0.25rem;
+      border-radius: 10px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .pill-choice-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--accent);
+    }
+
+    .pill-choice-btn.active {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-text);
+      font-weight: 700;
+    }
+
+    .lang-pair-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.35rem;
+    }
+
+    .lang-choice-btn {
+      min-height: 38px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    .lang-choice-btn.active {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-text);
+    }
+
+    .custom-glitch-box {
+      margin-top: 0.15rem;
+      padding: 0.45rem;
+      border-radius: 11px;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      display: none;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .custom-glitch-box.open {
+      display: flex;
+    }
+
+    .custom-glitch-controls {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+    }
+
+    .glitch-num-input {
+      width: 74px;
+      min-height: 40px;
+      padding: 0.25rem 0.45rem;
+      border-radius: 9px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 16px;
+      text-align: center;
+      outline: none;
+    }
+
+    .glitch-num-input:focus {
+      border-color: var(--border-focus);
+    }
+
+    .glitch-unit-select {
+      flex: 1;
+      min-height: 40px;
+      padding: 0.25rem 0.45rem;
+      border-radius: 9px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 16px;
+      outline: none;
+    }
+
+    .glitch-apply-btn {
+      min-height: 40px;
+      padding: 0 0.65rem;
+      border-radius: 9px;
+      font-size: 0.8rem;
+      background-color: var(--accent);
+      color: var(--accent-text);
+    }
+
+    .drawer-action-btn {
+      width: 100%;
+      min-height: 38px;
+      padding: 0.35rem 0.55rem;
+      border-radius: 10px;
+      justify-content: flex-start;
+      font-size: 0.8rem;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .drawer-action-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .backup-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.35rem;
+    }
+
+    .backup-status-msg {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.5rem;
+      border-radius: 8px;
+      background-color: var(--success-bg);
+      color: var(--success);
+      display: none;
+      line-height: 1.35;
+    }
+
+    .backup-status-msg.error {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .backup-status-msg.visible {
+      display: block;
+    }
+
+    @media (max-width: 420px) {
+      .top-bar {
+        padding: 0.65rem 0.65rem;
+        gap: 0.35rem;
+      }
+      .top-end-group {
+        gap: 0.35rem;
+      }
+      .slot-pill-btn {
+        min-width: 30px;
+        padding: 0 0.4rem;
+        font-size: 0.84rem;
+      }
+      .vault-btn {
+        padding: 0 0.72rem;
+        font-size: 0.83rem;
+      }
+    }
+
+    /* =========================================
+       4. MAIN FOCUS STAGE & DOUBLE-BLINK GLITCH
+       ========================================= */
+    .focus-stage {
+      flex: 1;
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.15rem;
+    }
+
+    .focus-card {
+      position: relative;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 22px;
+      padding: 1.85rem 1.65rem;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      transition: border-color 0.25s ease, background-color 0.25s ease;
+      user-select: none;
+    }
+
+    .focus-card.animate-enter {
+      animation: fadeSlideIn 0.24s ease;
+    }
+
+    .focus-card.is-mandatory {
+      border-color: var(--warning);
+    }
+
+    .focus-card.is-overdue {
+      border-color: var(--danger);
+    }
+
+    .focus-card.glitch-blink-sequence {
+      animation: doubleBlinkGlitch 2.8s linear 1;
+    }
+
+    @keyframes doubleBlinkGlitch {
+      0% { opacity: 1; }
+      4% { opacity: 0; }
+      29% { opacity: 0; }
+      33% { opacity: 1; }
+      51% { opacity: 1; }
+      55% { opacity: 0; }
+      80% { opacity: 0; }
+      84% { opacity: 1; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card-reorder-popover {
+      position: absolute;
+      top: -18px;
+      inset-inline-end: 1.25rem;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--accent);
+      border-radius: 14px;
+      padding: 0.3rem 0.55rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: var(--shadow-dropdown);
+      z-index: 25;
+      animation: dropReveal 0.16s ease;
+    }
+
+    .popover-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      padding-inline: 0.25rem;
+    }
+
+    .pos-choice-btn {
+      min-width: 38px;
+      min-height: 38px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .pos-choice-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .pos-choice-btn.current-pos {
+      background-color: var(--accent);
+      color: var(--accent-text);
+      border-color: var(--accent);
+    }
+
+    .card-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.3rem 0.72rem;
+      border-radius: 999px;
+      background-color: var(--bg-elevated);
+      color: var(--text-secondary);
+    }
+
+    .badge-mandatory {
+      background-color: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .badge-deadline {
+      background-color: var(--bg-elevated);
+      color: var(--accent);
+    }
+
+    .badge-deadline.urgent {
+      background-color: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .badge-deadline.overdue {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .task-title {
+      font-size: clamp(1.3rem, 3.4vw, 1.8rem);
+      font-weight: 700;
+      line-height: 1.4;
+      color: var(--text-primary);
+      word-break: break-word;
+      unicode-bidi: plaintext;
+    }
+
+    .task-note {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      white-space: pre-line;
+      word-break: break-word;
+      unicode-bidi: plaintext;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-done {
+      flex: 1;
+      min-width: 140px;
+      background-color: var(--accent);
+      color: var(--accent-text);
+      font-size: 0.98rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 14px;
+    }
+
+    .btn-done:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-defer {
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: 0.94rem;
+      padding: 0.75rem 1.15rem;
+      border-radius: 14px;
+    }
+
+    .btn-defer:hover {
+      color: var(--text-primary);
+      border-color: var(--text-muted);
+    }
+
+    .rest-card {
+      background-color: var(--bg-card);
+      border: 1px dashed var(--border-color);
+      border-radius: 22px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .rest-card.animate-enter {
+      animation: fadeSlideIn 0.24s ease;
+    }
+
+    .rest-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background-color: var(--success-bg);
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rest-icon.empty-vault-icon {
+      background-color: var(--bg-elevated);
+      color: var(--accent);
+    }
+
+    .rest-message {
+      font-size: 1.12rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .rest-sub {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      max-width: 360px;
+    }
+
+    .btn-pull {
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.7rem 1.45rem;
+      font-size: 0.95rem;
+      border-radius: 14px;
+      margin-top: 0.2rem;
+    }
+
+    .btn-pull:hover {
+      background-color: var(--accent);
+      color: var(--accent-text);
+    }
+
+    /* =========================================
+       5. CALM TOAST BANNER
+       ========================================= */
+    .calm-toast {
+      position: fixed;
+      bottom: max(1.25rem, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--accent);
+      border-radius: 14px;
+      padding: 0.65rem 1.15rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-dropdown);
+      z-index: 150;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      max-width: calc(100vw - 2rem);
+      text-align: center;
+    }
+
+    .calm-toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* =========================================
+       6. MODALS, CROPPER.JS WHATSAPP CROPPER & EXPORT
+       ========================================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: var(--overlay-bg);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0.85rem;
+      padding-top: max(0.85rem, env(safe-area-inset-top));
+      padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
+      z-index: 100;
+    }
+
+    .modal-backdrop.sub-modal-backdrop {
+      z-index: 120;
+    }
+
+    .modal-backdrop.crop-backdrop {
+      background-color: #000000;
+      padding: 0;
+      z-index: 130;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+      animation: fadeIn 0.18s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .vault-modal {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 22px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 90dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .compact-modal {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 22px;
+      width: 100%;
+      max-width: 410px;
+      max-height: 90dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .vault-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .vault-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-close {
+      background-color: var(--bg-elevated);
+      color: var(--text-secondary);
+      border-radius: 12px;
+    }
+
+    .btn-close:hover {
+      color: var(--text-primary);
+    }
+
+    /* WhatsApp-Style Full-Screen Cropper with Cropper.js + Offline Fallback */
+    .wa-crop-shell {
+      width: 100vw;
+      height: 100dvh;
+      background-color: #000000;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-top: max(0.75rem, env(safe-area-inset-top));
+      padding-bottom: max(0.9rem, env(safe-area-inset-bottom));
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      user-select: none;
+      overflow: hidden;
+    }
+
+    .wa-crop-stage {
+      flex: 1;
+      width: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background-color: #000000;
+    }
+
+    .wa-crop-stage img#cropSourceImg {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .wa-crop-stage canvas#cropFallbackCanvas {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .wa-crop-stage .cropper-bg {
+      background: #000000 !important;
+    }
+
+    .wa-crop-stage .cropper-modal {
+      background-color: rgba(0, 0, 0, 0.62);
+    }
+
+    .wa-crop-stage .cropper-view-box {
+      outline: 1.5px solid rgba(255, 255, 255, 0.9);
+      outline-offset: 0;
+    }
+
+    .wa-crop-stage .cropper-dashed {
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    .wa-crop-stage .cropper-line {
+      background-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .wa-crop-stage .cropper-point {
+      width: 14px !important;
+      height: 14px !important;
+      background-color: #ffffff !important;
+      border-radius: 2px !important;
+      opacity: 1 !important;
+    }
+
+    .wa-crop-stage .cropper-point.point-n,
+    .wa-crop-stage .cropper-point.point-s {
+      width: 18px !important;
+      height: 4px !important;
+      opacity: 0.7 !important;
+    }
+
+    .wa-crop-stage .cropper-point.point-e,
+    .wa-crop-stage .cropper-point.point-w {
+      width: 4px !important;
+      height: 18px !important;
+      opacity: 0.7 !important;
+    }
+
+    .wa-crop-footer {
+      width: 100%;
+      padding: 0.75rem 1.25rem 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background-color: #000000;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .wa-footer-btn {
+      min-height: 44px;
+      padding: 0 0.85rem;
+      border-radius: 12px;
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: transparent;
+    }
+
+    .wa-footer-btn:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .wa-footer-btn.done-btn {
+      color: #38bdf8;
+    }
+
+    .wa-rotate-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+    }
+
+    .wa-rotate-btn:hover {
+      background-color: rgba(255, 255, 255, 0.22);
+    }
+
+    /* Export Backup Modal Body */
+    .export-body {
+      padding: 1.15rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.95rem;
+    }
+
+    .filename-input-group {
+      display: flex;
+      align-items: stretch;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background-color: var(--bg-input);
+      overflow: hidden;
+    }
+
+    .filename-input-group:focus-within {
+      border-color: var(--border-focus);
+    }
+
+    .filename-field {
+      flex: 1;
+      min-width: 0;
+      min-height: 44px;
+      padding: 0.55rem 0.8rem;
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: 16px;
+      outline: none;
+      unicode-bidi: plaintext;
+    }
+
+    .filename-ext {
+      display: inline-flex;
+      align-items: center;
+      padding: 0 0.75rem;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background-color: var(--bg-elevated);
+      border-inline-start: 1px solid var(--border-color);
+      user-select: none;
+      direction: ltr;
+      unicode-bidi: isolate;
+    }
+
+    /* Vault Tabs */
+    .vault-tabs {
+      display: flex;
+      padding: 0.6rem 1.25rem 0;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--bg-primary);
+    }
+
+    .tab-btn {
+      flex: 1;
+      border-radius: 12px 12px 0 0;
+      border: 1px solid transparent;
+      border-bottom: none;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      padding: 0.6rem 0.9rem;
+      position: relative;
+      bottom: -1px;
+    }
+
+    .tab-btn.active {
+      background-color: var(--bg-card);
+      border-color: var(--border-color);
+      color: var(--accent);
+    }
+
+    .tab-count {
+      font-size: 0.76rem;
+      padding: 0.1rem 0.48rem;
+      border-radius: 999px;
+      background-color: var(--bg-elevated);
+      color: var(--text-secondary);
+    }
+
+    .tab-btn.active .tab-count {
+      background-color: var(--accent);
+      color: var(--accent-text);
+    }
+
+    .vault-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.15rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+      overscroll-behavior: contain;
+    }
+
+    .task-form {
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 0.95rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.32rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+      align-items: end;
+    }
+
+    .form-label {
+      font-size: 0.81rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .form-input {
+      width: 100%;
+      min-height: 44px;
+      padding: 0.58rem 0.8rem;
+      border-radius: 11px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s ease;
+      unicode-bidi: plaintext;
+    }
+
+    .form-input:focus {
+      border-color: var(--border-focus);
+    }
+
+    .toggle-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 0.5rem 0.8rem;
+      border-radius: 11px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-input);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .toggle-label-text {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .switch-track {
+      width: 44px;
+      height: 24px;
+      border-radius: 999px;
+      background-color: var(--border-color);
+      position: relative;
+      transition: background-color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .switch-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: #ffffff;
+      position: absolute;
+      top: 3px;
+      inset-inline-start: 3px;
+      transition: transform 0.2s ease;
+    }
+
+    input[type="checkbox"]:checked + .switch-track {
+      background-color: var(--warning);
+    }
+
+    [dir="rtl"] input[type="checkbox"]:checked + .switch-track .switch-thumb {
+      transform: translateX(-20px);
+    }
+
+    [dir="ltr"] input[type="checkbox"]:checked + .switch-track .switch-thumb {
+      transform: translateX(20px);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 0.55rem;
+      justify-content: flex-end;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: var(--accent-text);
+      padding: 0 1.2rem;
+      font-size: 0.92rem;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0 0.95rem;
+      font-size: 0.88rem;
+    }
+
+    .btn-secondary:hover {
+      color: var(--text-primary);
+      border-color: var(--text-muted);
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      position: relative;
+      border-radius: 14px;
+    }
+
+    .list-item {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 0.72rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+      user-select: none;
+      position: relative;
+    }
+
+    .list-item.is-active-slot {
+      border-inline-start: 3px solid var(--accent);
+    }
+
+    .sortable-ghost-calm {
+      opacity: 0.45;
+      background-color: var(--bg-elevated) !important;
+      border: 1px dashed var(--accent) !important;
+    }
+
+    .sortable-chosen-calm {
+      background-color: var(--bg-elevated);
+      border-color: var(--accent);
+      box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.4);
+    }
+
+    .drag-handle {
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      cursor: grab;
+      touch-action: none;
+      border-radius: 10px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .drag-handle:active {
+      cursor: grabbing;
+      color: var(--accent);
+      background-color: var(--bg-elevated);
+    }
+
+    .item-content {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .item-title {
+      font-size: 0.96rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      word-break: break-word;
+      unicode-bidi: plaintext;
+    }
+
+    .item-note {
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      unicode-bidi: plaintext;
+    }
+
+    .item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.38rem;
+      margin-top: 0.12rem;
+    }
+
+    .mini-tag {
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 0.16rem 0.52rem;
+      border-radius: 6px;
+      background-color: var(--bg-elevated);
+      color: var(--text-secondary);
+    }
+
+    .mini-tag.active-tag {
+      background-color: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+    }
+
+    .mini-tag.mandatory-tag {
+      background-color: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .mini-tag.overdue-tag {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .repeat-badge-btn {
+      min-height: 28px;
+      min-width: auto;
+      padding: 0.15rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      background-color: var(--success-bg);
+      color: var(--success);
+      border: 1px solid transparent;
+    }
+
+    .repeat-badge-btn:hover {
+      border-color: var(--success);
+    }
+
+    .history-drawer {
+      margin-top: 0.45rem;
+      padding: 0.55rem 0.7rem;
+      border-radius: 10px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    .history-drawer-title {
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.1rem;
+    }
+
+    .history-entry {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .item-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      flex-shrink: 0;
+    }
+
+    .ctrl-btn {
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 10px;
+      color: var(--text-secondary);
+      background-color: transparent;
+    }
+
+    .ctrl-btn:hover:not(:disabled) {
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+    }
+
+    .ctrl-btn:disabled {
+      opacity: 0.26;
+      cursor: not-allowed;
+    }
+
+    .ctrl-btn.danger:hover {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .completed-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-clear-history {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+      padding: 0 0.9rem;
+      font-size: 0.84rem;
+      margin-inline-start: auto;
+    }
+
+    .confirm-bar {
+      width: 100%;
+      background-color: var(--danger-bg);
+      border: 1px solid var(--danger);
+      border-radius: 12px;
+      padding: 0.65rem 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      font-size: 0.86rem;
+    }
+
+    .empty-list-msg {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 600px) {
+      .focus-stage {
+        padding: 1rem 0.85rem 2rem;
+      }
+
+      .focus-card {
+        padding: 1.45rem 1.2rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .list-item {
+        flex-wrap: wrap;
+      }
+
+      .item-controls {
+        width: 100%;
+        justify-content: flex-end;
+        border-top: 1px solid var(--border-color);
+        padding-top: 0.35rem;
+        margin-top: 0.15rem;
+      }
+    }
+  </style>
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon.jpg">
+<meta name="theme-color" content="#0b1320">
+</head>
+<body>
+
+  <!-- BACKDROP LAYER FOR DRAWER ISOLATION -->
+  <div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
+
+  <!-- SINGLE-ROW TOP BAR -->
+  <header class="top-bar">
+    <!-- Start Element: Hamburger Menu Button (☰) with Status Dot -->
+    <div class="menu-trigger-wrap" id="menuWrap">
+      <button type="button" id="hamburgerBtn" class="hamburger-btn" aria-haspopup="true" aria-expanded="false" aria-label="Menu">
+        <span>☰</span>
+        <span class="status-dot" aria-hidden="true"></span>
+      </button>
+
+      <div class="drawer-menu" id="drawerMenu" role="menu">
+        <!-- 1. Brand & Profile Identity Card -->
+        <div class="drawer-brand">
+          <div class="drawer-brand-title" id="drawerBrandTitle">نقطة تركيز</div>
+          <div class="drawer-brand-subtitle">Anti-Overwhelm Focus</div>
+        </div>
+
+        <div class="profile-wrap" id="profileWrap">
+          <div class="profile-box" id="profileBox">
+            <div class="profile-left">
+              <div class="avatar-circle" id="avatarCircle" aria-hidden="true">ن</div>
+              <div class="profile-name-wrap">
+                <input type="text" id="profileNameInput" class="profile-name-input" dir="auto" maxlength="32" autocomplete="off">
+              </div>
+            </div>
+            <div class="profile-actions">
+              <button type="button" class="profile-mini-btn" id="pickAvatarBtn">صورة</button>
+              <button type="button" class="profile-mini-btn remove-avatar" id="removeAvatarBtn" style="display: none;" aria-label="Remove avatar">✕</button>
+            </div>
+            <input type="file" id="avatarFileInput" accept="image/*" class="sr-only">
+          </div>
+          <div id="avatarConfirmSlot"></div>
+        </div>
+
+        <div class="drawer-divider"></div>
+
+        <!-- 2. Themes (Horizontal Pill Row) -->
+        <div class="drawer-section">
+          <div class="drawer-section-title" id="menuThemesTitle">الثيمات</div>
+          <div class="pills-row-3" id="themeOptionsRow"></div>
+        </div>
+
+        <div class="drawer-divider"></div>
+
+        <!-- 3. Visual Glitch Alert (Horizontal Pill Row) -->
+        <div class="drawer-section">
+          <div class="drawer-section-title" id="menuGlitchTitle">منبه الرعشة البصري</div>
+          <div class="pills-row-5" id="glitchPresetsRow"></div>
+
+          <div class="custom-glitch-box" id="customGlitchBox">
+            <div class="custom-glitch-controls">
+              <input type="number" id="customGlitchValue" class="glitch-num-input" min="1" max="9999" value="30">
+              <select id="customGlitchUnit" class="glitch-unit-select">
+                <option value="seconds" id="unitSecondsOpt">ثواني</option>
+                <option value="minutes" id="unitMinutesOpt">دقائق</option>
+              </select>
+              <button type="button" id="applyCustomGlitchBtn" class="glitch-apply-btn">تطبيق</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="drawer-divider"></div>
+
+        <!-- 4. Language -->
+        <div class="drawer-section">
+          <div class="drawer-section-title" id="menuLangTitle">اللغة</div>
+          <div class="lang-pair-row">
+            <button type="button" class="lang-choice-btn" id="langArBtn">العربية</button>
+            <button type="button" class="lang-choice-btn" id="langEnBtn">English</button>
+          </div>
+        </div>
+
+        <div class="drawer-divider"></div>
+
+        <!-- 5. Share App + Backup Export/Import -->
+        <div class="drawer-section">
+          <button type="button" class="drawer-action-btn" id="shareAppBtn">
+            <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+            <span id="shareAppBtnText">مشاركة التطبيق</span>
+          </button>
+
+          <div class="backup-row">
+            <button type="button" class="drawer-action-btn" id="exportBackupBtn">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span id="exportBackupText">تصدير نسخة احتياطية</span>
+            </button>
+            <button type="button" class="drawer-action-btn" id="importBackupBtn">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span id="importBackupText">استعادة</span>
+            </button>
+          </div>
+          <input type="file" id="importBackupFileInput" accept=".json,.txt,application/json,text/plain" class="sr-only">
+          <div class="backup-status-msg" id="backupStatusMsg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- End Group: One-Tap Slot Selector [1 | 2 | 3] + The Vault Button -->
+    <div class="top-end-group">
+      <div class="one-tap-slots" role="group" id="slotSelector">
+        <button type="button" class="slot-pill-btn active" data-slots="1">1</button>
+        <button type="button" class="slot-pill-btn" data-slots="2">2</button>
+        <button type="button" class="slot-pill-btn" data-slots="3">3</button>
+      </div>
+
+      <button type="button" id="openVaultBtn" class="vault-btn">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 15h6"/></svg>
+        <span id="vaultBtnText">الخزنة</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CALM FOCUS WORKSPACE -->
+  <main class="focus-stage" id="focusStage" aria-live="polite"></main>
+
+  <!-- CALM TOAST BANNER -->
+  <div class="calm-toast" id="calmToast" role="status" aria-live="polite"></div>
+
+  <!-- WHATSAPP-STYLE CROPPER MODAL (Cropper.js + Offline Canvas Fallback) -->
+  <div class="modal-backdrop crop-backdrop" id="cropModalBackdrop" role="dialog" aria-modal="true" aria-label="Crop Profile Photo">
+    <div class="wa-crop-shell" id="cropShell">
+      <div class="wa-crop-stage" id="cropStage">
+        <img id="cropSourceImg" alt="Crop source">
+        <canvas id="cropFallbackCanvas"></canvas>
+      </div>
+      <div class="wa-crop-footer">
+        <button type="button" class="wa-footer-btn" id="cancelCropBtn">إلغاء</button>
+        <button type="button" class="wa-rotate-btn" id="rotateCropBtn" aria-label="Rotate 90 degrees">
+          <svg viewBox="0 0 24 24" width="22" height="22">
+            <path d="M21 12a9 9 0 1 1-2.64-6.36"/>
+            <polyline points="21 3 21 9 15 9"/>
+          </svg>
+        </button>
+        <button type="button" class="wa-footer-btn done-btn" id="saveCropBtn">تم</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORT BACKUP FILENAME MODAL -->
+  <div class="modal-backdrop sub-modal-backdrop" id="exportModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="exportModalTitle">
+    <div class="compact-modal" id="exportModalCard">
+      <div class="vault-header">
+        <h3 class="vault-title" id="exportModalTitle">تصدير نسخة احتياطية</h3>
+        <button type="button" class="btn-close" id="closeExportModalBtn" aria-label="Close">
+          <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="export-body">
+        <div class="form-row">
+          <label class="form-label" for="exportFilenameInput" id="exportFilenameLabel">اسم ملف النسخة الاحتياطية</label>
+          <div class="filename-input-group">
+            <input type="text" id="exportFilenameInput" class="filename-field" dir="auto" autocomplete="off" value="nuqtat-tarkiz-tasks">
+            <span class="filename-ext" dir="ltr">.json</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-primary" style="width: 100%;" id="saveBackupFileBtn">
+            <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            <span id="saveBackupFileText">حفظ النسخة الاحتياطية</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE VAULT MODAL -->
+  <div class="modal-backdrop" id="vaultBackdrop" role="dialog" aria-modal="true" aria-labelledby="vaultHeaderTitle">
+    <div class="vault-modal">
+      <div class="vault-header">
+        <h2 class="vault-title">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 15h6"/></svg>
+          <span id="vaultHeaderTitle">الخزنة</span>
+        </h2>
+        <button type="button" class="btn-close" id="closeVaultBtn" aria-label="Close">
+          <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="vault-tabs" role="tablist">
+        <button type="button" class="tab-btn active" role="tab" id="tabQueue" aria-selected="true">
+          <span id="tabQueueText">المهام المنتظرة</span>
+          <span class="tab-count" id="queueCount">0</span>
+        </button>
+        <button type="button" class="tab-btn" role="tab" id="tabCompleted" aria-selected="false">
+          <span id="tabCompletedText">المنجز</span>
+          <span class="tab-count" id="completedCount">0</span>
+        </button>
+      </div>
+
+      <div class="vault-body" id="vaultBody">
+        <!-- QUEUE VIEW -->
+        <section id="queueView">
+          <form class="task-form" id="taskForm">
+            <input type="hidden" id="editTaskId" value="">
+            <div class="form-row">
+              <label class="form-label" for="taskTitleInput" id="labelTaskTitle">اسم المهمة *</label>
+              <input type="text" id="taskTitleInput" class="form-input" dir="auto" required autocomplete="off">
+            </div>
+
+            <div class="form-row">
+              <label class="form-label" for="taskNoteInput" id="labelTaskNote">ملاحظة قصيرة (اختياري)</label>
+              <input type="text" id="taskNoteInput" class="form-input" dir="auto" autocomplete="off">
+            </div>
+
+            <div class="form-grid">
+              <div class="form-row">
+                <label class="form-label" for="taskDeadlineInput" id="labelTaskDeadline">الموعد النهائي (اختياري)</label>
+                <input type="datetime-local" id="taskDeadlineInput" class="form-input">
+              </div>
+
+              <div class="form-row">
+                <span class="form-label" id="labelMandatoryHeader">التصنيف</span>
+                <label class="toggle-box" for="taskMandatoryInput">
+                  <span class="toggle-label-text" id="labelTaskMandatory">مهمة إلزامية</span>
+                  <input type="checkbox" id="taskMandatoryInput" class="sr-only">
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn-secondary" id="cancelEditBtn" style="display: none;">إلغاء</button>
+              <button type="submit" class="btn-primary" id="submitTaskBtn">إضافة للخزنة</button>
+            </div>
+          </form>
+
+          <div class="task-list" id="queueList" style="margin-top: 1.1rem;"></div>
+        </section>
+
+        <!-- COMPLETED VIEW -->
+        <section id="completedView" style="display: none;">
+          <div class="completed-toolbar" id="completedToolbar"></div>
+          <div class="task-list" id="completedList" style="margin-top: 0.85rem;"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* =========================================
+         1. TRANSLATIONS & OPTIONS CONFIG
+         ========================================= */
+      const I18N = {
+        ar: {
+          appTitle: 'نقطة تركيز | Nuqtat Tarkiz',
+          drawerBrandTitle: 'نقطة تركيز',
+          defaultProfileName: 'نقطة تركيز',
+          profileNamePlaceholder: 'اسمك...',
+          pickAvatarBtn: 'صورة',
+          removeAvatarAria: 'إزالة صورة البروفايل',
+          confirmRemoveAvatarText: 'إزالة الصورة الشخصية؟',
+          rotateCropAria: 'تدوير 90 درجة',
+          saveCropBtn: 'تم',
+          menuAria: 'القائمة الرئيسية',
+          menuThemesTitle: 'الثيمات',
+          menuLangTitle: 'اللغة',
+          menuGlitchTitle: 'منبه الرعشة البصري',
+          themeLight: 'نهاري',
+          themeDark: 'وضع مظلم',
+          themeMidnight: 'ليلي هادئ',
+          glitchOff: 'إيقاف',
+          glitch1m: '1 د',
+          glitch2m: '2 د',
+          glitch5m: '5 د',
+          glitchCustom: 'حر',
+          unitSeconds: 'ثواني',
+          unitMinutes: 'دقائق',
+          applyBtn: 'تطبيق',
+          shareAppBtn: 'مشاركة التطبيق',
+          shareLinkSuccessMsg: 'تمت مشاركة رابط التطبيق بنجاح.',
+          shareLinkCopiedMsg: 'تم نسخ رابط التطبيق إلى الحافظة.',
+          shareSuccessMsg: 'تمت مشاركة نسخة نظيفة من ملف التطبيق بنجاح.',
+          shareFallbackDownloadedMsg: 'تم تنزيل نسخة نظيفة من ملف التطبيق جاهزة للإرسال.',
+          shareFailedMsg: 'تعذرت مشاركة التطبيق حالياً.',
+          exportBackupText: 'تصدير نسخة احتياطية',
+          exportModalTitle: 'تصدير نسخة احتياطية',
+          exportFilenameLabel: 'اسم ملف النسخة الاحتياطية',
+          saveBackupFileText: 'حفظ النسخة الاحتياطية',
+          importBackupText: 'استعادة',
+          exportSuccessMsg: 'تم حفظ نسخة المهام الاحتياطية بنجاح.',
+          importSuccessMsg: 'تم استعادة بيانات المهام بنجاح.',
+          importInvalidMsg: 'ملف النسخة الاحتياطية غير صالح أو تالف.',
+          restoredToQueueToast: 'تمت إعادة المهمة إلى أعلى المهام المنتظرة في الخزنة.',
+          slotsAria: 'عدد المهام المعروضة',
+          vaultBtn: 'الخزنة',
+          doneBtn: 'تم',
+          deferBtn: 'تأجيل',
+          pullNextBtn: '+ اسحب المهمة التالية',
+          completedMsg: 'أنجزت مهمتك الحالية',
+          completedSubWithQueue: 'خذ نفساً عميقاً، واسحب المهمة التالية عندما تكون مستعداً.',
+          completedSubEmpty: 'أنهيت جميع المهام في الخزنة. مساحة هادئة بالكامل.',
+          emptyVaultTitle: 'لا توجد مهام نشطة حالياً',
+          emptyVaultSub: 'افتح الخزنة لإضافة مهمة واحدة واضحة لتبدأ بها.',
+          openVaultAction: 'افتح الخزنة',
+          moveToLabel: 'نقل إلى:',
+          mandatoryManualBadge: '⚠️ إلزامية',
+          mandatoryTimedBadge: '⚠️ إلزامية (موعد محدد)',
+          deadlineDueBadge: '🕒 الموعد:',
+          deadlinePassedBadge: '⏰ انتهى الموعد النهائي •',
+          tabQueue: 'المهام المنتظرة',
+          tabCompleted: 'المنجز',
+          labelTaskTitle: 'اسم المهمة *',
+          placeholderTaskTitle: 'ما الشيء الواحد الذي تريد إنجازه؟',
+          labelTaskNote: 'ملاحظة قصيرة (اختياري)',
+          placeholderTaskNote: 'تفاصيل مساعدة أو رابط سريع...',
+          labelTaskDeadline: 'الموعد النهائي (اختياري)',
+          labelPriority: 'التصنيف',
+          labelTaskMandatory: 'مهمة إلزامية',
+          addTaskBtn: 'إضافة للخزنة',
+          saveTaskBtn: 'حفظ التعديلات',
+          cancelEditBtn: 'إلغاء',
+          inFocusTag: 'معروضة الآن',
+          moveUpAria: 'تحريك لأعلى',
+          moveDownAria: 'تحريك لأسفل',
+          dragAria: 'سحب لإعادة الترتيب',
+          editAria: 'تعديل المهمة',
+          deleteAria: 'حذف المهمة',
+          queueEmptyMsg: 'الخزنة فارغة حالياً. أضف أول مهمة بالأعلى.',
+          completedEmptyMsg: 'لا توجد مهام منجزة في السجل بعد.',
+          completedAtPrefix: 'آخر إنجاز:',
+          completedTimes: (n) => `أنجزت ${n} مرات`,
+          historyLogHeader: 'سجل أوقات الإنجاز:',
+          restoreBtn: 'استعادة',
+          clearHistoryBtn: 'مسح السجل',
+          confirmClearText: 'هل تريد مسح سجل المهام المنجزة بالكامل؟',
+          confirmDeleteQueueText: 'هل تريد حذف هذه المهمة من قائمة الانتظار؟',
+          confirmDeleteSingleText: 'هل تريد حذف هذه المهمة المنجزة من السجل؟',
+          confirmYes: 'تأكيد الحذف',
+          undoBtn: 'تراجع',
+          closeAria: 'إغلاق'
+        },
+        en: {
+          appTitle: 'Nuqtat Tarkiz | Focus Vault',
+          drawerBrandTitle: 'Nuqtat Tarkiz',
+          defaultProfileName: 'Focus User',
+          profileNamePlaceholder: 'Your name...',
+          pickAvatarBtn: 'Photo',
+          removeAvatarAria: 'Remove profile photo',
+          confirmRemoveAvatarText: 'Remove profile photo?',
+          rotateCropAria: 'Rotate 90 degrees',
+          saveCropBtn: 'Done',
+          menuAria: 'Main Menu',
+          menuThemesTitle: 'Themes',
+          menuLangTitle: 'Language',
+          menuGlitchTitle: 'Visual Glitch Alert',
+          themeLight: 'Daylight',
+          themeDark: 'Dark Mode',
+          themeMidnight: 'Midnight',
+          glitchOff: 'Off',
+          glitch1m: '1m',
+          glitch2m: '2m',
+          glitch5m: '5m',
+          glitchCustom: 'Custom',
+          unitSeconds: 'Seconds',
+          unitMinutes: 'Minutes',
+          applyBtn: 'Apply',
+          shareAppBtn: 'Share App',
+          shareLinkSuccessMsg: 'App link shared successfully.',
+          shareLinkCopiedMsg: 'App link copied to clipboard.',
+          shareSuccessMsg: 'Clean app file shared successfully.',
+          shareFallbackDownloadedMsg: 'Downloaded a clean copy of the app ready to share.',
+          shareFailedMsg: 'Unable to share the app right now.',
+          exportBackupText: 'Export Backup',
+          exportModalTitle: 'Export Backup',
+          exportFilenameLabel: 'Backup file name',
+          saveBackupFileText: 'Save Backup',
+          importBackupText: 'Import',
+          exportSuccessMsg: 'Tasks backup saved successfully.',
+          importSuccessMsg: 'Tasks data restored successfully.',
+          importInvalidMsg: 'Invalid or corrupted backup file.',
+          restoredToQueueToast: 'Task moved to the top of Queue in the Vault.',
+          slotsAria: 'Visible focus slots',
+          vaultBtn: 'The Vault',
+          doneBtn: 'Done',
+          deferBtn: 'Defer',
+          pullNextBtn: '+ Pull Next Task',
+          completedMsg: 'Current task completed',
+          completedSubWithQueue: 'Take a mental breath, then pull your next task when ready.',
+          completedSubEmpty: 'You cleared everything in the Vault. Enjoy the calm.',
+          emptyVaultTitle: 'No active tasks right now',
+          emptyVaultSub: 'Open the Vault to add a clear task when you are ready.',
+          openVaultAction: 'Open The Vault',
+          moveToLabel: 'Move to:',
+          mandatoryManualBadge: '⚠️ Must Do',
+          mandatoryTimedBadge: '⚠️ Must Do (Timed)',
+          deadlineDueBadge: '🕒 Due:',
+          deadlinePassedBadge: '⏰ Deadline Passed •',
+          tabQueue: 'Queue',
+          tabCompleted: 'Completed',
+          labelTaskTitle: 'Task Name *',
+          placeholderTaskTitle: 'What is the one thing to get done?',
+          labelTaskNote: 'Short Note (Optional)',
+          placeholderTaskNote: 'Helpful context or quick note...',
+          labelTaskDeadline: 'Deadline (Optional)',
+          labelPriority: 'Rule',
+          labelTaskMandatory: 'Mandatory Task',
+          addTaskBtn: 'Add to Vault',
+          saveTaskBtn: 'Save Changes',
+          cancelEditBtn: 'Cancel',
+          inFocusTag: 'In Focus',
+          moveUpAria: 'Move up',
+          moveDownAria: 'Move down',
+          dragAria: 'Drag to reorder',
+          editAria: 'Edit task',
+          deleteAria: 'Delete task',
+          queueEmptyMsg: 'The Vault queue is empty. Add a task above.',
+          completedEmptyMsg: 'No completed tasks recorded yet.',
+          completedAtPrefix: 'Last completed:',
+          completedTimes: (n) => `Completed ${n} times`,
+          historyLogHeader: 'Completion history:',
+          restoreBtn: 'Restore',
+          clearHistoryBtn: 'Clear History',
+          confirmClearText: 'Clear all completed tasks history?',
+          confirmDeleteQueueText: 'Delete this queued task?',
+          confirmDeleteSingleText: 'Delete this completed task from history?',
+          confirmYes: 'Confirm Delete',
+          undoBtn: 'Undo',
+          closeAria: 'Close'
+        }
+      };
+
+      const THEME_OPTIONS = [
+        { id: 'light', labelKey: 'themeLight' },
+        { id: 'dark', labelKey: 'themeDark' },
+        { id: 'navy', labelKey: 'themeMidnight' }
+      ];
+
+      const GLITCH_PRESETS = [
+        { id: 'off', seconds: 0, labelKey: 'glitchOff' },
+        { id: '1m', seconds: 60, labelKey: 'glitch1m' },
+        { id: '2m', seconds: 120, labelKey: 'glitch2m' },
+        { id: '5m', seconds: 300, labelKey: 'glitch5m' }
+      ];
+
+      /* =========================================
+         2. STATE & STORAGE MANAGEMENT
+         ========================================= */
+      const STORAGE_KEY = 'focus_vault_app_v2_1';
+
+      const defaultState = {
+        theme: 'navy',
+        lang: 'ar',
+        slotCount: 1,
+        glitchMode: 'off',
+        glitchSeconds: 0,
+        customGlitchValue: 30,
+        customGlitchUnit: 'seconds',
+        profileName: '',
+        profileAvatar: '',
+        slots: [null, null, null],
+        activeAssignments: [null, null, null],
+        restingSlots: [false, false, false],
+        queue: [],
+        completed: []
+      };
+
+      function normalizeCompletedList(list) {
+        if (!Array.isArray(list)) return [];
+        return list.map(item => {
+          const log = Array.isArray(item.completionLog) && item.completionLog.length > 0
+            ? item.completionLog.slice()
+            : (item.completedAt ? [item.completedAt] : [new Date().toISOString()]);
+          log.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+          return {
+            ...item,
+            completionLog: log,
+            completedAt: log[log.length - 1]
+          };
+        });
+      }
+
+      function normalizeQueueList(list) {
+        if (!Array.isArray(list)) return [];
+        return list.map(item => ({
+          ...item,
+          completionLog: Array.isArray(item.completionLog) ? item.completionLog : []
+        }));
+      }
+
+      function extractThreeSlots(parsed) {
+        const hasActive = Array.isArray(parsed.activeAssignments) && parsed.activeAssignments.some(Boolean);
+        const source = hasActive
+          ? parsed.activeAssignments
+          : (Array.isArray(parsed.slots) ? parsed.slots : [null, null, null]);
+        return [
+          typeof source[0] === 'string' ? source[0] : null,
+          typeof source[1] === 'string' ? source[1] : null,
+          typeof source[2] === 'string' ? source[2] : null
+        ];
+      }
+
+      function normalizeParsedState(parsed) {
+        if (!parsed || typeof parsed !== 'object') return structuredClone(defaultState);
+
+        const mode = ['off', '1m', '2m', '5m', 'custom'].includes(parsed.glitchMode) ? parsed.glitchMode : 'off';
+        let gSec = Number(parsed.glitchSeconds) || 0;
+        if (mode === 'off') gSec = 0;
+        else if (mode === '1m') gSec = 60;
+        else if (mode === '2m') gSec = 120;
+        else if (mode === '5m') gSec = 300;
+        else if (mode === 'custom' && gSec <= 0) {
+          const val = Math.max(1, Number(parsed.customGlitchValue) || 30);
+          gSec = parsed.customGlitchUnit === 'minutes' ? val * 60 : val;
+        }
+
+        const safeAvatar = typeof parsed.profileAvatar === 'string' && parsed.profileAvatar.startsWith('data:image/')
+          ? parsed.profileAvatar
+          : '';
+
+        const restoredSlotCount = [1, 2, 3].includes(Number(parsed.slotCount))
+          ? Number(parsed.slotCount)
+          : 1;
+
+        // Preserve all 3 slots [slot0, slot1, slot2] intact regardless of slotCount
+        const restoredSlots = extractThreeSlots(parsed);
+        const rawResting = Array.isArray(parsed.restingSlots) ? parsed.restingSlots : [false, false, false];
+        const restoredResting = [Boolean(rawResting[0]), Boolean(rawResting[1]), Boolean(rawResting[2])];
+
+        return {
+          theme: ['navy', 'dark', 'light'].includes(parsed.theme) ? parsed.theme : 'navy',
+          lang: parsed.lang === 'en' ? 'en' : 'ar',
+          slotCount: restoredSlotCount,
+          glitchMode: mode,
+          glitchSeconds: gSec,
+          customGlitchValue: Math.max(1, Number(parsed.customGlitchValue) || 30),
+          customGlitchUnit: parsed.customGlitchUnit === 'minutes' ? 'minutes' : 'seconds',
+          profileName: typeof parsed.profileName === 'string' ? parsed.profileName.slice(0, 32) : '',
+          profileAvatar: safeAvatar,
+          slots: restoredSlots.slice(),
+          activeAssignments: restoredSlots.slice(),
+          restingSlots: restoredResting,
+          queue: normalizeQueueList(parsed.queue),
+          completed: normalizeCompletedList(parsed.completed)
+        };
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY)
+            || localStorage.getItem('focus_vault_app_v2')
+            || localStorage.getItem('anti_overwhelm_focus_v1');
+          if (!raw) return structuredClone(defaultState);
+          return normalizeParsedState(JSON.parse(raw));
+        } catch (err) {
+          return structuredClone(defaultState);
+        }
+      }
+
+      let state = loadState();
+      let confirmClearHistory = false;
+      let confirmRemoveAvatar = false;
+      let pendingDeleteQueueId = null;
+      let pendingDeleteCompletedId = null;
+      let expandedHistoryIds = new Set();
+      let openReorderSlot = null;
+      let customBoxOpen = state.glitchMode === 'custom';
+      let glitchIntervalTimer = null;
+      let queueSortableInstance = null;
+      let backupStatusTimeout = null;
+      let toastTimer = null;
+
+      /* Cropper.js + Offline Fallback state */
+      let cropperInstance = null;
+      let fallbackCropImage = null;
+
+      function saveState() {
+        try {
+          const threeSlots = [
+            state.slots[0] || null,
+            state.slots[1] || null,
+            state.slots[2] || null
+          ];
+          state.slots = threeSlots.slice();
+          state.activeAssignments = threeSlots.slice();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (err) {
+          // Graceful fallback if storage quota is reached
+        }
+      }
+
+      function t(key) {
+        return I18N[state.lang][key] || key;
+      }
+
+      function generateId() {
+        return 't_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
+      }
+
+      /* =========================================
+         3. DEADLINE & MANDATORY EVALUATION LOGIC
+         ========================================= */
+      function getTaskStatus(task) {
+        let isUrgent = false;
+        let isOverdue = false;
+
+        if (task.deadline) {
+          const dueTime = new Date(task.deadline).getTime();
+          if (!isNaN(dueTime)) {
+            const diff = dueTime - Date.now();
+            if (diff <= 0) {
+              isOverdue = true;
+            } else if (diff <= 24 * 60 * 60 * 1000) {
+              isUrgent = true;
+            }
+          }
+        }
+
+        const isTimedMandatory = isUrgent || isOverdue;
+        const isMandatory = Boolean(task.manualMandatory) || isTimedMandatory;
+
+        return {
+          isMandatory,
+          isTimedMandatory,
+          isUrgent,
+          isOverdue
+        };
+      }
+
+      function formatDateTime(isoString) {
+        if (!isoString) return '';
+        const date = new Date(isoString);
+        if (isNaN(date.getTime())) return '';
+        const locale = state.lang === 'ar' ? 'ar-EG' : 'en-US';
+        return date.toLocaleString(locale, {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+
+      /* =========================================
+         4. THREE-SLOT PERSISTENCE & RENDER SLICING
+         ========================================= */
+      // Operates strictly on all 3 slots [0, 1, 2] without truncating to slotCount
+      function compactAllThreeSlots() {
+        const activeIds = [];
+        for (let i = 0; i < 3; i++) {
+          if (state.slots[i]) {
+            activeIds.push(state.slots[i]);
+          }
+        }
+
+        for (let i = 0; i < 3; i++) {
+          if (i < activeIds.length) {
+            state.slots[i] = activeIds[i];
+            state.restingSlots[i] = false;
+          } else {
+            state.slots[i] = null;
+          }
+        }
+      }
+
+      function syncFocusSlots() {
+        const queueMap = new Map(state.queue.map(item => [item.id, item]));
+
+        for (let i = 0; i < 3; i++) {
+          if (state.slots[i] && !queueMap.has(state.slots[i])) {
+            state.slots[i] = null;
+          }
+        }
+
+        const seen = new Set();
+        for (let i = 0; i < 3; i++) {
+          if (state.slots[i]) {
+            if (seen.has(state.slots[i])) {
+              state.slots[i] = null;
+            } else {
+              seen.add(state.slots[i]);
+            }
+          }
+        }
+
+        compactAllThreeSlots();
+        saveState();
+      }
+
+      function syncFocusSlotsToQueueOrder() {
+        const orderedQueueIds = state.queue.map(item => item.id);
+        const availableSet = new Set(orderedQueueIds);
+
+        for (let i = 0; i < 3; i++) {
+          if (state.slots[i] && !availableSet.has(state.slots[i])) {
+            state.slots[i] = null;
+          }
+        }
+
+        const activeAssignments = [];
+        for (let i = 0; i < 3; i++) {
+          if (state.slots[i]) {
+            activeAssignments.push({ slot: i, id: state.slots[i] });
+          }
+        }
+        const sortedIds = activeAssignments
+          .map(entry => entry.id)
+          .sort((a, b) => orderedQueueIds.indexOf(a) - orderedQueueIds.indexOf(b));
+
+        activeAssignments.forEach((entry, idx) => {
+          state.slots[entry.slot] = sortedIds[idx];
+        });
+
+        saveState();
+      }
+
+      function completeSlotTask(slotIndex) {
+        const taskId = state.slots[slotIndex];
+        if (!taskId) return;
+
+        openReorderSlot = null;
+        const nowIso = new Date().toISOString();
+        const idx = state.queue.findIndex(item => item.id === taskId);
+
+        if (idx !== -1) {
+          const [task] = state.queue.splice(idx, 1);
+          const existingLog = Array.isArray(task.completionLog) ? task.completionLog.slice() : [];
+          existingLog.push(nowIso);
+          existingLog.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+          state.completed.unshift({
+            ...task,
+            completedAt: existingLog[existingLog.length - 1],
+            completionLog: existingLog
+          });
+        }
+
+        state.slots[slotIndex] = null;
+        state.restingSlots[slotIndex] = true;
+        compactAllThreeSlots();
+        saveState();
+        renderAll(true);
+        restartGlitchTimer();
+      }
+
+      function pullNextForSlot(slotIndex) {
+        openReorderSlot = null;
+        const activeIds = new Set(state.slots.filter(Boolean));
+        const nextTask = state.queue.find(item => !activeIds.has(item.id));
+        if (nextTask) {
+          state.slots[slotIndex] = nextTask.id;
+        } else {
+          state.slots[slotIndex] = null;
+        }
+        state.restingSlots[slotIndex] = false;
+        compactAllThreeSlots();
+        saveState();
+        renderAll(true);
+        restartGlitchTimer();
+      }
+
+      function deferSlotTask(slotIndex) {
+        const taskId = state.slots[slotIndex];
+        if (!taskId) return;
+
+        const idx = state.queue.findIndex(item => item.id === taskId);
+        if (idx === -1) return;
+
+        const task = state.queue[idx];
+        if (getTaskStatus(task).isMandatory) return;
+
+        openReorderSlot = null;
+        state.queue.splice(idx, 1);
+        state.queue.push(task);
+
+        state.slots[slotIndex] = null;
+        state.restingSlots[slotIndex] = false;
+        syncFocusSlots();
+        pullNextForSlot(slotIndex);
+      }
+
+      function swapFocusSlotPositions(fromSlot, toSlot) {
+        if (fromSlot === toSlot || fromSlot < 0 || toSlot < 0 || fromSlot >= state.slotCount || toSlot >= state.slotCount) {
+          openReorderSlot = null;
+          renderFocusStage(false);
+          return;
+        }
+
+        const tempId = state.slots[fromSlot];
+        const tempRest = state.restingSlots[fromSlot];
+        state.slots[fromSlot] = state.slots[toSlot];
+        state.restingSlots[fromSlot] = state.restingSlots[toSlot];
+        state.slots[toSlot] = tempId;
+        state.restingSlots[toSlot] = tempRest;
+
+        compactAllThreeSlots();
+
+        const assignedIds = state.slots.filter(Boolean);
+        const assignedTasks = assignedIds
+          .map(id => state.queue.find(tItem => tItem.id === id))
+          .filter(Boolean);
+        const remainingTasks = state.queue.filter(tItem => !assignedIds.includes(tItem.id));
+        state.queue = [...assignedTasks, ...remainingTasks];
+
+        openReorderSlot = null;
+        saveState();
+        renderAll(true);
+      }
+
+      /* =========================================
+         5. VISUAL GLITCH ALERT (DOUBLE-BLINK IN PLACE)
+         ========================================= */
+      function triggerDoubleBlinkInPlace() {
+        if (els.vaultBackdrop.classList.contains('open')) return;
+        const cards = els.focusStage.querySelectorAll('.focus-card');
+        if (cards.length === 0) return;
+
+        cards.forEach(card => {
+          card.classList.remove('glitch-blink-sequence');
+          void card.offsetWidth;
+          card.classList.add('glitch-blink-sequence');
+        });
+      }
+
+      function restartGlitchTimer() {
+        if (glitchIntervalTimer) {
+          clearInterval(glitchIntervalTimer);
+          glitchIntervalTimer = null;
+        }
+        if (state.glitchMode === 'off' || !state.glitchSeconds || state.glitchSeconds <= 0) {
+          return;
+        }
+
+        glitchIntervalTimer = setInterval(() => {
+          triggerDoubleBlinkInPlace();
+        }, state.glitchSeconds * 1000);
+      }
+
+      /* =========================================
+         6. DOM REFERENCES, CROPPER & SMART SHARE
+         ========================================= */
+      const els = {
+        drawerBackdrop: document.getElementById('drawerBackdrop'),
+        menuWrap: document.getElementById('menuWrap'),
+        hamburgerBtn: document.getElementById('hamburgerBtn'),
+        drawerMenu: document.getElementById('drawerMenu'),
+        drawerBrandTitle: document.getElementById('drawerBrandTitle'),
+
+        avatarCircle: document.getElementById('avatarCircle'),
+        profileNameInput: document.getElementById('profileNameInput'),
+        pickAvatarBtn: document.getElementById('pickAvatarBtn'),
+        removeAvatarBtn: document.getElementById('removeAvatarBtn'),
+        avatarFileInput: document.getElementById('avatarFileInput'),
+        avatarConfirmSlot: document.getElementById('avatarConfirmSlot'),
+
+        cropModalBackdrop: document.getElementById('cropModalBackdrop'),
+        cropShell: document.getElementById('cropShell'),
+        cropStage: document.getElementById('cropStage'),
+        cropSourceImg: document.getElementById('cropSourceImg'),
+        cropFallbackCanvas: document.getElementById('cropFallbackCanvas'),
+        cancelCropBtn: document.getElementById('cancelCropBtn'),
+        rotateCropBtn: document.getElementById('rotateCropBtn'),
+        saveCropBtn: document.getElementById('saveCropBtn'),
+
+        exportModalBackdrop: document.getElementById('exportModalBackdrop'),
+        exportModalCard: document.getElementById('exportModalCard'),
+        exportModalTitle: document.getElementById('exportModalTitle'),
+        closeExportModalBtn: document.getElementById('closeExportModalBtn'),
+        exportFilenameLabel: document.getElementById('exportFilenameLabel'),
+        exportFilenameInput: document.getElementById('exportFilenameInput'),
+        saveBackupFileBtn: document.getElementById('saveBackupFileBtn'),
+        saveBackupFileText: document.getElementById('saveBackupFileText'),
+
+        menuThemesTitle: document.getElementById('menuThemesTitle'),
+        themeOptionsRow: document.getElementById('themeOptionsRow'),
+        menuGlitchTitle: document.getElementById('menuGlitchTitle'),
+        glitchPresetsRow: document.getElementById('glitchPresetsRow'),
+        menuLangTitle: document.getElementById('menuLangTitle'),
+        langArBtn: document.getElementById('langArBtn'),
+        langEnBtn: document.getElementById('langEnBtn'),
+        customGlitchBox: document.getElementById('customGlitchBox'),
+        customGlitchValue: document.getElementById('customGlitchValue'),
+        customGlitchUnit: document.getElementById('customGlitchUnit'),
+        unitSecondsOpt: document.getElementById('unitSecondsOpt'),
+        unitMinutesOpt: document.getElementById('unitMinutesOpt'),
+        applyCustomGlitchBtn: document.getElementById('applyCustomGlitchBtn'),
+
+        shareAppBtn: document.getElementById('shareAppBtn'),
+        shareAppBtnText: document.getElementById('shareAppBtnText'),
+        exportBackupBtn: document.getElementById('exportBackupBtn'),
+        exportBackupText: document.getElementById('exportBackupText'),
+        importBackupBtn: document.getElementById('importBackupBtn'),
+        importBackupText: document.getElementById('importBackupText'),
+        importBackupFileInput: document.getElementById('importBackupFileInput'),
+        backupStatusMsg: document.getElementById('backupStatusMsg'),
+
+        slotSelector: document.getElementById('slotSelector'),
+        openVaultBtn: document.getElementById('openVaultBtn'),
+        vaultBtnText: document.getElementById('vaultBtnText'),
+
+        focusStage: document.getElementById('focusStage'),
+        calmToast: document.getElementById('calmToast'),
+
+        vaultBackdrop: document.getElementById('vaultBackdrop'),
+        vaultHeaderTitle: document.getElementById('vaultHeaderTitle'),
+        closeVaultBtn: document.getElementById('closeVaultBtn'),
+        tabQueue: document.getElementById('tabQueue'),
+        tabQueueText: document.getElementById('tabQueueText'),
+        queueCount: document.getElementById('queueCount'),
+        tabCompleted: document.getElementById('tabCompleted'),
+        tabCompletedText: document.getElementById('tabCompletedText'),
+        completedCount: document.getElementById('completedCount'),
+        queueView: document.getElementById('queueView'),
+        completedView: document.getElementById('completedView'),
+
+        taskForm: document.getElementById('taskForm'),
+        editTaskId: document.getElementById('editTaskId'),
+        labelTaskTitle: document.getElementById('labelTaskTitle'),
+        taskTitleInput: document.getElementById('taskTitleInput'),
+        labelTaskNote: document.getElementById('labelTaskNote'),
+        taskNoteInput: document.getElementById('taskNoteInput'),
+        labelTaskDeadline: document.getElementById('labelTaskDeadline'),
+        taskDeadlineInput: document.getElementById('taskDeadlineInput'),
+        labelMandatoryHeader: document.getElementById('labelMandatoryHeader'),
+        labelTaskMandatory: document.getElementById('labelTaskMandatory'),
+        taskMandatoryInput: document.getElementById('taskMandatoryInput'),
+        cancelEditBtn: document.getElementById('cancelEditBtn'),
+        submitTaskBtn: document.getElementById('submitTaskBtn'),
+
+        queueList: document.getElementById('queueList'),
+        vaultBody: document.getElementById('vaultBody'),
+        completedToolbar: document.getElementById('completedToolbar'),
+        completedList: document.getElementById('completedList')
+      };
+
+      function hasAnySubModalOpen() {
+        return els.cropModalBackdrop.classList.contains('open')
+          || els.exportModalBackdrop.classList.contains('open')
+          || els.vaultBackdrop.classList.contains('open');
+      }
+
+      function showCalmToast(message) {
+        els.calmToast.textContent = message;
+        els.calmToast.classList.add('visible');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          els.calmToast.classList.remove('visible');
+        }, 2800);
+      }
+
+      function showBackupNotice(message, isError = false) {
+        els.backupStatusMsg.textContent = message;
+        els.backupStatusMsg.classList.toggle('error', Boolean(isError));
+        els.backupStatusMsg.classList.add('visible');
+        if (backupStatusTimeout) clearTimeout(backupStatusTimeout);
+        backupStatusTimeout = setTimeout(() => {
+          els.backupStatusMsg.classList.remove('visible');
+        }, 4000);
+      }
+
+      function renderAvatarConfirmBar() {
+        els.avatarConfirmSlot.innerHTML = '';
+        if (!confirmRemoveAvatar || !state.profileAvatar) return;
+
+        const bar = document.createElement('div');
+        bar.className = 'confirm-bar';
+        bar.innerHTML = `<span>${t('confirmRemoveAvatarText')}</span>`;
+
+        const actionPair = document.createElement('div');
+        actionPair.style.display = 'flex';
+        actionPair.style.gap = '0.4rem';
+
+        const confirmBtn = document.createElement('button');
+        confirmBtn.type = 'button';
+        confirmBtn.className = 'btn-clear-history';
+        confirmBtn.textContent = t('confirmYes');
+        confirmBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          state.profileAvatar = '';
+          confirmRemoveAvatar = false;
+          saveState();
+          renderProfileSection();
+        });
+
+        const undoBtn = document.createElement('button');
+        undoBtn.type = 'button';
+        undoBtn.className = 'btn-secondary';
+        undoBtn.textContent = t('undoBtn');
+        undoBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          confirmRemoveAvatar = false;
+          renderProfileSection();
+        });
+
+        actionPair.appendChild(confirmBtn);
+        actionPair.appendChild(undoBtn);
+        bar.appendChild(actionPair);
+        els.avatarConfirmSlot.appendChild(bar);
+      }
+
+      function renderProfileSection() {
+        const displayName = (state.profileName || '').trim() || t('defaultProfileName');
+        if (document.activeElement !== els.profileNameInput) {
+          els.profileNameInput.value = state.profileName || '';
+        }
+        els.profileNameInput.placeholder = t('profileNamePlaceholder');
+        els.pickAvatarBtn.textContent = t('pickAvatarBtn');
+        els.removeAvatarBtn.setAttribute('aria-label', t('removeAvatarAria'));
+
+        if (state.profileAvatar) {
+          els.avatarCircle.innerHTML = `<img src="${state.profileAvatar}" alt="">`;
+          els.removeAvatarBtn.style.display = 'inline-flex';
+        } else {
+          confirmRemoveAvatar = false;
+          const initialChar = Array.from(displayName)[0] || (state.lang === 'ar' ? 'ن' : 'F');
+          els.avatarCircle.textContent = initialChar.toUpperCase();
+          els.removeAvatarBtn.style.display = 'none';
+        }
+
+        renderAvatarConfirmBar();
+      }
+
+      /* =========================================
+         7. CROPPER.JS WHATSAPP CROPPER + OFFLINE FALLBACK
+         ========================================= */
+      function destroyCropperInstance() {
+        if (cropperInstance) {
+          try {
+            cropperInstance.destroy();
+          } catch (_) {}
+          cropperInstance = null;
+        }
+      }
+
+      function renderOfflineCenterCropPreview() {
+        if (!fallbackCropImage) return;
+        const canvas = els.cropFallbackCanvas;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const side = Math.min(fallbackCropImage.naturalWidth, fallbackCropImage.naturalHeight);
+        const sx = Math.floor((fallbackCropImage.naturalWidth - side) / 2);
+        const sy = Math.floor((fallbackCropImage.naturalHeight - side) / 2);
+
+        const previewSize = Math.min(320, Math.max(200, Math.floor(Math.min(window.innerWidth, window.innerHeight) * 0.68)));
+        canvas.width = previewSize;
+        canvas.height = previewSize;
+        ctx.clearRect(0, 0, previewSize, previewSize);
+        ctx.drawImage(fallbackCropImage, sx, sy, side, side, 0, 0, previewSize, previewSize);
+      }
+
+      function openCropModalWithFile(file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = String(reader.result);
+          destroyCropperInstance();
+          fallbackCropImage = null;
+
+          els.cropModalBackdrop.classList.add('open');
+
+          if (typeof window.Cropper === 'function') {
+            els.cropFallbackCanvas.style.display = 'none';
+            els.cropSourceImg.style.display = 'block';
+
+            els.cropSourceImg.onload = () => {
+              destroyCropperInstance();
+              cropperInstance = new window.Cropper(els.cropSourceImg, {
+                aspectRatio: 1,
+                viewMode: 1,
+                dragMode: 'move',
+                guides: true,
+                autoCropArea: 0.85,
+                background: false,
+                responsive: true,
+                restore: false,
+                movable: true,
+                rotatable: true,
+                scalable: false,
+                zoomable: true,
+                cropBoxMovable: true,
+                cropBoxResizable: true
+              });
+            };
+            els.cropSourceImg.src = dataUrl;
+          } else {
+            els.cropSourceImg.style.display = 'none';
+            els.cropFallbackCanvas.style.display = 'block';
+            const img = new Image();
+            img.onload = () => {
+              fallbackCropImage = img;
+              renderOfflineCenterCropPreview();
+            };
+            img.src = dataUrl;
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function closeCropModalOnly() {
+        destroyCropperInstance();
+        fallbackCropImage = null;
+        els.cropSourceImg.onload = null;
+        els.cropSourceImg.removeAttribute('src');
+        els.cropModalBackdrop.classList.remove('open');
+      }
+
+      function rotateCropper90() {
+        if (cropperInstance) {
+          cropperInstance.rotate(90);
+        } else if (fallbackCropImage) {
+          const off = document.createElement('canvas');
+          off.width = fallbackCropImage.naturalHeight;
+          off.height = fallbackCropImage.naturalWidth;
+          const octx = off.getContext('2d');
+          if (octx) {
+            octx.translate(off.width / 2, off.height / 2);
+            octx.rotate(Math.PI / 2);
+            octx.drawImage(fallbackCropImage, -fallbackCropImage.naturalWidth / 2, -fallbackCropImage.naturalHeight / 2);
+            const rotatedImg = new Image();
+            rotatedImg.onload = () => {
+              fallbackCropImage = rotatedImg;
+              renderOfflineCenterCropPreview();
+            };
+            rotatedImg.src = off.toDataURL('image/jpeg', 0.92);
+          }
+        }
+      }
+
+      function exportCroppedAvatar300() {
+        if (cropperInstance) {
+          const canvas = cropperInstance.getCroppedCanvas({
+            width: 300,
+            height: 300,
+            imageSmoothingQuality: 'high'
+          });
+          if (canvas) {
+            return canvas.toDataURL('image/jpeg', 0.85);
+          }
+        }
+
+        if (fallbackCropImage) {
+          const side = Math.min(fallbackCropImage.naturalWidth, fallbackCropImage.naturalHeight);
+          const sx = Math.floor((fallbackCropImage.naturalWidth - side) / 2);
+          const sy = Math.floor((fallbackCropImage.naturalHeight - side) / 2);
+          const out = document.createElement('canvas');
+          out.width = 300;
+          out.height = 300;
+          const ctx = out.getContext('2d');
+          if (ctx) {
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(fallbackCropImage, sx, sy, side, side, 0, 0, 300, 300);
+            return out.toDataURL('image/jpeg', 0.85);
+          }
+        }
+
+        return '';
+      }
+
+      /* Clean App Share (no user data) for Offline Mode */
+      function buildCleanAppHtml() {
+        const clone = document.documentElement.cloneNode(true);
+        clone.setAttribute('data-theme', 'navy');
+        clone.setAttribute('lang', 'ar');
+        clone.setAttribute('dir', 'rtl');
+
+        const slots = clone.querySelectorAll('.slot-pill-btn');
+        slots.forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.slots === '1');
+        });
+
+        const backdrop = clone.querySelector('#drawerBackdrop');
+        if (backdrop) backdrop.classList.remove('open');
+
+        const drawer = clone.querySelector('#drawerMenu');
+        if (drawer) drawer.classList.remove('open');
+
+        const vault = clone.querySelector('#vaultBackdrop');
+        if (vault) vault.classList.remove('open');
+
+        const crop = clone.querySelector('#cropModalBackdrop');
+        if (crop) crop.classList.remove('open');
+
+        const exp = clone.querySelector('#exportModalBackdrop');
+        if (exp) exp.classList.remove('open');
+
+        const avatarCircle = clone.querySelector('#avatarCircle');
+        if (avatarCircle) avatarCircle.textContent = 'ن';
+
+        const removeBtn = clone.querySelector('#removeAvatarBtn');
+        if (removeBtn) removeBtn.style.display = 'none';
+
+        const nameInput = clone.querySelector('#profileNameInput');
+        if (nameInput) nameInput.removeAttribute('value');
+
+        const statusMsg = clone.querySelector('#backupStatusMsg');
+        if (statusMsg) {
+          statusMsg.textContent = '';
+          statusMsg.classList.remove('visible', 'error');
+        }
+
+        return '<!DOCTYPE html>\n' + clone.outerHTML;
+      }
+
+      function downloadCleanHtmlFile() {
+        const htmlContent = buildCleanAppHtml();
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'nuqtat-tarkiz.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      async function copyUrlToClipboard(urlStr) {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          await navigator.clipboard.writeText(urlStr);
+          return true;
+        }
+        const helper = document.createElement('textarea');
+        helper.value = urlStr;
+        helper.style.position = 'fixed';
+        helper.style.opacity = '0';
+        document.body.appendChild(helper);
+        helper.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(helper);
+        return ok;
+      }
+
+      async function shareCurrentApp() {
+        const isHttpOrigin = typeof window.location.protocol === 'string' && window.location.protocol.startsWith('http');
+
+        if (isHttpOrigin) {
+          const shareUrl = window.location.href;
+          try {
+            if (typeof navigator.share === 'function') {
+              await navigator.share({
+                title: t('drawerBrandTitle'),
+                text: 'Nuqtat Tarkiz — Anti-Overwhelm Focus',
+                url: shareUrl
+              });
+              showCalmToast(t('shareLinkSuccessMsg'));
+              return;
+            }
+          } catch (err) {
+            if (err && err.name === 'AbortError') return;
+          }
+
+          try {
+            const copied = await copyUrlToClipboard(shareUrl);
+            if (copied) {
+              showCalmToast(t('shareLinkCopiedMsg'));
+              return;
+            }
+          } catch (_) {}
+
+          showBackupNotice(t('shareFailedMsg'), true);
+          return;
+        }
+
+        try {
+          const htmlContent = buildCleanAppHtml();
+          const file = new File([htmlContent], 'nuqtat-tarkiz.html', { type: 'text/html' });
+
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              title: t('drawerBrandTitle'),
+              text: 'Anti-Overwhelm Focus',
+              files: [file]
+            });
+            showBackupNotice(t('shareSuccessMsg'), false);
+            return;
+          }
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+
+        try {
+          downloadCleanHtmlFile();
+          showBackupNotice(t('shareFallbackDownloadedMsg'), false);
+        } catch (_) {
+          showBackupNotice(t('shareFailedMsg'), true);
+        }
+      }
+
+      /* Tasks-Only Backup via showSaveFilePicker + Import (.json & .txt) */
+      function sanitizeFilenameBase(rawName) {
+        const cleaned = String(rawName || '')
+          .replace(/\.(json|txt)$/i, '')
+          .replace(/[\\/:*?"<>|]+/g, '-')
+          .trim();
+        return cleaned || 'nuqtat-tarkiz-tasks';
+      }
+
+      function buildTasksBackupJson() {
+        const threeSlots = [
+          state.slots[0] || null,
+          state.slots[1] || null,
+          state.slots[2] || null
+        ];
+        const payload = {
+          version: '2.2.6',
+          scope: 'tasks-only',
+          exportedAt: new Date().toISOString(),
+          slotCount: state.slotCount,
+          slots: threeSlots.slice(),
+          activeAssignments: threeSlots.slice(),
+          restingSlots: state.restingSlots.slice(0, 3),
+          queue: structuredClone(state.queue),
+          completed: structuredClone(state.completed)
+        };
+        return JSON.stringify(payload, null, 2);
+      }
+
+      function openExportBackupModal() {
+        const defaultName = `nuqtat-tarkiz-tasks-${new Date().toISOString().slice(0, 10)}`;
+        els.exportFilenameInput.value = defaultName;
+        els.exportModalBackdrop.classList.add('open');
+        els.exportFilenameInput.focus();
+      }
+
+      function closeExportBackupModal() {
+        els.exportModalBackdrop.classList.remove('open');
+      }
+
+      function triggerDirectJsonDownload(fileBaseName, jsonStr) {
+        const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileBaseName}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showBackupNotice(t('exportSuccessMsg'), false);
+      }
+
+      async function saveBackupWithSystemPicker(fileBaseName) {
+        const jsonStr = buildTasksBackupJson();
+        const fileName = `${fileBaseName}.json`;
+
+        if (typeof window.showSaveFilePicker === 'function') {
+          try {
+            const handle = await window.showSaveFilePicker({
+              suggestedName: fileName,
+              types: [
+                {
+                  description: 'JSON Backup File',
+                  accept: { 'application/json': ['.json'] }
+                }
+              ]
+            });
+            const writable = await handle.createWritable();
+            await writable.write(jsonStr);
+            await writable.close();
+            showBackupNotice(t('exportSuccessMsg'), false);
+            return;
+          } catch (err) {
+            if (err && err.name === 'AbortError') {
+              return;
+            }
+          }
+        }
+
+        triggerDirectJsonDownload(fileBaseName, jsonStr);
+      }
+
+      function importBackupFromFile(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onerror = () => showBackupNotice(t('importInvalidMsg'), true);
+        reader.onload = () => {
+          try {
+            const parsed = JSON.parse(String(reader.result));
+            const rawData = parsed && typeof parsed === 'object' && parsed.data && typeof parsed.data === 'object'
+              ? parsed.data
+              : parsed;
+
+            if (!rawData || typeof rawData !== 'object' || (!Array.isArray(rawData.queue) && !Array.isArray(rawData.completed) && !Array.isArray(rawData.slots) && !Array.isArray(rawData.activeAssignments))) {
+              showBackupNotice(t('importInvalidMsg'), true);
+              return;
+            }
+
+            state.queue = normalizeQueueList(rawData.queue);
+            state.completed = normalizeCompletedList(rawData.completed);
+            if ([1, 2, 3].includes(Number(rawData.slotCount))) {
+              state.slotCount = Number(rawData.slotCount);
+            }
+            const importedSlots = extractThreeSlots(rawData);
+            state.slots = importedSlots.slice();
+            state.activeAssignments = importedSlots.slice();
+            const rawResting = Array.isArray(rawData.restingSlots) ? rawData.restingSlots : [false, false, false];
+            state.restingSlots = [Boolean(rawResting[0]), Boolean(rawResting[1]), Boolean(rawResting[2])];
+
+            pendingDeleteQueueId = null;
+            pendingDeleteCompletedId = null;
+            confirmClearHistory = false;
+            syncFocusSlots();
+            renderAll(false);
+            showBackupNotice(t('importSuccessMsg'), false);
+          } catch (_) {
+            showBackupNotice(t('importInvalidMsg'), true);
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      function openDrawerMenu() {
+        els.hamburgerBtn.classList.add('is-open');
+        els.hamburgerBtn.setAttribute('aria-expanded', 'true');
+        els.drawerBackdrop.classList.add('open');
+        els.drawerMenu.classList.add('open');
+        document.body.classList.add('menu-scroll-locked');
+      }
+
+      function closeDrawerMenu() {
+        confirmRemoveAvatar = false;
+        els.hamburgerBtn.classList.remove('is-open');
+        els.hamburgerBtn.setAttribute('aria-expanded', 'false');
+        els.drawerBackdrop.classList.remove('open');
+        els.drawerMenu.classList.remove('open');
+        document.body.classList.remove('menu-scroll-locked');
+      }
+
+      document.addEventListener('touchmove', (e) => {
+        if (!els.drawerMenu.classList.contains('open')) return;
+        if (hasAnySubModalOpen()) return;
+        const insideDrawer = e.target.closest('#drawerMenu');
+        if (!insideDrawer) {
+          e.preventDefault();
+          return;
+        }
+        if (els.drawerMenu.scrollHeight <= els.drawerMenu.clientHeight) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      function renderDrawerMenu() {
+        const isGlitchActive = state.glitchMode !== 'off' && state.glitchSeconds > 0;
+        els.hamburgerBtn.classList.toggle('has-alert', isGlitchActive);
+        els.hamburgerBtn.setAttribute('aria-label', t('menuAria'));
+
+        els.drawerBrandTitle.textContent = t('drawerBrandTitle');
+        renderProfileSection();
+
+        els.menuThemesTitle.textContent = t('menuThemesTitle');
+        els.menuGlitchTitle.textContent = t('menuGlitchTitle');
+        els.menuLangTitle.textContent = t('menuLangTitle');
+
+        els.langArBtn.classList.toggle('active', state.lang === 'ar');
+        els.langEnBtn.classList.toggle('active', state.lang === 'en');
+
+        /* Horizontal Theme Pills */
+        els.themeOptionsRow.innerHTML = '';
+        THEME_OPTIONS.forEach(opt => {
+          const isSelected = opt.id === state.theme;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'pill-choice-btn' + (isSelected ? ' active' : '');
+          btn.textContent = t(opt.labelKey);
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            state.theme = opt.id;
+            saveState();
+            applyThemeAndLang();
+          });
+          els.themeOptionsRow.appendChild(btn);
+        });
+
+        /* Horizontal Glitch Pills (Off | 1m | 2m | 5m | Custom) */
+        els.glitchPresetsRow.innerHTML = '';
+        GLITCH_PRESETS.forEach(preset => {
+          const isSelected = state.glitchMode === preset.id;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'pill-choice-btn' + (isSelected ? ' active' : '');
+          btn.textContent = t(preset.labelKey);
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            state.glitchMode = preset.id;
+            state.glitchSeconds = preset.seconds;
+            customBoxOpen = false;
+            saveState();
+            renderDrawerMenu();
+            restartGlitchTimer();
+          });
+          els.glitchPresetsRow.appendChild(btn);
+        });
+
+        const isCustomSelected = state.glitchMode === 'custom';
+        const customPill = document.createElement('button');
+        customPill.type = 'button';
+        customPill.className = 'pill-choice-btn' + (isCustomSelected ? ' active' : '');
+        customPill.textContent = t('glitchCustom');
+        customPill.addEventListener('click', (e) => {
+          e.stopPropagation();
+          customBoxOpen = !customBoxOpen;
+          if (customBoxOpen && state.glitchMode !== 'custom') {
+            state.glitchMode = 'custom';
+            const val = Math.max(1, Number(els.customGlitchValue.value) || state.customGlitchValue || 30);
+            const unit = els.customGlitchUnit.value === 'minutes' ? 'minutes' : 'seconds';
+            state.customGlitchValue = val;
+            state.customGlitchUnit = unit;
+            state.glitchSeconds = unit === 'minutes' ? val * 60 : val;
+            saveState();
+            restartGlitchTimer();
+          }
+          renderDrawerMenu();
+        });
+        els.glitchPresetsRow.appendChild(customPill);
+
+        els.customGlitchBox.classList.toggle('open', customBoxOpen || isCustomSelected);
+
+        els.customGlitchValue.value = String(state.customGlitchValue);
+        els.customGlitchUnit.value = state.customGlitchUnit;
+        els.unitSecondsOpt.textContent = t('unitSeconds');
+        els.unitMinutesOpt.textContent = t('unitMinutes');
+        els.applyCustomGlitchBtn.textContent = t('applyBtn');
+
+        els.shareAppBtnText.textContent = t('shareAppBtn');
+        els.exportBackupText.textContent = t('exportBackupText');
+        els.importBackupText.textContent = t('importBackupText');
+
+        els.cancelCropBtn.textContent = t('cancelEditBtn');
+        els.rotateCropBtn.setAttribute('aria-label', t('rotateCropAria'));
+        els.saveCropBtn.textContent = t('saveCropBtn');
+
+        els.exportModalTitle.textContent = t('exportModalTitle');
+        els.exportFilenameLabel.textContent = t('exportFilenameLabel');
+        els.saveBackupFileText.textContent = t('saveBackupFileText');
+      }
+
+      function applyThemeAndLang() {
+        document.documentElement.setAttribute('data-theme', state.theme);
+        document.documentElement.lang = state.lang;
+        document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+        document.title = t('appTitle');
+
+        els.slotSelector.setAttribute('aria-label', t('slotsAria'));
+        els.slotSelector.querySelectorAll('.slot-pill-btn').forEach(btn => {
+          btn.classList.toggle('active', Number(btn.dataset.slots) === state.slotCount);
+        });
+
+        els.vaultBtnText.textContent = t('vaultBtn');
+        els.vaultHeaderTitle.textContent = t('vaultBtn');
+        els.closeVaultBtn.setAttribute('aria-label', t('closeAria'));
+
+        els.tabQueueText.textContent = t('tabQueue');
+        els.tabCompletedText.textContent = t('tabCompleted');
+
+        els.labelTaskTitle.textContent = t('labelTaskTitle');
+        els.taskTitleInput.placeholder = t('placeholderTaskTitle');
+        els.labelTaskNote.textContent = t('labelTaskNote');
+        els.taskNoteInput.placeholder = t('placeholderTaskNote');
+        els.labelTaskDeadline.textContent = t('labelTaskDeadline');
+        els.labelMandatoryHeader.textContent = t('labelPriority');
+        els.labelTaskMandatory.textContent = t('labelTaskMandatory');
+        els.cancelEditBtn.textContent = t('cancelEditBtn');
+        els.submitTaskBtn.textContent = els.editTaskId.value ? t('saveTaskBtn') : t('addTaskBtn');
+
+        renderDrawerMenu();
+      }
+
+      /* =========================================
+         8. RENDER MAIN FOCUS STAGE & LONG-PRESS
+         ========================================= */
+      function attachLongPressReorder(cardEl, slotIndex) {
+        if (state.slotCount <= 1) return;
+
+        let pressTimer = null;
+        let startX = 0;
+        let startY = 0;
+
+        const clearTimer = () => {
+          if (pressTimer) {
+            clearTimeout(pressTimer);
+            pressTimer = null;
+          }
+        };
+
+        cardEl.addEventListener('pointerdown', (e) => {
+          if (e.target.closest('button') || e.target.closest('.card-reorder-popover')) return;
+          if (e.button !== undefined && e.button !== 0) return;
+
+          startX = e.clientX;
+          startY = e.clientY;
+          clearTimer();
+
+          pressTimer = setTimeout(() => {
+            openReorderSlot = slotIndex;
+            renderFocusStage(false);
+          }, 500);
+        });
+
+        cardEl.addEventListener('pointermove', (e) => {
+          if (!pressTimer) return;
+          if (Math.abs(e.clientX - startX) > 12 || Math.abs(e.clientY - startY) > 12) {
+            clearTimer();
+          }
+        });
+
+        cardEl.addEventListener('pointerup', clearTimer);
+        cardEl.addEventListener('pointercancel', clearTimer);
+        cardEl.addEventListener('contextmenu', (e) => {
+          if (state.slotCount > 1 && !e.target.closest('button')) {
+            e.preventDefault();
+          }
+        });
+      }
+
+      // Render-only slicing of state.slots [0, 1, 2] to state.slotCount
+      function renderFocusStage(animateEntrance = false) {
+        els.focusStage.innerHTML = '';
+        const queueMap = new Map(state.queue.map(item => [item.id, item]));
+        const allAssignedIds = new Set(state.slots.filter(Boolean));
+        const unpulledTasksExist = state.queue.some(task => !allAssignedIds.has(task.id));
+
+        for (let i = 0; i < state.slotCount; i++) {
+          const taskId = state.slots[i];
+          const task = taskId ? queueMap.get(taskId) : null;
+
+          if (task) {
+            const status = getTaskStatus(task);
+            const card = document.createElement('article');
+            card.className = 'focus-card' + (animateEntrance ? ' animate-enter' : '');
+            if (status.isOverdue) card.classList.add('is-overdue');
+            else if (status.isMandatory) card.classList.add('is-mandatory');
+
+            if (state.slotCount > 1 && openReorderSlot === i) {
+              const popover = document.createElement('div');
+              popover.className = 'card-reorder-popover';
+
+              const lbl = document.createElement('span');
+              lbl.className = 'popover-label';
+              lbl.textContent = t('moveToLabel');
+              popover.appendChild(lbl);
+
+              for (let pos = 0; pos < state.slotCount; pos++) {
+                const posBtn = document.createElement('button');
+                posBtn.type = 'button';
+                posBtn.className = 'pos-choice-btn' + (pos === i ? ' current-pos' : '');
+                posBtn.textContent = String(pos + 1);
+                posBtn.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  swapFocusSlotPositions(i, pos);
+                });
+                popover.appendChild(posBtn);
+              }
+              card.appendChild(popover);
+            }
+
+            const hasBadges = status.isMandatory || Boolean(task.deadline);
+            if (hasBadges) {
+              const badgesRow = document.createElement('div');
+              badgesRow.className = 'card-badges';
+
+              if (status.isMandatory) {
+                const mBadge = document.createElement('span');
+                mBadge.className = 'badge badge-mandatory';
+                mBadge.textContent = status.isTimedMandatory
+                  ? t('mandatoryTimedBadge')
+                  : t('mandatoryManualBadge');
+                badgesRow.appendChild(mBadge);
+              }
+
+              if (task.deadline) {
+                const dBadge = document.createElement('span');
+                dBadge.className = 'badge badge-deadline';
+                if (status.isOverdue) {
+                  dBadge.classList.add('overdue');
+                  dBadge.textContent = `${t('deadlinePassedBadge')} ${formatDateTime(task.deadline)}`;
+                } else {
+                  if (status.isUrgent) dBadge.classList.add('urgent');
+                  dBadge.textContent = `${t('deadlineDueBadge')} ${formatDateTime(task.deadline)}`;
+                }
+                badgesRow.appendChild(dBadge);
+              }
+
+              card.appendChild(badgesRow);
+            }
+
+            const titleEl = document.createElement('h1');
+            titleEl.className = 'task-title';
+            titleEl.setAttribute('dir', 'auto');
+            titleEl.textContent = task.title;
+            card.appendChild(titleEl);
+
+            if (task.note && task.note.trim()) {
+              const noteEl = document.createElement('p');
+              noteEl.className = 'task-note';
+              noteEl.setAttribute('dir', 'auto');
+              noteEl.textContent = task.note;
+              card.appendChild(noteEl);
+            }
+
+            const actionsRow = document.createElement('div');
+            actionsRow.className = 'card-actions';
+
+            const doneBtn = document.createElement('button');
+            doneBtn.type = 'button';
+            doneBtn.className = 'btn-done';
+            doneBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>${t('doneBtn')}</span>`;
+            doneBtn.addEventListener('click', () => completeSlotTask(i));
+            actionsRow.appendChild(doneBtn);
+
+            if (!status.isMandatory) {
+              const deferBtn = document.createElement('button');
+              deferBtn.type = 'button';
+              deferBtn.className = 'btn-defer';
+              deferBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg><span>${t('deferBtn')}</span>`;
+              deferBtn.addEventListener('click', () => deferSlotTask(i));
+              actionsRow.appendChild(deferBtn);
+            }
+
+            card.appendChild(actionsRow);
+            attachLongPressReorder(card, i);
+            els.focusStage.appendChild(card);
+
+          } else if (unpulledTasksExist) {
+            const restCard = document.createElement('div');
+            restCard.className = 'rest-card' + (animateEntrance ? ' animate-enter' : '');
+
+            const headingText = state.restingSlots[i] ? t('completedMsg') : t('emptyVaultTitle');
+            const subText = t('completedSubWithQueue');
+            restCard.innerHTML = `
+              <div class="rest-icon">
+                <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+              <p class="rest-message">${headingText}</p>
+              <p class="rest-sub">${subText}</p>
+            `;
+
+            const pullBtn = document.createElement('button');
+            pullBtn.type = 'button';
+            pullBtn.className = 'btn-pull';
+            pullBtn.textContent = t('pullNextBtn');
+            pullBtn.addEventListener('click', () => pullNextForSlot(i));
+            restCard.appendChild(pullBtn);
+
+            els.focusStage.appendChild(restCard);
+          } else if (state.restingSlots[i] && allAssignedIds.size === 0) {
+            const restCard = document.createElement('div');
+            restCard.className = 'rest-card' + (animateEntrance ? ' animate-enter' : '');
+
+            restCard.innerHTML = `
+              <div class="rest-icon">
+                <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+              <p class="rest-message">${t('completedMsg')}</p>
+              <p class="rest-sub">${t('completedSubEmpty')}</p>
+            `;
+
+            els.focusStage.appendChild(restCard);
+          } else {
+            const emptyCard = document.createElement('div');
+            emptyCard.className = 'rest-card' + (animateEntrance ? ' animate-enter' : '');
+
+            emptyCard.innerHTML = `
+              <div class="rest-icon empty-vault-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8m-4-4h8"/></svg>
+              </div>
+              <p class="rest-message">${t('emptyVaultTitle')}</p>
+              <p class="rest-sub">${t('emptyVaultSub')}</p>
+            `;
+
+            if (i === 0) {
+              const openBtn = document.createElement('button');
+              openBtn.type = 'button';
+              openBtn.className = 'btn-pull';
+              openBtn.textContent = t('openVaultAction');
+              openBtn.addEventListener('click', openVaultModal);
+              emptyCard.appendChild(openBtn);
+            }
+
+            els.focusStage.appendChild(emptyCard);
+          }
+        }
+      }
+
+      /* =========================================
+         9. RENDER VAULT QUEUE & COMPLETED LISTS
+         ========================================= */
+      function destroyQueueSortable() {
+        if (queueSortableInstance) {
+          try {
+            queueSortableInstance.destroy();
+          } catch (_) {}
+          queueSortableInstance = null;
+        }
+      }
+
+      function initQueueSortable() {
+        destroyQueueSortable();
+        if (typeof window.Sortable === 'undefined') return;
+        if (state.queue.length < 2) return;
+
+        queueSortableInstance = window.Sortable.create(els.queueList, {
+          handle: '.drag-handle',
+          animation: 150,
+          ghostClass: 'sortable-ghost-calm',
+          chosenClass: 'sortable-chosen-calm',
+          scroll: els.vaultBody,
+          scrollSensitivity: 60,
+          scrollSpeed: 10,
+          forceFallback: false,
+          onEnd: (evt) => {
+            const oldIdx = evt.oldIndex;
+            const newIdx = evt.newIndex;
+            if (
+              typeof oldIdx !== 'number' ||
+              typeof newIdx !== 'number' ||
+              oldIdx === newIdx ||
+              oldIdx < 0 ||
+              newIdx < 0 ||
+              oldIdx >= state.queue.length ||
+              newIdx >= state.queue.length
+            ) {
+              renderVaultLists();
+              return;
+            }
+
+            const [movedTask] = state.queue.splice(oldIdx, 1);
+            state.queue.splice(newIdx, 0, movedTask);
+            syncFocusSlotsToQueueOrder();
+            renderFocusStage(false);
+            renderVaultLists();
+          }
+        });
+      }
+
+      function renderVaultLists() {
+        els.queueCount.textContent = state.queue.length;
+        els.completedCount.textContent = state.completed.length;
+
+        destroyQueueSortable();
+        els.queueList.innerHTML = '';
+
+        if (state.queue.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'empty-list-msg';
+          empty.textContent = t('queueEmptyMsg');
+          els.queueList.appendChild(empty);
+        } else {
+          // Track all 3 assigned slots so hidden tasks in slots 2/3 stay marked as in-focus
+          const assignedSlotIds = new Set(state.slots.filter(Boolean));
+
+          state.queue.forEach((task, index) => {
+            const status = getTaskStatus(task);
+            const isInFocus = assignedSlotIds.has(task.id);
+
+            const item = document.createElement('div');
+            item.className = 'list-item' + (isInFocus ? ' is-active-slot' : '');
+            item.style.flexDirection = 'column';
+            item.style.alignItems = 'stretch';
+            item.dataset.index = index;
+            item.dataset.id = task.id;
+
+            const topRow = document.createElement('div');
+            topRow.style.display = 'flex';
+            topRow.style.alignItems = 'center';
+            topRow.style.gap = '0.55rem';
+            topRow.style.flexWrap = 'wrap';
+
+            const dragHandle = document.createElement('div');
+            dragHandle.className = 'drag-handle';
+            dragHandle.setAttribute('aria-label', t('dragAria'));
+            dragHandle.textContent = '≡';
+            topRow.appendChild(dragHandle);
+
+            const content = document.createElement('div');
+            content.className = 'item-content';
+
+            const title = document.createElement('div');
+            title.className = 'item-title';
+            title.setAttribute('dir', 'auto');
+            title.textContent = task.title;
+            content.appendChild(title);
+
+            if (task.note && task.note.trim()) {
+              const note = document.createElement('div');
+              note.className = 'item-note';
+              note.setAttribute('dir', 'auto');
+              note.textContent = task.note;
+              content.appendChild(note);
+            }
+
+            const meta = document.createElement('div');
+            meta.className = 'item-meta';
+
+            if (isInFocus) {
+              const focusTag = document.createElement('span');
+              focusTag.className = 'mini-tag active-tag';
+              focusTag.textContent = t('inFocusTag');
+              meta.appendChild(focusTag);
+            }
+
+            if (status.isMandatory) {
+              const mTag = document.createElement('span');
+              mTag.className = 'mini-tag mandatory-tag';
+              mTag.textContent = status.isTimedMandatory
+                ? t('mandatoryTimedBadge')
+                : t('mandatoryManualBadge');
+              meta.appendChild(mTag);
+            }
+
+            if (task.deadline) {
+              const dTag = document.createElement('span');
+              dTag.className = 'mini-tag' + (status.isOverdue ? ' overdue-tag' : '');
+              dTag.textContent = formatDateTime(task.deadline);
+              meta.appendChild(dTag);
+            }
+
+            if (meta.children.length > 0) {
+              content.appendChild(meta);
+            }
+
+            topRow.appendChild(content);
+
+            const controls = document.createElement('div');
+            controls.className = 'item-controls';
+
+            const upBtn = document.createElement('button');
+            upBtn.type = 'button';
+            upBtn.className = 'ctrl-btn';
+            upBtn.disabled = index === 0;
+            upBtn.setAttribute('aria-label', t('moveUpAria'));
+            upBtn.textContent = '↑';
+            upBtn.addEventListener('click', () => moveQueueItem(index, index - 1));
+            controls.appendChild(upBtn);
+
+            const downBtn = document.createElement('button');
+            downBtn.type = 'button';
+            downBtn.className = 'ctrl-btn';
+            downBtn.disabled = index === state.queue.length - 1;
+            downBtn.setAttribute('aria-label', t('moveDownAria'));
+            downBtn.textContent = '↓';
+            downBtn.addEventListener('click', () => moveQueueItem(index, index + 1));
+            controls.appendChild(downBtn);
+
+            const editBtn = document.createElement('button');
+            editBtn.type = 'button';
+            editBtn.className = 'ctrl-btn';
+            editBtn.setAttribute('aria-label', t('editAria'));
+            editBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+            editBtn.addEventListener('click', () => startEditTask(task));
+            controls.appendChild(editBtn);
+
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'ctrl-btn danger';
+            delBtn.setAttribute('aria-label', t('deleteAria'));
+            delBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+            delBtn.addEventListener('click', () => {
+              pendingDeleteCompletedId = null;
+              confirmClearHistory = false;
+              pendingDeleteQueueId = pendingDeleteQueueId === task.id ? null : task.id;
+              renderVaultLists();
+            });
+            controls.appendChild(delBtn);
+
+            topRow.appendChild(controls);
+            item.appendChild(topRow);
+
+            if (pendingDeleteQueueId === task.id) {
+              const confirmStrip = document.createElement('div');
+              confirmStrip.className = 'confirm-bar';
+              confirmStrip.style.marginTop = '0.55rem';
+              confirmStrip.innerHTML = `<span>${t('confirmDeleteQueueText')}</span>`;
+
+              const actionPair = document.createElement('div');
+              actionPair.style.display = 'flex';
+              actionPair.style.gap = '0.45rem';
+
+              const confirmDelBtn = document.createElement('button');
+              confirmDelBtn.type = 'button';
+              confirmDelBtn.className = 'btn-clear-history';
+              confirmDelBtn.textContent = t('confirmYes');
+              confirmDelBtn.addEventListener('click', () => {
+                pendingDeleteQueueId = null;
+                deleteQueueTask(task.id);
+              });
+
+              const undoBtn = document.createElement('button');
+              undoBtn.type = 'button';
+              undoBtn.className = 'btn-secondary';
+              undoBtn.textContent = t('undoBtn');
+              undoBtn.addEventListener('click', () => {
+                pendingDeleteQueueId = null;
+                renderVaultLists();
+              });
+
+              actionPair.appendChild(confirmDelBtn);
+              actionPair.appendChild(undoBtn);
+              confirmStrip.appendChild(actionPair);
+              item.appendChild(confirmStrip);
+            }
+
+            els.queueList.appendChild(item);
+          });
+
+          if (pendingDeleteQueueId === null) {
+            initQueueSortable();
+          }
+        }
+
+        els.completedToolbar.innerHTML = '';
+        els.completedList.innerHTML = '';
+
+        if (state.completed.length > 0) {
+          if (confirmClearHistory) {
+            const bar = document.createElement('div');
+            bar.className = 'confirm-bar';
+            bar.innerHTML = `<span>${t('confirmClearText')}</span>`;
+
+            const btns = document.createElement('div');
+            btns.style.display = 'flex';
+            btns.style.gap = '0.5rem';
+
+            const yesBtn = document.createElement('button');
+            yesBtn.type = 'button';
+            yesBtn.className = 'btn-clear-history';
+            yesBtn.textContent = t('confirmYes');
+            yesBtn.addEventListener('click', () => {
+              state.completed = [];
+              expandedHistoryIds.clear();
+              pendingDeleteCompletedId = null;
+              confirmClearHistory = false;
+              saveState();
+              renderVaultLists();
+            });
+
+            const undoBtn = document.createElement('button');
+            undoBtn.type = 'button';
+            undoBtn.className = 'btn-secondary';
+            undoBtn.textContent = t('undoBtn');
+            undoBtn.addEventListener('click', () => {
+              confirmClearHistory = false;
+              renderVaultLists();
+            });
+
+            btns.appendChild(yesBtn);
+            btns.appendChild(undoBtn);
+            bar.appendChild(btns);
+            els.completedToolbar.appendChild(bar);
+          } else {
+            const clearBtn = document.createElement('button');
+            clearBtn.type = 'button';
+            clearBtn.className = 'btn-clear-history';
+            clearBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg><span>${t('clearHistoryBtn')}</span>`;
+            clearBtn.addEventListener('click', () => {
+              pendingDeleteQueueId = null;
+              pendingDeleteCompletedId = null;
+              confirmClearHistory = true;
+              renderVaultLists();
+            });
+            els.completedToolbar.appendChild(clearBtn);
+          }
+        }
+
+        if (state.completed.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'empty-list-msg';
+          empty.textContent = t('completedEmptyMsg');
+          els.completedList.appendChild(empty);
+        } else {
+          state.completed.forEach(task => {
+            const rawLog = Array.isArray(task.completionLog) && task.completionLog.length > 0
+              ? task.completionLog.slice()
+              : [task.completedAt];
+            const orderedLog = rawLog.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+            const latestStamp = orderedLog[orderedLog.length - 1];
+
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            item.style.flexDirection = 'column';
+            item.style.alignItems = 'stretch';
+
+            const topRow = document.createElement('div');
+            topRow.style.display = 'flex';
+            topRow.style.alignItems = 'center';
+            topRow.style.gap = '0.55rem';
+            topRow.style.flexWrap = 'wrap';
+
+            const content = document.createElement('div');
+            content.className = 'item-content';
+
+            const title = document.createElement('div');
+            title.className = 'item-title';
+            title.setAttribute('dir', 'auto');
+            title.textContent = task.title;
+            content.appendChild(title);
+
+            const meta = document.createElement('div');
+            meta.className = 'item-meta';
+
+            const timeTag = document.createElement('span');
+            timeTag.className = 'mini-tag';
+            timeTag.textContent = `${t('completedAtPrefix')} ${formatDateTime(latestStamp)}`;
+            meta.appendChild(timeTag);
+
+            if (orderedLog.length > 1) {
+              const repeatBtn = document.createElement('button');
+              repeatBtn.type = 'button';
+              repeatBtn.className = 'repeat-badge-btn';
+              repeatBtn.textContent = t('completedTimes')(orderedLog.length);
+              repeatBtn.addEventListener('click', () => {
+                if (expandedHistoryIds.has(task.id)) {
+                  expandedHistoryIds.delete(task.id);
+                } else {
+                  expandedHistoryIds.add(task.id);
+                }
+                renderVaultLists();
+              });
+              meta.appendChild(repeatBtn);
+            }
+
+            content.appendChild(meta);
+
+            if (orderedLog.length > 1 && expandedHistoryIds.has(task.id)) {
+              const drawer = document.createElement('div');
+              drawer.className = 'history-drawer';
+
+              const drawerHeader = document.createElement('div');
+              drawerHeader.className = 'history-drawer-title';
+              drawerHeader.textContent = t('historyLogHeader');
+              drawer.appendChild(drawerHeader);
+
+              orderedLog.forEach((stamp, idx) => {
+                const entry = document.createElement('div');
+                entry.className = 'history-entry';
+                entry.textContent = `${idx + 1}. ${formatDateTime(stamp)}`;
+                drawer.appendChild(entry);
+              });
+
+              content.appendChild(drawer);
+            }
+
+            topRow.appendChild(content);
+
+            const controls = document.createElement('div');
+            controls.className = 'item-controls';
+
+            const restoreBtn = document.createElement('button');
+            restoreBtn.type = 'button';
+            restoreBtn.className = 'btn-secondary';
+            restoreBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg><span>${t('restoreBtn')}</span>`;
+            restoreBtn.addEventListener('click', () => restoreCompletedTask(task.id));
+            controls.appendChild(restoreBtn);
+
+            const delSingleBtn = document.createElement('button');
+            delSingleBtn.type = 'button';
+            delSingleBtn.className = 'ctrl-btn danger';
+            delSingleBtn.setAttribute('aria-label', t('deleteAria'));
+            delSingleBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+            delSingleBtn.addEventListener('click', () => {
+              pendingDeleteQueueId = null;
+              confirmClearHistory = false;
+              pendingDeleteCompletedId = pendingDeleteCompletedId === task.id ? null : task.id;
+              renderVaultLists();
+            });
+            controls.appendChild(delSingleBtn);
+
+            topRow.appendChild(controls);
+            item.appendChild(topRow);
+
+            if (pendingDeleteCompletedId === task.id) {
+              const confirmStrip = document.createElement('div');
+              confirmStrip.className = 'confirm-bar';
+              confirmStrip.style.marginTop = '0.55rem';
+              confirmStrip.innerHTML = `<span>${t('confirmDeleteSingleText')}</span>`;
+
+              const actionPair = document.createElement('div');
+              actionPair.style.display = 'flex';
+              actionPair.style.gap = '0.45rem';
+
+              const confirmDelBtn = document.createElement('button');
+              confirmDelBtn.type = 'button';
+              confirmDelBtn.className = 'btn-clear-history';
+              confirmDelBtn.textContent = t('confirmYes');
+              confirmDelBtn.addEventListener('click', () => {
+                pendingDeleteCompletedId = null;
+                deleteCompletedTask(task.id);
+              });
+
+              const undoSingleBtn = document.createElement('button');
+              undoSingleBtn.type = 'button';
+              undoSingleBtn.className = 'btn-secondary';
+              undoSingleBtn.textContent = t('undoBtn');
+              undoSingleBtn.addEventListener('click', () => {
+                pendingDeleteCompletedId = null;
+                renderVaultLists();
+              });
+
+              actionPair.appendChild(confirmDelBtn);
+              actionPair.appendChild(undoSingleBtn);
+              confirmStrip.appendChild(actionPair);
+              item.appendChild(confirmStrip);
+            }
+
+            els.completedList.appendChild(item);
+          });
+        }
+      }
+
+      /* =========================================
+         10. STEPWISE ARROW REORDERING & VAULT CRUD
+         ========================================= */
+      function moveQueueItem(fromIdx, toIdx) {
+        if (fromIdx === toIdx || toIdx < 0 || toIdx >= state.queue.length) return;
+        const [moved] = state.queue.splice(fromIdx, 1);
+        state.queue.splice(toIdx, 0, moved);
+        saveState();
+        renderAll(false);
+      }
+
+      function resetTaskForm() {
+        els.editTaskId.value = '';
+        els.taskTitleInput.value = '';
+        els.taskNoteInput.value = '';
+        els.taskDeadlineInput.value = '';
+        els.taskMandatoryInput.checked = false;
+        els.cancelEditBtn.style.display = 'none';
+        els.submitTaskBtn.textContent = t('addTaskBtn');
+      }
+
+      function startEditTask(task) {
+        els.editTaskId.value = task.id;
+        els.taskTitleInput.value = task.title;
+        els.taskNoteInput.value = task.note || '';
+        els.taskDeadlineInput.value = task.deadline || '';
+        els.taskMandatoryInput.checked = Boolean(task.manualMandatory);
+        els.cancelEditBtn.style.display = 'inline-flex';
+        els.submitTaskBtn.textContent = t('saveTaskBtn');
+        els.taskTitleInput.focus();
+      }
+
+      function deleteQueueTask(taskId) {
+        state.queue = state.queue.filter(item => item.id !== taskId);
+        if (els.editTaskId.value === taskId) {
+          resetTaskForm();
+        }
+        syncFocusSlots();
+        renderAll(false);
+      }
+
+      /* Restore completed task to top of Queued list in Vault (not directly to focus screen) */
+      function restoreCompletedTask(taskId) {
+        const idx = state.completed.findIndex(item => item.id === taskId);
+        if (idx === -1) return;
+
+        const [restored] = state.completed.splice(idx, 1);
+        const preservedLog = Array.isArray(restored.completionLog) ? restored.completionLog.slice() : [];
+        delete restored.completedAt;
+        restored.completionLog = preservedLog;
+
+        state.queue.unshift(restored);
+        pendingDeleteCompletedId = null;
+        syncFocusSlots();
+        saveState();
+        renderFocusStage(false);
+        renderVaultLists();
+        showCalmToast(t('restoredToQueueToast'));
+      }
+
+      function deleteCompletedTask(taskId) {
+        state.completed = state.completed.filter(item => item.id !== taskId);
+        expandedHistoryIds.delete(taskId);
+        saveState();
+        renderVaultLists();
+      }
+
+      /* =========================================
+         11. EVENT LISTENERS & LAYER ISOLATION
+         ========================================= */
+      els.hamburgerBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (hasAnySubModalOpen()) return;
+        const isOpen = els.drawerMenu.classList.contains('open');
+        if (isOpen) {
+          closeDrawerMenu();
+        } else {
+          openDrawerMenu();
+        }
+      });
+
+      els.drawerBackdrop.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (hasAnySubModalOpen()) return;
+        if (e.target === els.drawerBackdrop) {
+          closeDrawerMenu();
+        }
+      });
+
+      els.drawerMenu.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
+      els.profileNameInput.addEventListener('input', () => {
+        state.profileName = els.profileNameInput.value.slice(0, 32);
+        saveState();
+        if (!state.profileAvatar) {
+          renderProfileSection();
+        }
+      });
+
+      els.pickAvatarBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        confirmRemoveAvatar = false;
+        renderAvatarConfirmBar();
+        els.avatarFileInput.click();
+      });
+
+      els.avatarFileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        e.target.value = '';
+        if (file) {
+          openCropModalWithFile(file);
+        }
+      });
+
+      els.removeAvatarBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!state.profileAvatar) return;
+        confirmRemoveAvatar = !confirmRemoveAvatar;
+        renderAvatarConfirmBar();
+      });
+
+      /* Keep drawer menu open when closing crop modal & stop propagation inside crop modal */
+      els.cropShell.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
+      els.cropModalBackdrop.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (e.target === els.cropModalBackdrop) {
+          closeCropModalOnly();
+        }
+      });
+
+      els.rotateCropBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        rotateCropper90();
+      });
+
+      els.saveCropBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const cropped = exportCroppedAvatar300();
+        if (cropped) {
+          state.profileAvatar = cropped;
+          confirmRemoveAvatar = false;
+          saveState();
+          renderProfileSection();
+        }
+        closeCropModalOnly();
+      });
+
+      els.cancelCropBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeCropModalOnly();
+      });
+
+      window.addEventListener('resize', () => {
+        if (els.cropModalBackdrop.classList.contains('open') && fallbackCropImage && !cropperInstance) {
+          renderOfflineCenterCropPreview();
+        }
+      });
+
+      /* Export Backup Modal Events (Keep Drawer Open) */
+      els.exportBackupBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openExportBackupModal();
+      });
+
+      els.exportModalCard.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
+      els.saveBackupFileBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const baseName = sanitizeFilenameBase(els.exportFilenameInput.value);
+        closeExportBackupModal();
+        await saveBackupWithSystemPicker(baseName);
+      });
+
+      els.closeExportModalBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeExportBackupModal();
+      });
+
+      els.exportModalBackdrop.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (e.target === els.exportModalBackdrop) {
+          closeExportBackupModal();
+        }
+      });
+
+      /* Import Backup Events (Keep Drawer Open) */
+      els.importBackupBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        els.importBackupFileInput.click();
+      });
+
+      els.importBackupFileInput.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
+      els.importBackupFileInput.addEventListener('change', (e) => {
+        e.stopPropagation();
+        const file = e.target.files && e.target.files[0];
+        e.target.value = '';
+        if (file) {
+          importBackupFromFile(file);
+        }
+      });
+
+      els.langArBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (state.lang !== 'ar') {
+          state.lang = 'ar';
+          saveState();
+          renderAll(false);
+        }
+      });
+
+      els.langEnBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (state.lang !== 'en') {
+          state.lang = 'en';
+          saveState();
+          renderAll(false);
+        }
+      });
+
+      els.applyCustomGlitchBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const val = Math.max(1, parseInt(els.customGlitchValue.value, 10) || 1);
+        const unit = els.customGlitchUnit.value === 'minutes' ? 'minutes' : 'seconds';
+        state.glitchMode = 'custom';
+        state.customGlitchValue = val;
+        state.customGlitchUnit = unit;
+        state.glitchSeconds = unit === 'minutes' ? val * 60 : val;
+        customBoxOpen = true;
+        saveState();
+        renderDrawerMenu();
+        restartGlitchTimer();
+      });
+
+      els.shareAppBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        shareCurrentApp();
+      });
+
+      /* Slot buttons [1 | 2 | 3] control visual rendering count only without mutating state.slots */
+      els.slotSelector.addEventListener('click', (e) => {
+        const btn = e.target.closest('.slot-pill-btn');
+        if (!btn) return;
+        const count = Number(btn.dataset.slots);
+        if ([1, 2, 3].includes(count) && count !== state.slotCount) {
+          closeDrawerMenu();
+          openReorderSlot = null;
+          state.slotCount = count;
+          saveState();
+          renderAll(true);
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (hasAnySubModalOpen()) return;
+        if (openReorderSlot !== null && !e.target.closest('.card-reorder-popover')) {
+          openReorderSlot = null;
+          renderFocusStage(false);
+        }
+      });
+
+      function openVaultModal() {
+        closeDrawerMenu();
+        openReorderSlot = null;
+        confirmClearHistory = false;
+        pendingDeleteQueueId = null;
+        pendingDeleteCompletedId = null;
+        els.vaultBackdrop.classList.add('open');
+        renderVaultLists();
+      }
+
+      function closeVaultModal() {
+        els.vaultBackdrop.classList.remove('open');
+        resetTaskForm();
+        confirmClearHistory = false;
+        pendingDeleteQueueId = null;
+        pendingDeleteCompletedId = null;
+      }
+
+      els.openVaultBtn.addEventListener('click', openVaultModal);
+      els.closeVaultBtn.addEventListener('click', closeVaultModal);
+      els.vaultBackdrop.addEventListener('click', (e) => {
+        if (e.target === els.vaultBackdrop) closeVaultModal();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (els.cropModalBackdrop.classList.contains('open')) {
+            e.stopPropagation();
+            closeCropModalOnly();
+            return;
+          }
+          if (els.exportModalBackdrop.classList.contains('open')) {
+            e.stopPropagation();
+            closeExportBackupModal();
+            return;
+          }
+          if (els.vaultBackdrop.classList.contains('open')) {
+            closeVaultModal();
+            return;
+          }
+          closeDrawerMenu();
+          if (openReorderSlot !== null) {
+            openReorderSlot = null;
+            renderFocusStage(false);
+          }
+        }
+      });
+
+      els.tabQueue.addEventListener('click', () => {
+        confirmClearHistory = false;
+        pendingDeleteQueueId = null;
+        pendingDeleteCompletedId = null;
+        els.tabQueue.classList.add('active');
+        els.tabQueue.setAttribute('aria-selected', 'true');
+        els.tabCompleted.classList.remove('active');
+        els.tabCompleted.setAttribute('aria-selected', 'false');
+        els.queueView.style.display = 'block';
+        els.completedView.style.display = 'none';
+        initQueueSortable();
+      });
+
+      els.tabCompleted.addEventListener('click', () => {
+        destroyQueueSortable();
+        pendingDeleteQueueId = null;
+        els.tabCompleted.classList.add('active');
+        els.tabCompleted.setAttribute('aria-selected', 'true');
+        els.tabQueue.classList.remove('active');
+        els.tabQueue.setAttribute('aria-selected', 'false');
+        els.completedView.style.display = 'block';
+        els.queueView.style.display = 'none';
+        renderVaultLists();
+      });
+
+      els.cancelEditBtn.addEventListener('click', resetTaskForm);
+
+      els.taskForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = els.taskTitleInput.value.trim();
+        if (!title) return;
+
+        const note = els.taskNoteInput.value.trim();
+        const deadline = els.taskDeadlineInput.value || '';
+        const manualMandatory = els.taskMandatoryInput.checked;
+        const editingId = els.editTaskId.value;
+
+        if (editingId) {
+          const existing = state.queue.find(item => item.id === editingId);
+          if (existing) {
+            existing.title = title;
+            existing.note = note;
+            existing.deadline = deadline;
+            existing.manualMandatory = manualMandatory;
+          }
+          resetTaskForm();
+          syncFocusSlots();
+        } else {
+          state.queue.push({
+            id: generateId(),
+            title,
+            note,
+            deadline,
+            manualMandatory,
+            completionLog: [],
+            createdAt: new Date().toISOString()
+          });
+          resetTaskForm();
+          syncFocusSlots();
+          const hasAnyAssignedSlot = state.slots.some(Boolean);
+          if (!hasAnyAssignedSlot && state.queue.length > 0) {
+            state.slots[0] = state.queue[state.queue.length - 1].id;
+            saveState();
+          }
+        }
+
+        renderAll(false);
+      });
+
+      /* =========================================
+         12. INITIALIZATION
+         ========================================= */
+      function renderAll(animateEntrance = false) {
+        applyThemeAndLang();
+        renderFocusStage(animateEntrance);
+        renderVaultLists();
+      }
+
+      syncFocusSlots();
+      const allSlotsEmptyOnBoot = !state.slots.some(Boolean);
+      if (allSlotsEmptyOnBoot && state.queue.length > 0) {
+        state.slots[0] = state.queue[0].id;
+        saveState();
+      }
+      renderAll(true);
+      restartGlitchTimer();
+
+      window.addEventListener('load', () => {
+        if (els.vaultBackdrop.classList.contains('open') && els.queueView.style.display !== 'none') {
+          initQueueSortable();
+        }
+      });
+    })();
+  </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js');
+    });
+  }
+</script>
+</body>
+</html>

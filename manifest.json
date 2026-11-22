@@ -1,0 +1,18 @@
+{
+  "name": "نقطة تركيز | Nuqtat Tarkiz",
+  "short_name": "Nuqtat Tarkiz",
+  "description": "تطبيق لإنجاز المهام بهدوء ومنع التشتت",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1320",
+  "theme_color": "#0b1320",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
