@@ -1,10 +1,12 @@
+<!-- Version: V2.2.8 | نقطة تركيز | Nuqtat Tarkiz: Anti-Overwhelm Focus -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" data-theme="navy">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1320">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>نقطة تركيز | Nuqtat Tarkiz</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
@@ -37,6 +39,9 @@
       --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.45);
       --shadow-dropdown: 0 14px 34px -6px rgba(0, 0, 0, 0.65);
       --overlay-bg: rgba(5, 9, 17, 0.78);
+      --crop-shell-bg: #0b1320;
+      --crop-stage-bg: #0e1828;
+      --crop-dim-mask: rgba(11, 19, 32, 0.56);
     }
 
     [data-theme="dark"] {
@@ -62,6 +67,9 @@
       --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.85);
       --shadow-dropdown: 0 14px 34px -6px rgba(0, 0, 0, 0.9);
       --overlay-bg: rgba(0, 0, 0, 0.85);
+      --crop-shell-bg: #000000;
+      --crop-stage-bg: #0a0a0a;
+      --crop-dim-mask: rgba(0, 0, 0, 0.62);
     }
 
     [data-theme="light"] {
@@ -73,7 +81,7 @@
       --border-focus: #0284c7;
       --text-primary: #0f172a;
       --text-secondary: #475569;
-      --text-muted: #94a3b8;
+      --text-muted: #64748b;
       --accent: #0284c7;
       --accent-hover: #0369a1;
       --accent-text: #ffffff;
@@ -82,11 +90,14 @@
       --success-bg: rgba(22, 163, 74, 0.12);
       --danger: #dc2626;
       --danger-bg: rgba(220, 38, 38, 0.1);
-      --warning: #d97706;
-      --warning-bg: rgba(217, 119, 6, 0.12);
+      --warning: #0369a1;
+      --warning-bg: rgba(2, 132, 199, 0.12);
       --shadow-card: 0 10px 28px -6px rgba(15, 23, 42, 0.08);
       --shadow-dropdown: 0 14px 34px -6px rgba(15, 23, 42, 0.14);
       --overlay-bg: rgba(15, 23, 42, 0.55);
+      --crop-shell-bg: #f8fafc;
+      --crop-stage-bg: #f1f5f9;
+      --crop-dim-mask: rgba(15, 23, 42, 0.42);
     }
 
     /* =========================================
@@ -637,6 +648,51 @@
       display: block;
     }
 
+    /* V2.2.8 Sidebar Footer (Developer Identity & Version Badge) */
+    .drawer-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.45rem;
+      padding: 0.32rem 0.48rem;
+      border-radius: 11px;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      min-height: 36px;
+    }
+
+    .drawer-dev-label {
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      line-height: 1.3;
+      unicode-bidi: plaintext;
+      min-width: 0;
+    }
+
+    .drawer-emoji-iso {
+      direction: ltr;
+      unicode-bidi: isolate;
+      display: inline-block;
+    }
+
+    .drawer-version-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.14rem 0.5rem;
+      border-radius: 999px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      line-height: 1.2;
+      direction: ltr;
+      unicode-bidi: isolate;
+      flex-shrink: 0;
+    }
+
     @media (max-width: 420px) {
       .top-bar {
         padding: 0.65rem 0.65rem;
@@ -951,7 +1007,7 @@
     }
 
     /* =========================================
-       6. MODALS, CROPPER.JS WHATSAPP CROPPER & EXPORT
+       6. MODALS, THEME-ADAPTIVE CROPPER (V2.2.8) & EXPORT
        ========================================= */
     .modal-backdrop {
       position: fixed;
@@ -971,7 +1027,7 @@
     }
 
     .modal-backdrop.crop-backdrop {
-      background-color: #000000;
+      background-color: var(--crop-shell-bg);
       padding: 0;
       z-index: 130;
     }
@@ -1039,32 +1095,59 @@
       color: var(--text-primary);
     }
 
-    /* WhatsApp-Style Full-Screen Cropper with Cropper.js + Offline Fallback */
+    /* V2.2.8 Theme-Adaptive Full-Screen Cropper with Cropper.js + Offline Canvas Fallback */
     .wa-crop-shell {
       width: 100vw;
       height: 100dvh;
-      background-color: #000000;
-      color: #ffffff;
+      background-color: var(--crop-shell-bg);
+      color: var(--text-primary);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding-top: max(0.75rem, env(safe-area-inset-top));
-      padding-bottom: max(0.9rem, env(safe-area-inset-bottom));
-      padding-left: env(safe-area-inset-left);
-      padding-right: env(safe-area-inset-right);
+      padding-top: max(0.55rem, env(safe-area-inset-top));
+      padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+      padding-left: max(0.75rem, env(safe-area-inset-left));
+      padding-right: max(0.75rem, env(safe-area-inset-right));
       user-select: none;
       overflow: hidden;
+      gap: 0.6rem;
+    }
+
+    .crop-top-bar {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0.5rem 0.85rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .crop-top-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
     }
 
     .wa-crop-stage {
       flex: 1;
       width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      background-color: #000000;
+      background-color: var(--crop-stage-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      min-height: 0;
     }
 
     .wa-crop-stage img#cropSourceImg {
@@ -1076,25 +1159,47 @@
     .wa-crop-stage canvas#cropFallbackCanvas {
       max-width: 100%;
       max-height: 100%;
-      border-radius: 4px;
+      border-radius: 12px;
       display: none;
+      touch-action: none;
+    }
+
+    /* Neutral circular preview ring & soft corner mask inside the 1:1 crop box */
+    .crop-circle-guide {
+      position: absolute;
+      width: var(--crop-ring-size, 240px);
+      height: var(--crop-ring-size, 240px);
+      left: var(--crop-ring-left, 50%);
+      top: var(--crop-ring-top, 50%);
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 0 9999px var(--crop-dim-mask), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+      pointer-events: none;
+      z-index: 6;
+      display: none;
+      transition: width 0.06s linear, height 0.06s linear, left 0.06s linear, top 0.06s linear;
+    }
+
+    .crop-circle-guide.active {
+      display: block;
     }
 
     .wa-crop-stage .cropper-bg {
-      background: #000000 !important;
+      background: var(--crop-stage-bg) !important;
     }
 
     .wa-crop-stage .cropper-modal {
-      background-color: rgba(0, 0, 0, 0.62);
+      background-color: transparent !important;
     }
 
     .wa-crop-stage .cropper-view-box {
-      outline: 1.5px solid rgba(255, 255, 255, 0.9);
+      outline: 1.5px solid var(--accent);
       outline-offset: 0;
     }
 
     .wa-crop-stage .cropper-dashed {
-      border-color: rgba(255, 255, 255, 0.45);
+      border-color: rgba(255, 255, 255, 0.5);
     }
 
     .wa-crop-stage .cropper-line {
@@ -1104,64 +1209,116 @@
     .wa-crop-stage .cropper-point {
       width: 14px !important;
       height: 14px !important;
-      background-color: #ffffff !important;
-      border-radius: 2px !important;
+      background-color: var(--accent) !important;
+      border: 2px solid var(--bg-card) !important;
+      border-radius: 3px !important;
       opacity: 1 !important;
     }
 
     .wa-crop-stage .cropper-point.point-n,
     .wa-crop-stage .cropper-point.point-s {
-      width: 18px !important;
-      height: 4px !important;
-      opacity: 0.7 !important;
+      width: 20px !important;
+      height: 5px !important;
+      opacity: 0.85 !important;
     }
 
     .wa-crop-stage .cropper-point.point-e,
     .wa-crop-stage .cropper-point.point-w {
-      width: 4px !important;
-      height: 18px !important;
-      opacity: 0.7 !important;
+      width: 5px !important;
+      height: 20px !important;
+      opacity: 0.85 !important;
     }
 
-    .wa-crop-footer {
+    .crop-bottom-panel {
       width: 100%;
-      padding: 0.75rem 1.25rem 0.25rem;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0.65rem 0.75rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      flex-shrink: 0;
+    }
+
+    /* Single-row capsule controls: Rotate Right | Reset | Rotate Left in LTR order */
+    .crop-capsules-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.45rem;
+      direction: ltr;
+      unicode-bidi: isolate;
+    }
+
+    .crop-capsule-btn {
+      min-height: 44px;
+      min-width: 0;
+      padding: 0 0.65rem;
+      border-radius: 999px;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      font-weight: 700;
+      gap: 0.32rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .crop-capsule-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .crop-capsule-btn.reset-pill-btn {
+      color: var(--text-secondary);
+    }
+
+    .crop-capsule-btn.reset-pill-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--accent);
+    }
+
+    .crop-confirm-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
-      background-color: #000000;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      gap: 0.75rem;
     }
 
-    .wa-footer-btn {
-      min-height: 44px;
-      padding: 0 0.85rem;
-      border-radius: 12px;
-      font-size: 0.96rem;
+    .crop-confirm-btn {
+      flex: 1;
+      min-height: 46px;
+      padding: 0 1.2rem;
+      border-radius: 14px;
+      background-color: var(--success);
+      color: #ffffff;
+      font-size: 0.98rem;
       font-weight: 700;
-      color: #ffffff;
-      background: transparent;
+      box-shadow: 0 6px 18px -4px rgba(22, 163, 74, 0.35);
     }
 
-    .wa-footer-btn:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+    .crop-confirm-btn:hover {
+      filter: brightness(1.06);
     }
 
-    .wa-footer-btn.done-btn {
-      color: #38bdf8;
+    .crop-cancel-btn {
+      min-height: 46px;
+      padding: 0 1.15rem;
+      border-radius: 14px;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 700;
     }
 
-    .wa-rotate-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background-color: rgba(255, 255, 255, 0.12);
-      color: #ffffff;
-    }
-
-    .wa-rotate-btn:hover {
-      background-color: rgba(255, 255, 255, 0.22);
+    .crop-cancel-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--text-muted);
     }
 
     /* Export Backup Modal Body */
@@ -1647,6 +1804,11 @@
         padding-top: 0.35rem;
         margin-top: 0.15rem;
       }
+
+      .crop-capsule-btn {
+        padding: 0 0.45rem;
+        font-size: 0.75rem;
+      }
     }
   </style>
 <link rel="manifest" href="./manifest.json">
@@ -1751,6 +1913,12 @@
           <input type="file" id="importBackupFileInput" accept=".json,.txt,application/json,text/plain" class="sr-only">
           <div class="backup-status-msg" id="backupStatusMsg"></div>
         </div>
+
+        <!-- 6. Sidebar Footer: Developer Identity & Version Badge -->
+        <div class="drawer-footer" id="drawerFooter">
+          <span class="drawer-dev-label" id="drawerDevLabel" dir="auto">تطوير MiniDev <span class="drawer-emoji-iso">🧑🏻‍💻</span></span>
+          <span class="drawer-version-badge" id="drawerVersionBadge" dir="ltr">v2.2.8</span>
+        </div>
       </div>
     </div>
 
@@ -1775,22 +1943,45 @@
   <!-- CALM TOAST BANNER -->
   <div class="calm-toast" id="calmToast" role="status" aria-live="polite"></div>
 
-  <!-- WHATSAPP-STYLE CROPPER MODAL (Cropper.js + Offline Canvas Fallback) -->
-  <div class="modal-backdrop crop-backdrop" id="cropModalBackdrop" role="dialog" aria-modal="true" aria-label="Crop Profile Photo">
+  <!-- V2.2.8 THEME-ADAPTIVE CROPPER MODAL (Cropper.js + Offline Canvas Fallback) -->
+  <div class="modal-backdrop crop-backdrop" id="cropModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="cropTopTitle">
     <div class="wa-crop-shell" id="cropShell">
+      <!-- Top Bar: Title Only -->
+      <div class="crop-top-bar">
+        <h3 class="crop-top-title" id="cropTopTitle">تعديل وقص الصورة</h3>
+      </div>
+
+      <!-- Stage: Locked Image + Movable/Resizable 1:1 Crop Box + Touch-Neutral Circular Ring -->
       <div class="wa-crop-stage" id="cropStage">
         <img id="cropSourceImg" alt="Crop source">
         <canvas id="cropFallbackCanvas"></canvas>
+        <div class="crop-circle-guide" id="cropCircleGuide" aria-hidden="true"></div>
       </div>
-      <div class="wa-crop-footer">
-        <button type="button" class="wa-footer-btn" id="cancelCropBtn">إلغاء</button>
-        <button type="button" class="wa-rotate-btn" id="rotateCropBtn" aria-label="Rotate 90 degrees">
-          <svg viewBox="0 0 24 24" width="22" height="22">
-            <path d="M21 12a9 9 0 1 1-2.64-6.36"/>
-            <polyline points="21 3 21 9 15 9"/>
-          </svg>
-        </button>
-        <button type="button" class="wa-footer-btn done-btn" id="saveCropBtn">تم</button>
+
+      <!-- Bottom Control Panel: Single-Row Capsules (Rotate Right | Reset | Rotate Left) + Confirm/Cancel -->
+      <div class="crop-bottom-panel">
+        <div class="crop-capsules-row" id="cropCapsulesRow">
+          <button type="button" class="crop-capsule-btn" id="rotateCropBtn" aria-label="Rotate right 90 degrees">
+            <svg viewBox="0 0 24 24" width="17" height="17">
+              <path d="M21 12a9 9 0 1 1-2.64-6.36"/>
+              <polyline points="21 3 21 9 15 9"/>
+            </svg>
+            <span id="rotateRightBtnText">تدوير يمين</span>
+          </button>
+          <button type="button" class="crop-capsule-btn reset-pill-btn" id="resetCropBtn">إعادة ضبط</button>
+          <button type="button" class="crop-capsule-btn" id="rotateLeftCropBtn" aria-label="Rotate left 90 degrees">
+            <svg viewBox="0 0 24 24" width="17" height="17">
+              <path d="M3 12a9 9 0 1 0 2.64-6.36"/>
+              <polyline points="3 3 3 9 9 9"/>
+            </svg>
+            <span id="rotateLeftBtnText">تدوير يسار</span>
+          </button>
+        </div>
+
+        <div class="crop-confirm-row">
+          <button type="button" class="crop-confirm-btn" id="saveCropBtn">✓ تم</button>
+          <button type="button" class="crop-cancel-btn" id="cancelCropBtn">إلغاء</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1912,8 +2103,15 @@
           pickAvatarBtn: 'صورة',
           removeAvatarAria: 'إزالة صورة البروفايل',
           confirmRemoveAvatarText: 'إزالة الصورة الشخصية؟',
-          rotateCropAria: 'تدوير 90 درجة',
-          saveCropBtn: 'تم',
+          cropModalTitle: 'تعديل وقص الصورة',
+          resetCropBtn: 'إعادة ضبط',
+          rotateRightBtn: 'تدوير يمين',
+          rotateLeftBtn: 'تدوير يسار',
+          rotateCropAria: 'تدوير يمين 90 درجة',
+          rotateLeftCropAria: 'تدوير يسار 90 درجة',
+          saveCropBtn: '✓ تم',
+          devByPrefix: 'تطوير MiniDev',
+          versionBadgeText: 'v2.2.8',
           menuAria: 'القائمة الرئيسية',
           menuThemesTitle: 'الثيمات',
           menuLangTitle: 'اللغة',
@@ -2000,8 +2198,15 @@
           pickAvatarBtn: 'Photo',
           removeAvatarAria: 'Remove profile photo',
           confirmRemoveAvatarText: 'Remove profile photo?',
-          rotateCropAria: 'Rotate 90 degrees',
-          saveCropBtn: 'Done',
+          cropModalTitle: 'Edit & Crop Photo',
+          resetCropBtn: 'Reset',
+          rotateRightBtn: 'Rotate Right',
+          rotateLeftBtn: 'Rotate Left',
+          rotateCropAria: 'Rotate right 90 degrees',
+          rotateLeftCropAria: 'Rotate left 90 degrees',
+          saveCropBtn: '✓ Done',
+          devByPrefix: 'Developed by MiniDev',
+          versionBadgeText: 'v2.2.8',
           menuAria: 'Main Menu',
           menuThemesTitle: 'Themes',
           menuLangTitle: 'Language',
@@ -2095,6 +2300,12 @@
         { id: '5m', seconds: 300, labelKey: 'glitch5m' }
       ];
 
+      const THEME_META_COLORS = {
+        navy: '#0b1320',
+        dark: '#000000',
+        light: '#f8fafc'
+      };
+
       /* =========================================
          2. STATE & STORAGE MANAGEMENT
          ========================================= */
@@ -2174,7 +2385,6 @@
           ? Number(parsed.slotCount)
           : 1;
 
-        // Preserve all 3 slots [slot0, slot1, slot2] intact regardless of slotCount
         const restoredSlots = extractThreeSlots(parsed);
         const rawResting = Array.isArray(parsed.restingSlots) ? parsed.restingSlots : [false, false, false];
         const restoredResting = [Boolean(rawResting[0]), Boolean(rawResting[1]), Boolean(rawResting[2])];
@@ -2222,9 +2432,15 @@
       let backupStatusTimeout = null;
       let toastTimer = null;
 
-      /* Cropper.js + Offline Fallback state */
+      /* Cropper.js + Offline Canvas Fallback state (image locked inside stage, crop box moves/resizes) */
       let cropperInstance = null;
       let fallbackCropImage = null;
+      let fallbackRotation = 0;
+      let fallbackBox = { x: 0, y: 0, size: 180 };
+      let fallbackBounds = { left: 0, top: 0, width: 240, height: 240 };
+      let fallbackAction = null; // 'move' | 'n' | 's' | 'e' | 'w' | 'nw' | 'ne' | 'sw' | 'se'
+      let fallbackPointerStart = { x: 0, y: 0, box: null };
+      let cropSyncRaf = null;
 
       function saveState() {
         try {
@@ -2295,7 +2511,6 @@
       /* =========================================
          4. THREE-SLOT PERSISTENCE & RENDER SLICING
          ========================================= */
-      // Operates strictly on all 3 slots [0, 1, 2] without truncating to slotCount
       function compactAllThreeSlots() {
         const activeIds = [];
         for (let i = 0; i < 3; i++) {
@@ -2488,7 +2703,7 @@
       }
 
       /* =========================================
-         6. DOM REFERENCES, CROPPER & SMART SHARE
+         6. DOM REFERENCES, CROPPER, HISTORY STACK & SHARE
          ========================================= */
       const els = {
         drawerBackdrop: document.getElementById('drawerBackdrop'),
@@ -2496,6 +2711,9 @@
         hamburgerBtn: document.getElementById('hamburgerBtn'),
         drawerMenu: document.getElementById('drawerMenu'),
         drawerBrandTitle: document.getElementById('drawerBrandTitle'),
+        drawerFooter: document.getElementById('drawerFooter'),
+        drawerDevLabel: document.getElementById('drawerDevLabel'),
+        drawerVersionBadge: document.getElementById('drawerVersionBadge'),
 
         avatarCircle: document.getElementById('avatarCircle'),
         profileNameInput: document.getElementById('profileNameInput'),
@@ -2506,11 +2724,18 @@
 
         cropModalBackdrop: document.getElementById('cropModalBackdrop'),
         cropShell: document.getElementById('cropShell'),
+        cropTopTitle: document.getElementById('cropTopTitle'),
         cropStage: document.getElementById('cropStage'),
         cropSourceImg: document.getElementById('cropSourceImg'),
         cropFallbackCanvas: document.getElementById('cropFallbackCanvas'),
-        cancelCropBtn: document.getElementById('cancelCropBtn'),
+        cropCircleGuide: document.getElementById('cropCircleGuide'),
+        cropCapsulesRow: document.getElementById('cropCapsulesRow'),
+        resetCropBtn: document.getElementById('resetCropBtn'),
+        rotateLeftCropBtn: document.getElementById('rotateLeftCropBtn'),
+        rotateLeftBtnText: document.getElementById('rotateLeftBtnText'),
         rotateCropBtn: document.getElementById('rotateCropBtn'),
+        rotateRightBtnText: document.getElementById('rotateRightBtnText'),
+        cancelCropBtn: document.getElementById('cancelCropBtn'),
         saveCropBtn: document.getElementById('saveCropBtn'),
 
         exportModalBackdrop: document.getElementById('exportModalBackdrop'),
@@ -2583,6 +2808,66 @@
         completedToolbar: document.getElementById('completedToolbar'),
         completedList: document.getElementById('completedList')
       };
+
+      /* =========================================
+         6B. BACK ONE STEP (HISTORY API LAYER STACK)
+         ========================================= */
+      // Ordered stack of open layers: 'drawer', 'vault', 'crop', 'export'
+      const openLayerStack = [];
+      let suppressingPopstateClose = false;
+
+      function pushLayerHistory(layerName) {
+        if (openLayerStack[openLayerStack.length - 1] === layerName) return;
+        openLayerStack.push(layerName);
+        try {
+          window.history.pushState(
+            { nuqtatLayer: layerName, depth: openLayerStack.length },
+            '',
+            window.location.href
+          );
+        } catch (_) {}
+      }
+
+      function popLayerHistorySilent(layerName) {
+        const idx = openLayerStack.lastIndexOf(layerName);
+        if (idx === -1) return;
+        const stepsAbove = openLayerStack.length - idx;
+        openLayerStack.splice(idx);
+        if (stepsAbove > 0 && window.history && typeof window.history.go === 'function') {
+          suppressingPopstateClose = true;
+          try {
+            window.history.go(-stepsAbove);
+          } catch (_) {
+            suppressingPopstateClose = false;
+          }
+          setTimeout(() => {
+            suppressingPopstateClose = false;
+          }, 80);
+        }
+      }
+
+      function applyTopLayerCloseOnly(layerName) {
+        if (layerName === 'crop') {
+          closeCropModalOnly(true);
+        } else if (layerName === 'export') {
+          closeExportBackupModal(true);
+        } else if (layerName === 'vault') {
+          closeVaultModal(true);
+        } else if (layerName === 'drawer') {
+          closeDrawerMenu(true);
+        }
+      }
+
+      window.addEventListener('popstate', () => {
+        if (suppressingPopstateClose) {
+          suppressingPopstateClose = false;
+          return;
+        }
+        if (openLayerStack.length > 0) {
+          const topLayer = openLayerStack.pop();
+          applyTopLayerCloseOnly(topLayer);
+        }
+      });
 
       function hasAnySubModalOpen() {
         return els.cropModalBackdrop.classList.contains('open')
@@ -2672,32 +2957,217 @@
       }
 
       /* =========================================
-         7. CROPPER.JS WHATSAPP CROPPER + OFFLINE FALLBACK
+         7. V2.2.8 LOCKED-IMAGE CROPPER + CIRCULAR RING
          ========================================= */
+      function positionCircleRing(leftPx, topPx, sizePx) {
+        if (!sizePx || sizePx <= 0) return;
+        els.cropCircleGuide.style.setProperty('--crop-ring-left', `${leftPx}px`);
+        els.cropCircleGuide.style.setProperty('--crop-ring-top', `${topPx}px`);
+        els.cropCircleGuide.style.setProperty('--crop-ring-size', `${sizePx}px`);
+        els.cropCircleGuide.classList.add('active');
+      }
+
+      function clampCropperBoxInsideImage() {
+        if (!cropperInstance) return;
+        const canvasData = cropperInstance.getCanvasData();
+        const boxData = cropperInstance.getCropBoxData();
+        if (!canvasData || !boxData || canvasData.width <= 0 || canvasData.height <= 0) return;
+
+        const minSide = 48;
+        const maxSide = Math.max(minSide, Math.min(canvasData.width, canvasData.height));
+        let nextW = Math.min(maxSide, Math.max(minSide, boxData.width));
+        let nextH = nextW;
+        let nextL = Math.max(canvasData.left, Math.min(boxData.left, canvasData.left + canvasData.width - nextW));
+        let nextT = Math.max(canvasData.top, Math.min(boxData.top, canvasData.top + canvasData.height - nextH));
+
+        if (
+          Math.abs(nextW - boxData.width) > 0.5 ||
+          Math.abs(nextL - boxData.left) > 0.5 ||
+          Math.abs(nextT - boxData.top) > 0.5
+        ) {
+          cropperInstance.setCropBoxData({
+            left: nextL,
+            top: nextT,
+            width: nextW,
+            height: nextH
+          });
+        }
+      }
+
+      function syncCircularGuideToCropBox() {
+        if (!els.cropModalBackdrop.classList.contains('open')) return;
+
+        if (cropperInstance) {
+          clampCropperBoxInsideImage();
+          const box = cropperInstance.getCropBoxData();
+          const container = cropperInstance.getContainerData();
+          if (box && container && box.width > 0 && box.height > 0) {
+            const stageRect = els.cropStage.getBoundingClientRect();
+            const containerRect = cropperInstance.cropper
+              ? cropperInstance.cropper.getBoundingClientRect()
+              : stageRect;
+            const offsetX = containerRect.left - stageRect.left;
+            const offsetY = containerRect.top - stageRect.top;
+            const side = Math.min(box.width, box.height);
+            const centerX = offsetX + box.left + box.width / 2;
+            const centerY = offsetY + box.top + box.height / 2;
+            positionCircleRing(centerX, centerY, side);
+            return;
+          }
+        }
+
+        if (fallbackCropImage && els.cropFallbackCanvas.style.display !== 'none') {
+          const stageRect = els.cropStage.getBoundingClientRect();
+          const canvasRect = els.cropFallbackCanvas.getBoundingClientRect();
+          if (canvasRect.width > 0 && canvasRect.height > 0) {
+            const centerX = (canvasRect.left - stageRect.left) + (fallbackBounds.left + fallbackBox.x + fallbackBox.size / 2);
+            const centerY = (canvasRect.top - stageRect.top) + (fallbackBounds.top + fallbackBox.y + fallbackBox.size / 2);
+            positionCircleRing(centerX, centerY, fallbackBox.size);
+          }
+        }
+      }
+
+      function scheduleCircularGuideSync() {
+        if (cropSyncRaf) cancelAnimationFrame(cropSyncRaf);
+        cropSyncRaf = requestAnimationFrame(() => {
+          cropSyncRaf = null;
+          syncCircularGuideToCropBox();
+        });
+      }
+
       function destroyCropperInstance() {
+        if (cropSyncRaf) {
+          cancelAnimationFrame(cropSyncRaf);
+          cropSyncRaf = null;
+        }
         if (cropperInstance) {
           try {
             cropperInstance.destroy();
           } catch (_) {}
           cropperInstance = null;
         }
+        els.cropCircleGuide.classList.remove('active');
       }
 
-      function renderOfflineCenterCropPreview() {
+      function computeFallbackImageBounds(canvasW, canvasH) {
+        if (!fallbackCropImage) {
+          return { left: 0, top: 0, width: canvasW, height: canvasH };
+        }
+        const normRot = ((fallbackRotation % 360) + 360) % 360;
+        const swapDims = normRot === 90 || normRot === 270;
+        const srcW = swapDims ? fallbackCropImage.naturalHeight : fallbackCropImage.naturalWidth;
+        const srcH = swapDims ? fallbackCropImage.naturalWidth : fallbackCropImage.naturalHeight;
+        const aspect = srcW / Math.max(1, srcH);
+
+        let drawW = canvasW;
+        let drawH = canvasH;
+        if (aspect >= 1) {
+          drawW = canvasW;
+          drawH = Math.max(48, Math.round(canvasW / aspect));
+        } else {
+          drawH = canvasH;
+          drawW = Math.max(48, Math.round(canvasH * aspect));
+        }
+
+        const left = Math.round((canvasW - drawW) / 2);
+        const top = Math.round((canvasH - drawH) / 2);
+        return { left, top, width: drawW, height: drawH, drawW, drawH };
+      }
+
+      function renderOfflineCanvasView(resetBox = false) {
         if (!fallbackCropImage) return;
         const canvas = els.cropFallbackCanvas;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        const side = Math.min(fallbackCropImage.naturalWidth, fallbackCropImage.naturalHeight);
-        const sx = Math.floor((fallbackCropImage.naturalWidth - side) / 2);
-        const sy = Math.floor((fallbackCropImage.naturalHeight - side) / 2);
+        const stageRect = els.cropStage.getBoundingClientRect();
+        const side = Math.min(360, Math.max(220, Math.floor(Math.min(stageRect.width || 340, stageRect.height || 340) * 0.86)));
+        canvas.width = side;
+        canvas.height = side;
 
-        const previewSize = Math.min(320, Math.max(200, Math.floor(Math.min(window.innerWidth, window.innerHeight) * 0.68)));
-        canvas.width = previewSize;
-        canvas.height = previewSize;
-        ctx.clearRect(0, 0, previewSize, previewSize);
-        ctx.drawImage(fallbackCropImage, sx, sy, side, side, 0, 0, previewSize, previewSize);
+        const bounds = computeFallbackImageBounds(side, side);
+        fallbackBounds = bounds;
+
+        const minBox = 48;
+        const maxBox = Math.max(minBox, Math.min(bounds.width, bounds.height));
+        if (resetBox || fallbackBox.size <= 0) {
+          const initSize = Math.max(minBox, Math.round(maxBox * 0.82));
+          fallbackBox = {
+            size: initSize,
+            x: Math.round((bounds.width - initSize) / 2),
+            y: Math.round((bounds.height - initSize) / 2)
+          };
+        } else {
+          fallbackBox.size = Math.min(maxBox, Math.max(minBox, fallbackBox.size));
+          fallbackBox.x = Math.max(0, Math.min(fallbackBox.x, bounds.width - fallbackBox.size));
+          fallbackBox.y = Math.max(0, Math.min(fallbackBox.y, bounds.height - fallbackBox.size));
+        }
+
+        ctx.clearRect(0, 0, side, side);
+
+        // Draw locked image centered inside bounds
+        ctx.save();
+        ctx.translate(side / 2, side / 2);
+        ctx.rotate((fallbackRotation * Math.PI) / 180);
+        const normRot = ((fallbackRotation % 360) + 360) % 360;
+        const swapDims = normRot === 90 || normRot === 270;
+        const rotW = swapDims ? bounds.height : bounds.width;
+        const rotH = swapDims ? bounds.width : bounds.height;
+        ctx.drawImage(fallbackCropImage, -rotW / 2, -rotH / 2, rotW, rotH);
+        ctx.restore();
+
+        // Draw 1:1 crop rectangle, rule-of-thirds guides, and corner/edge handles
+        const bx = bounds.left + fallbackBox.x;
+        const by = bounds.top + fallbackBox.y;
+        const bs = fallbackBox.size;
+
+        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#38bdf8';
+        const cardColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-card').trim() || '#131e30';
+
+        ctx.save();
+        ctx.strokeStyle = accentColor;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(bx, by, bs, bs);
+
+        // Rule of thirds
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(bx + bs / 3, by);
+        ctx.lineTo(bx + bs / 3, by + bs);
+        ctx.moveTo(bx + (2 * bs) / 3, by);
+        ctx.lineTo(bx + (2 * bs) / 3, by + bs);
+        ctx.moveTo(bx, by + bs / 3);
+        ctx.lineTo(bx + bs, by + bs / 3);
+        ctx.moveTo(bx, by + (2 * bs) / 3);
+        ctx.lineTo(bx + bs, by + (2 * bs) / 3);
+        ctx.stroke();
+
+        // Corner handles
+        const hSize = 12;
+        const corners = [
+          [bx, by],
+          [bx + bs, by],
+          [bx, by + bs],
+          [bx + bs, by + bs]
+        ];
+        corners.forEach(([cx, cy]) => {
+          ctx.fillStyle = accentColor;
+          ctx.strokeStyle = cardColor;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.roundRect(cx - hSize / 2, cy - hSize / 2, hSize, hSize, 2);
+          ctx.fill();
+          ctx.stroke();
+        });
+        ctx.restore();
+
+        scheduleCircularGuideSync();
+      }
+
+      function resetFallbackTransform() {
+        fallbackRotation = 0;
+        renderOfflineCanvasView(true);
       }
 
       function openCropModalWithFile(file) {
@@ -2706,8 +3176,11 @@
           const dataUrl = String(reader.result);
           destroyCropperInstance();
           fallbackCropImage = null;
+          fallbackRotation = 0;
+          fallbackBox = { x: 0, y: 0, size: 0 };
 
           els.cropModalBackdrop.classList.add('open');
+          pushLayerHistory('crop');
 
           if (typeof window.Cropper === 'function') {
             els.cropFallbackCanvas.style.display = 'none';
@@ -2718,18 +3191,29 @@
               cropperInstance = new window.Cropper(els.cropSourceImg, {
                 aspectRatio: 1,
                 viewMode: 1,
-                dragMode: 'move',
+                dragMode: 'none',
                 guides: true,
+                center: true,
                 autoCropArea: 0.85,
                 background: false,
                 responsive: true,
                 restore: false,
-                movable: true,
+                movable: false,
                 rotatable: true,
                 scalable: false,
                 zoomable: true,
                 cropBoxMovable: true,
-                cropBoxResizable: true
+                cropBoxResizable: true,
+                ready() {
+                  clampCropperBoxInsideImage();
+                  scheduleCircularGuideSync();
+                },
+                crop() {
+                  scheduleCircularGuideSync();
+                },
+                zoom() {
+                  scheduleCircularGuideSync();
+                }
               });
             };
             els.cropSourceImg.src = dataUrl;
@@ -2739,7 +3223,7 @@
             const img = new Image();
             img.onload = () => {
               fallbackCropImage = img;
-              renderOfflineCenterCropPreview();
+              resetFallbackTransform();
             };
             img.src = dataUrl;
           }
@@ -2747,33 +3231,36 @@
         reader.readAsDataURL(file);
       }
 
-      function closeCropModalOnly() {
+      function closeCropModalOnly(fromPopstate = false) {
         destroyCropperInstance();
         fallbackCropImage = null;
+        fallbackAction = null;
         els.cropSourceImg.onload = null;
         els.cropSourceImg.removeAttribute('src');
         els.cropModalBackdrop.classList.remove('open');
+        if (!fromPopstate) {
+          popLayerHistorySilent('crop');
+        }
       }
 
-      function rotateCropper90() {
+      function rotateCropperBy(deg) {
         if (cropperInstance) {
-          cropperInstance.rotate(90);
+          cropperInstance.rotate(deg);
+          clampCropperBoxInsideImage();
+          scheduleCircularGuideSync();
         } else if (fallbackCropImage) {
-          const off = document.createElement('canvas');
-          off.width = fallbackCropImage.naturalHeight;
-          off.height = fallbackCropImage.naturalWidth;
-          const octx = off.getContext('2d');
-          if (octx) {
-            octx.translate(off.width / 2, off.height / 2);
-            octx.rotate(Math.PI / 2);
-            octx.drawImage(fallbackCropImage, -fallbackCropImage.naturalWidth / 2, -fallbackCropImage.naturalHeight / 2);
-            const rotatedImg = new Image();
-            rotatedImg.onload = () => {
-              fallbackCropImage = rotatedImg;
-              renderOfflineCenterCropPreview();
-            };
-            rotatedImg.src = off.toDataURL('image/jpeg', 0.92);
-          }
+          fallbackRotation = (((fallbackRotation + deg) % 360) + 360) % 360;
+          renderOfflineCanvasView(false);
+        }
+      }
+
+      function resetCropperView() {
+        if (cropperInstance) {
+          cropperInstance.reset();
+          clampCropperBoxInsideImage();
+          scheduleCircularGuideSync();
+        } else if (fallbackCropImage) {
+          resetFallbackTransform();
         }
       }
 
@@ -2785,27 +3272,144 @@
             imageSmoothingQuality: 'high'
           });
           if (canvas) {
-            return canvas.toDataURL('image/jpeg', 0.85);
+            return canvas.toDataURL('image/jpeg', 0.88);
           }
         }
 
         if (fallbackCropImage) {
-          const side = Math.min(fallbackCropImage.naturalWidth, fallbackCropImage.naturalHeight);
-          const sx = Math.floor((fallbackCropImage.naturalWidth - side) / 2);
-          const sy = Math.floor((fallbackCropImage.naturalHeight - side) / 2);
+          const side = els.cropFallbackCanvas.width || 300;
+          const off = document.createElement('canvas');
+          off.width = side;
+          off.height = side;
+          const octx = off.getContext('2d');
+          if (octx) {
+            octx.imageSmoothingQuality = 'high';
+            octx.translate(side / 2, side / 2);
+            octx.rotate((fallbackRotation * Math.PI) / 180);
+            const normRot = ((fallbackRotation % 360) + 360) % 360;
+            const swapDims = normRot === 90 || normRot === 270;
+            const rotW = swapDims ? fallbackBounds.height : fallbackBounds.width;
+            const rotH = swapDims ? fallbackBounds.width : fallbackBounds.height;
+            octx.drawImage(fallbackCropImage, -rotW / 2, -rotH / 2, rotW, rotH);
+          }
+
           const out = document.createElement('canvas');
           out.width = 300;
           out.height = 300;
           const ctx = out.getContext('2d');
           if (ctx) {
             ctx.imageSmoothingQuality = 'high';
-            ctx.drawImage(fallbackCropImage, sx, sy, side, side, 0, 0, 300, 300);
-            return out.toDataURL('image/jpeg', 0.85);
+            const sx = fallbackBounds.left + fallbackBox.x;
+            const sy = fallbackBounds.top + fallbackBox.y;
+            const sw = fallbackBox.size;
+            ctx.drawImage(off, sx, sy, sw, sw, 0, 0, 300, 300);
+            return out.toDataURL('image/jpeg', 0.88);
           }
         }
 
         return '';
       }
+
+      /* Offline Canvas Crop Box Move & Resize Handlers (Image Remains Stationary) */
+      function detectFallbackHitZone(px, py) {
+        const bx = fallbackBounds.left + fallbackBox.x;
+        const by = fallbackBounds.top + fallbackBox.y;
+        const bs = fallbackBox.size;
+        const tol = 18;
+
+        const nearLeft = Math.abs(px - bx) <= tol;
+        const nearRight = Math.abs(px - (bx + bs)) <= tol;
+        const nearTop = Math.abs(py - by) <= tol;
+        const nearBottom = Math.abs(py - (by + bs)) <= tol;
+
+        if (nearTop && nearLeft) return 'nw';
+        if (nearTop && nearRight) return 'ne';
+        if (nearBottom && nearLeft) return 'sw';
+        if (nearBottom && nearRight) return 'se';
+        if (nearTop && px >= bx - tol && px <= bx + bs + tol) return 'n';
+        if (nearBottom && px >= bx - tol && px <= bx + bs + tol) return 's';
+        if (nearLeft && py >= by - tol && py <= by + bs + tol) return 'w';
+        if (nearRight && py >= by - tol && py <= by + bs + tol) return 'e';
+        if (px >= bx && px <= bx + bs && py >= by && py <= by + bs) return 'move';
+        return null;
+      }
+
+      els.cropFallbackCanvas.addEventListener('pointerdown', (e) => {
+        if (!fallbackCropImage || cropperInstance) return;
+        const rect = els.cropFallbackCanvas.getBoundingClientRect();
+        const scaleX = (els.cropFallbackCanvas.width || rect.width) / Math.max(1, rect.width);
+        const scaleY = (els.cropFallbackCanvas.height || rect.height) / Math.max(1, rect.height);
+        const px = (e.clientX - rect.left) * scaleX;
+        const py = (e.clientY - rect.top) * scaleY;
+
+        const zone = detectFallbackHitZone(px, py);
+        if (!zone) return;
+
+        fallbackAction = zone;
+        fallbackPointerStart = {
+          x: px,
+          y: py,
+          box: { ...fallbackBox }
+        };
+        try {
+          els.cropFallbackCanvas.setPointerCapture(e.pointerId);
+        } catch (_) {}
+      });
+
+      els.cropFallbackCanvas.addEventListener('pointermove', (e) => {
+        if (!fallbackAction || !fallbackCropImage || cropperInstance || !fallbackPointerStart.box) return;
+        const rect = els.cropFallbackCanvas.getBoundingClientRect();
+        const scaleX = (els.cropFallbackCanvas.width || rect.width) / Math.max(1, rect.width);
+        const scaleY = (els.cropFallbackCanvas.height || rect.height) / Math.max(1, rect.height);
+        const px = (e.clientX - rect.left) * scaleX;
+        const py = (e.clientY - rect.top) * scaleY;
+
+        const dx = px - fallbackPointerStart.x;
+        const dy = py - fallbackPointerStart.y;
+        const startBox = fallbackPointerStart.box;
+        const minSide = 48;
+        const maxSide = Math.max(minSide, Math.min(fallbackBounds.width, fallbackBounds.height));
+
+        if (fallbackAction === 'move') {
+          fallbackBox.x = Math.max(0, Math.min(startBox.x + dx, fallbackBounds.width - startBox.size));
+          fallbackBox.y = Math.max(0, Math.min(startBox.y + dy, fallbackBounds.height - startBox.size));
+        } else {
+          let delta = 0;
+          if (fallbackAction === 'se') delta = Math.max(dx, dy);
+          else if (fallbackAction === 'nw') delta = Math.max(-dx, -dy);
+          else if (fallbackAction === 'ne') delta = Math.max(dx, -dy);
+          else if (fallbackAction === 'sw') delta = Math.max(-dx, dy);
+          else if (fallbackAction === 'e') delta = dx;
+          else if (fallbackAction === 'w') delta = -dx;
+          else if (fallbackAction === 's') delta = dy;
+          else if (fallbackAction === 'n') delta = -dy;
+
+          const nextSize = Math.min(maxSide, Math.max(minSide, startBox.size + delta));
+          let nextX = startBox.x;
+          let nextY = startBox.y;
+
+          if (fallbackAction.includes('w')) {
+            nextX = startBox.x + (startBox.size - nextSize);
+          }
+          if (fallbackAction.includes('n')) {
+            nextY = startBox.y + (startBox.size - nextSize);
+          }
+
+          nextX = Math.max(0, Math.min(nextX, fallbackBounds.width - nextSize));
+          nextY = Math.max(0, Math.min(nextY, fallbackBounds.height - nextSize));
+
+          fallbackBox = { x: nextX, y: nextY, size: nextSize };
+        }
+
+        renderOfflineCanvasView(false);
+      });
+
+      const endFallbackAction = () => {
+        fallbackAction = null;
+        fallbackPointerStart = { x: 0, y: 0, box: null };
+      };
+      els.cropFallbackCanvas.addEventListener('pointerup', endFallbackAction);
+      els.cropFallbackCanvas.addEventListener('pointercancel', endFallbackAction);
 
       /* Clean App Share (no user data) for Offline Mode */
       function buildCleanAppHtml() {
@@ -2813,6 +3417,9 @@
         clone.setAttribute('data-theme', 'navy');
         clone.setAttribute('lang', 'ar');
         clone.setAttribute('dir', 'rtl');
+
+        const metaTheme = clone.querySelector('meta[name="theme-color"]');
+        if (metaTheme) metaTheme.setAttribute('content', '#0b1320');
 
         const slots = clone.querySelectorAll('.slot-pill-btn');
         slots.forEach(btn => {
@@ -2830,6 +3437,9 @@
 
         const crop = clone.querySelector('#cropModalBackdrop');
         if (crop) crop.classList.remove('open');
+
+        const guide = clone.querySelector('#cropCircleGuide');
+        if (guide) guide.classList.remove('active');
 
         const exp = clone.querySelector('#exportModalBackdrop');
         if (exp) exp.classList.remove('open');
@@ -2953,7 +3563,7 @@
           state.slots[2] || null
         ];
         const payload = {
-          version: '2.2.6',
+          version: '2.2.8',
           scope: 'tasks-only',
           exportedAt: new Date().toISOString(),
           slotCount: state.slotCount,
@@ -2970,11 +3580,15 @@
         const defaultName = `nuqtat-tarkiz-tasks-${new Date().toISOString().slice(0, 10)}`;
         els.exportFilenameInput.value = defaultName;
         els.exportModalBackdrop.classList.add('open');
+        pushLayerHistory('export');
         els.exportFilenameInput.focus();
       }
 
-      function closeExportBackupModal() {
+      function closeExportBackupModal(fromPopstate = false) {
         els.exportModalBackdrop.classList.remove('open');
+        if (!fromPopstate) {
+          popLayerHistorySilent('export');
+        }
       }
 
       function triggerDirectJsonDownload(fileBaseName, jsonStr) {
@@ -3066,15 +3680,19 @@
         els.drawerBackdrop.classList.add('open');
         els.drawerMenu.classList.add('open');
         document.body.classList.add('menu-scroll-locked');
+        pushLayerHistory('drawer');
       }
 
-      function closeDrawerMenu() {
+      function closeDrawerMenu(fromPopstate = false) {
         confirmRemoveAvatar = false;
         els.hamburgerBtn.classList.remove('is-open');
         els.hamburgerBtn.setAttribute('aria-expanded', 'false');
         els.drawerBackdrop.classList.remove('open');
         els.drawerMenu.classList.remove('open');
         document.body.classList.remove('menu-scroll-locked');
+        if (!fromPopstate) {
+          popLayerHistorySilent('drawer');
+        }
       }
 
       document.addEventListener('touchmove', (e) => {
@@ -3176,13 +3794,32 @@
         els.exportBackupText.textContent = t('exportBackupText');
         els.importBackupText.textContent = t('importBackupText');
 
-        els.cancelCropBtn.textContent = t('cancelEditBtn');
+        /* Sidebar Footer Developer Identity & Version Badge */
+        els.drawerDevLabel.innerHTML = `${t('devByPrefix')} <span class="drawer-emoji-iso">🧑🏻‍💻</span>`;
+        els.drawerVersionBadge.textContent = t('versionBadgeText');
+
+        /* Cropper Labels & Accessibility */
+        els.cropTopTitle.textContent = t('cropModalTitle');
+        els.resetCropBtn.textContent = t('resetCropBtn');
+        els.rotateLeftBtnText.textContent = t('rotateLeftBtn');
+        els.rotateLeftCropBtn.setAttribute('aria-label', t('rotateLeftCropAria'));
+        els.rotateRightBtnText.textContent = t('rotateRightBtn');
         els.rotateCropBtn.setAttribute('aria-label', t('rotateCropAria'));
         els.saveCropBtn.textContent = t('saveCropBtn');
+        els.cancelCropBtn.textContent = t('cancelEditBtn');
 
         els.exportModalTitle.textContent = t('exportModalTitle');
         els.exportFilenameLabel.textContent = t('exportFilenameLabel');
         els.saveBackupFileText.textContent = t('saveBackupFileText');
+      }
+
+      function syncThemeMetaAndBody() {
+        const hex = THEME_META_COLORS[state.theme] || '#0b1320';
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) {
+          metaTheme.setAttribute('content', hex);
+        }
+        document.body.style.backgroundColor = hex;
       }
 
       function applyThemeAndLang() {
@@ -3190,6 +3827,7 @@
         document.documentElement.lang = state.lang;
         document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
         document.title = t('appTitle');
+        syncThemeMetaAndBody();
 
         els.slotSelector.setAttribute('aria-label', t('slotsAria'));
         els.slotSelector.querySelectorAll('.slot-pill-btn').forEach(btn => {
@@ -3214,6 +3852,13 @@
         els.submitTaskBtn.textContent = els.editTaskId.value ? t('saveTaskBtn') : t('addTaskBtn');
 
         renderDrawerMenu();
+        if (els.cropModalBackdrop.classList.contains('open')) {
+          if (fallbackCropImage && !cropperInstance) {
+            renderOfflineCanvasView(false);
+          } else {
+            scheduleCircularGuideSync();
+          }
+        }
       }
 
       /* =========================================
@@ -3263,7 +3908,6 @@
         });
       }
 
-      // Render-only slicing of state.slots [0, 1, 2] to state.slotCount
       function renderFocusStage(animateEntrance = false) {
         els.focusStage.innerHTML = '';
         const queueMap = new Map(state.queue.map(item => [item.id, item]));
@@ -3496,7 +4140,6 @@
           empty.textContent = t('queueEmptyMsg');
           els.queueList.appendChild(empty);
         } else {
-          // Track all 3 assigned slots so hidden tasks in slots 2/3 stay marked as in-focus
           const assignedSlotIds = new Set(state.slots.filter(Boolean));
 
           state.queue.forEach((task, index) => {
@@ -3898,7 +4541,6 @@
         renderAll(false);
       }
 
-      /* Restore completed task to top of Queued list in Vault (not directly to focus screen) */
       function restoreCompletedTask(taskId) {
         const idx = state.completed.findIndex(item => item.id === taskId);
         if (idx === -1) return;
@@ -3932,7 +4574,7 @@
         if (hasAnySubModalOpen()) return;
         const isOpen = els.drawerMenu.classList.contains('open');
         if (isOpen) {
-          closeDrawerMenu();
+          closeDrawerMenu(false);
         } else {
           openDrawerMenu();
         }
@@ -3942,7 +4584,7 @@
         e.stopPropagation();
         if (hasAnySubModalOpen()) return;
         if (e.target === els.drawerBackdrop) {
-          closeDrawerMenu();
+          closeDrawerMenu(false);
         }
       });
 
@@ -3988,13 +4630,23 @@
       els.cropModalBackdrop.addEventListener('click', (e) => {
         e.stopPropagation();
         if (e.target === els.cropModalBackdrop) {
-          closeCropModalOnly();
+          closeCropModalOnly(false);
         }
+      });
+
+      els.resetCropBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        resetCropperView();
+      });
+
+      els.rotateLeftCropBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        rotateCropperBy(-90);
       });
 
       els.rotateCropBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        rotateCropper90();
+        rotateCropperBy(90);
       });
 
       els.saveCropBtn.addEventListener('click', (e) => {
@@ -4006,17 +4658,21 @@
           saveState();
           renderProfileSection();
         }
-        closeCropModalOnly();
+        closeCropModalOnly(false);
       });
 
       els.cancelCropBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        closeCropModalOnly();
+        closeCropModalOnly(false);
       });
 
       window.addEventListener('resize', () => {
-        if (els.cropModalBackdrop.classList.contains('open') && fallbackCropImage && !cropperInstance) {
-          renderOfflineCenterCropPreview();
+        if (els.cropModalBackdrop.classList.contains('open')) {
+          if (fallbackCropImage && !cropperInstance) {
+            renderOfflineCanvasView(false);
+          } else {
+            scheduleCircularGuideSync();
+          }
         }
       });
 
@@ -4033,19 +4689,19 @@
       els.saveBackupFileBtn.addEventListener('click', async (e) => {
         e.stopPropagation();
         const baseName = sanitizeFilenameBase(els.exportFilenameInput.value);
-        closeExportBackupModal();
+        closeExportBackupModal(false);
         await saveBackupWithSystemPicker(baseName);
       });
 
       els.closeExportModalBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        closeExportBackupModal();
+        closeExportBackupModal(false);
       });
 
       els.exportModalBackdrop.addEventListener('click', (e) => {
         e.stopPropagation();
         if (e.target === els.exportModalBackdrop) {
-          closeExportBackupModal();
+          closeExportBackupModal(false);
         }
       });
 
@@ -4105,13 +4761,12 @@
         shareCurrentApp();
       });
 
-      /* Slot buttons [1 | 2 | 3] control visual rendering count only without mutating state.slots */
       els.slotSelector.addEventListener('click', (e) => {
         const btn = e.target.closest('.slot-pill-btn');
         if (!btn) return;
         const count = Number(btn.dataset.slots);
         if ([1, 2, 3].includes(count) && count !== state.slotCount) {
-          closeDrawerMenu();
+          closeDrawerMenu(false);
           openReorderSlot = null;
           state.slotCount = count;
           saveState();
@@ -4127,55 +4782,7 @@
         }
       });
 
-      function openVaultModal() {
-        closeDrawerMenu();
-        openReorderSlot = null;
-        confirmClearHistory = false;
-        pendingDeleteQueueId = null;
-        pendingDeleteCompletedId = null;
-        els.vaultBackdrop.classList.add('open');
-        renderVaultLists();
-      }
-
-      function closeVaultModal() {
-        els.vaultBackdrop.classList.remove('open');
-        resetTaskForm();
-        confirmClearHistory = false;
-        pendingDeleteQueueId = null;
-        pendingDeleteCompletedId = null;
-      }
-
-      els.openVaultBtn.addEventListener('click', openVaultModal);
-      els.closeVaultBtn.addEventListener('click', closeVaultModal);
-      els.vaultBackdrop.addEventListener('click', (e) => {
-        if (e.target === els.vaultBackdrop) closeVaultModal();
-      });
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          if (els.cropModalBackdrop.classList.contains('open')) {
-            e.stopPropagation();
-            closeCropModalOnly();
-            return;
-          }
-          if (els.exportModalBackdrop.classList.contains('open')) {
-            e.stopPropagation();
-            closeExportBackupModal();
-            return;
-          }
-          if (els.vaultBackdrop.classList.contains('open')) {
-            closeVaultModal();
-            return;
-          }
-          closeDrawerMenu();
-          if (openReorderSlot !== null) {
-            openReorderSlot = null;
-            renderFocusStage(false);
-          }
-        }
-      });
-
-      els.tabQueue.addEventListener('click', () => {
+      function activateQueueTabView() {
         confirmClearHistory = false;
         pendingDeleteQueueId = null;
         pendingDeleteCompletedId = null;
@@ -4185,7 +4792,62 @@
         els.tabCompleted.setAttribute('aria-selected', 'false');
         els.queueView.style.display = 'block';
         els.completedView.style.display = 'none';
-        initQueueSortable();
+      }
+
+      function openVaultModal() {
+        closeDrawerMenu(false);
+        openReorderSlot = null;
+        activateQueueTabView();
+        els.vaultBackdrop.classList.add('open');
+        pushLayerHistory('vault');
+        renderVaultLists();
+      }
+
+      function closeVaultModal(fromPopstate = false) {
+        destroyQueueSortable();
+        els.vaultBackdrop.classList.remove('open');
+        resetTaskForm();
+        confirmClearHistory = false;
+        pendingDeleteQueueId = null;
+        pendingDeleteCompletedId = null;
+        if (!fromPopstate) {
+          popLayerHistorySilent('vault');
+        }
+      }
+
+      els.openVaultBtn.addEventListener('click', openVaultModal);
+      els.closeVaultBtn.addEventListener('click', () => closeVaultModal(false));
+      els.vaultBackdrop.addEventListener('click', (e) => {
+        if (e.target === els.vaultBackdrop) closeVaultModal(false);
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (els.cropModalBackdrop.classList.contains('open')) {
+            e.stopPropagation();
+            closeCropModalOnly(false);
+            return;
+          }
+          if (els.exportModalBackdrop.classList.contains('open')) {
+            e.stopPropagation();
+            closeExportBackupModal(false);
+            return;
+          }
+          if (els.vaultBackdrop.classList.contains('open')) {
+            closeVaultModal(false);
+            return;
+          }
+          closeDrawerMenu(false);
+          if (openReorderSlot !== null) {
+            openReorderSlot = null;
+            renderFocusStage(false);
+          }
+        }
+      });
+
+      els.tabQueue.addEventListener('click', () => {
+        activateQueueTabView();
+        renderVaultLists();
       });
 
       els.tabCompleted.addEventListener('click', () => {
@@ -4236,7 +4898,7 @@
           syncFocusSlots();
           const hasAnyAssignedSlot = state.slots.some(Boolean);
           if (!hasAnyAssignedSlot && state.queue.length > 0) {
-            state.slots[0] = state.queue[state.queue.length - 1].id;
+            state.slots[0] = state.queue[0].id;
             saveState();
           }
         }
