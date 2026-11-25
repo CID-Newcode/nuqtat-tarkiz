@@ -1,11 +1,14 @@
-<!-- Version: V2.2.8 | نقطة تركيز | Nuqtat Tarkiz: Anti-Overwhelm Focus -->
+<!-- V2.2.11 -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" data-theme="navy">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#0b1320">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/jpeg" href="./icon.jpg">
+<link rel="apple-touch-icon" href="./icon.jpg">
+<meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>نقطة تركيز | Nuqtat Tarkiz</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
@@ -13,7 +16,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
   <style>
     /* =========================================
-       1. CSS VARIABLES & 3 BUILT-IN THEMES
+       1. CSS VARIABLES & 4 BUILT-IN THEMES
        ========================================= */
     :root,
     [data-theme="navy"] {
@@ -30,18 +33,25 @@
       --accent-hover: #0ea5e9;
       --accent-text: #082f49;
       --accent-glow: rgba(56, 189, 248, 0.35);
+      --badge-soft-bg: rgba(56, 189, 248, 0.14);
+      --badge-soft-border: rgba(56, 189, 248, 0.32);
+      --badge-soft-text: #7dd3fc;
       --success: #22c55e;
       --success-bg: rgba(34, 197, 94, 0.14);
-      --danger: #f87171;
-      --danger-bg: rgba(248, 113, 113, 0.14);
-      --warning: #fbbf24;
-      --warning-bg: rgba(251, 191, 36, 0.14);
+      --danger: #e07a7a;
+      --danger-bg: rgba(224, 122, 122, 0.12);
+      --danger-border-soft: rgba(224, 122, 122, 0.42);
+      --warning: #d99b26;
+      --warning-bg: rgba(217, 155, 38, 0.13);
       --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.45);
       --shadow-dropdown: 0 14px 34px -6px rgba(0, 0, 0, 0.65);
       --overlay-bg: rgba(5, 9, 17, 0.78);
       --crop-shell-bg: #0b1320;
       --crop-stage-bg: #0e1828;
       --crop-dim-mask: rgba(11, 19, 32, 0.56);
+      --theme-icon-bg: #162238;
+      --theme-icon-border: #263a5c;
+      --dev-emoji-halo: drop-shadow(0 0 5px rgba(241, 245, 249, 0.34));
     }
 
     [data-theme="dark"] {
@@ -58,26 +68,33 @@
       --accent-hover: #3b82f6;
       --accent-text: #0a0a0a;
       --accent-glow: rgba(96, 165, 250, 0.35);
+      --badge-soft-bg: rgba(96, 165, 250, 0.14);
+      --badge-soft-border: rgba(96, 165, 250, 0.32);
+      --badge-soft-text: #93c5fd;
       --success: #4ade80;
       --success-bg: rgba(74, 222, 128, 0.14);
-      --danger: #f87171;
-      --danger-bg: rgba(248, 113, 113, 0.14);
-      --warning: #fbbf24;
-      --warning-bg: rgba(251, 191, 36, 0.14);
+      --danger: #e07a7a;
+      --danger-bg: rgba(224, 122, 122, 0.12);
+      --danger-border-soft: rgba(224, 122, 122, 0.42);
+      --warning: #d99b26;
+      --warning-bg: rgba(217, 155, 38, 0.13);
       --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.85);
       --shadow-dropdown: 0 14px 34px -6px rgba(0, 0, 0, 0.9);
       --overlay-bg: rgba(0, 0, 0, 0.85);
       --crop-shell-bg: #000000;
-      --crop-stage-bg: #0a0a0a;
+      --crop-stage-bg: #121212;
       --crop-dim-mask: rgba(0, 0, 0, 0.62);
+      --theme-icon-bg: #262930;
+      --theme-icon-border: #3a3f4a;
+      --dev-emoji-halo: drop-shadow(0 0 5px rgba(255, 255, 255, 0.36));
     }
 
     [data-theme="light"] {
-      --bg-primary: #f8fafc;
+      --bg-primary: #e8eef5;
       --bg-card: #ffffff;
       --bg-elevated: #f1f5f9;
       --bg-input: #f8fafc;
-      --border-color: #e2e8f0;
+      --border-color: #cbd5e1;
       --border-focus: #0284c7;
       --text-primary: #0f172a;
       --text-secondary: #475569;
@@ -86,22 +103,64 @@
       --accent-hover: #0369a1;
       --accent-text: #ffffff;
       --accent-glow: rgba(2, 132, 199, 0.28);
+      --badge-soft-bg: rgba(2, 132, 199, 0.11);
+      --badge-soft-border: rgba(2, 132, 199, 0.28);
+      --badge-soft-text: #0369a1;
       --success: #16a34a;
       --success-bg: rgba(22, 163, 74, 0.12);
-      --danger: #dc2626;
-      --danger-bg: rgba(220, 38, 38, 0.1);
-      --warning: #0369a1;
-      --warning-bg: rgba(2, 132, 199, 0.12);
+      --danger: #c25959;
+      --danger-bg: rgba(194, 89, 89, 0.1);
+      --danger-border-soft: rgba(194, 89, 89, 0.38);
+      --warning: #b4690e;
+      --warning-bg: rgba(180, 105, 14, 0.11);
       --shadow-card: 0 10px 28px -6px rgba(15, 23, 42, 0.08);
       --shadow-dropdown: 0 14px 34px -6px rgba(15, 23, 42, 0.14);
       --overlay-bg: rgba(15, 23, 42, 0.55);
-      --crop-shell-bg: #f8fafc;
+      --crop-shell-bg: #e8eef5;
       --crop-stage-bg: #f1f5f9;
-      --crop-dim-mask: rgba(15, 23, 42, 0.42);
+      --crop-dim-mask: rgba(15, 23, 42, 0.45);
+      --theme-icon-bg: #e0f2fe;
+      --theme-icon-border: #bae6fd;
+      --dev-emoji-halo: drop-shadow(0 2px 5px rgba(15, 23, 42, 0.18));
+    }
+
+    [data-theme="soft"] {
+      --bg-primary: #f6eef2;
+      --bg-card: #ffffff;
+      --bg-elevated: #ffffff;
+      --bg-input: #ffffff;
+      --border-color: #eed8e3;
+      --border-focus: #c85a82;
+      --text-primary: #2d2329;
+      --text-secondary: #685560;
+      --text-muted: #8b7582;
+      --accent: #c85a82;
+      --accent-hover: #b2486f;
+      --accent-text: #ffffff;
+      --accent-glow: rgba(200, 90, 130, 0.24);
+      --badge-soft-bg: #fceef4;
+      --badge-soft-border: #eed8e3;
+      --badge-soft-text: #9d3b60;
+      --success: #9d3b60;
+      --success-bg: #fceef4;
+      --danger: #c25959;
+      --danger-bg: rgba(194, 89, 89, 0.1);
+      --danger-border-soft: rgba(194, 89, 89, 0.36);
+      --warning: #b4690e;
+      --warning-bg: rgba(180, 105, 14, 0.1);
+      --shadow-card: 0 10px 26px -8px rgba(157, 59, 96, 0.11);
+      --shadow-dropdown: 0 14px 32px -6px rgba(157, 59, 96, 0.15);
+      --overlay-bg: rgba(45, 35, 41, 0.46);
+      --crop-shell-bg: #f6eef2;
+      --crop-stage-bg: #ffffff;
+      --crop-dim-mask: rgba(45, 35, 41, 0.44);
+      --theme-icon-bg: #fceef4;
+      --theme-icon-border: #eed8e3;
+      --dev-emoji-halo: drop-shadow(0 2px 5px rgba(157, 59, 96, 0.22));
     }
 
     /* =========================================
-       2. RESET & BASE STYLES
+       2. RESET & BASE STYLES (UNIFIED 0.18s THEME TRANSITION)
        ========================================= */
     *, *::before, *::after {
       box-sizing: border-box;
@@ -116,7 +175,7 @@
       color: var(--text-primary);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans Arabic", sans-serif;
       line-height: 1.5;
-      transition: background-color 0.25s ease, color 0.25s ease;
+      transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), color 0.18s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
       overflow-x: hidden;
     }
 
@@ -144,6 +203,7 @@
     button, input, textarea, select {
       font-family: inherit;
       color: inherit;
+      transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), color 0.18s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s ease, box-shadow 0.2s ease;
     }
 
     button {
@@ -158,7 +218,6 @@
       gap: 0.3rem;
       border-radius: 12px;
       font-weight: 600;
-      transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
     }
 
     button:active {
@@ -174,6 +233,94 @@
       stroke-linecap: round;
       stroke-linejoin: round;
       flex-shrink: 0;
+    }
+
+    /* Soft Theme Welcome Overlay (Stays Open Until Tapped / Escape) */
+    .soft-welcome-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: linear-gradient(155deg, #f6eef2 0%, #fceef4 58%, #f6eef2 100%);
+      opacity: 0;
+      transition: opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .soft-welcome-overlay.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    .soft-welcome-card {
+      background-color: #ffffff;
+      border: 1.5px solid #eed8e3;
+      border-radius: 26px;
+      padding: 2.1rem 1.85rem 1.75rem;
+      max-width: 390px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 16px 36px -12px rgba(157, 59, 96, 0.16);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .soft-welcome-ribbon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background-color: #fceef4;
+      border: 1px solid #eed8e3;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.85rem;
+      line-height: 1;
+      direction: ltr;
+      unicode-bidi: isolate;
+    }
+
+    .soft-welcome-text {
+      font-size: 1.22rem;
+      font-weight: 800;
+      color: #2d2329;
+      line-height: 1.5;
+      unicode-bidi: plaintext;
+    }
+
+    .soft-welcome-tag {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #9d3b60;
+      background-color: #fceef4;
+      border: 1px solid #eed8e3;
+      padding: 0.24rem 0.75rem;
+      border-radius: 999px;
+    }
+
+    .soft-welcome-skip-btn {
+      margin-top: 0.35rem;
+      min-height: 40px;
+      padding: 0.45rem 1.15rem;
+      border-radius: 999px;
+      background-color: #fceef4;
+      border: 1px solid #eed8e3;
+      color: #9d3b60;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    @media (hover: hover) {
+      .soft-welcome-skip-btn:hover {
+        background-color: #c85a82;
+        border-color: #c85a82;
+        color: #ffffff;
+      }
     }
 
     /* =========================================
@@ -229,14 +376,23 @@
       font-size: 1.2rem;
       position: relative;
       z-index: 66;
+      outline: none;
     }
 
-    .hamburger-btn:hover {
-      border-color: var(--accent);
-      background-color: var(--bg-elevated);
+    .hamburger-btn:focus,
+    .hamburger-btn:focus-visible {
+      outline: none;
     }
 
-    .hamburger-btn.is-open {
+    @media (hover: hover) {
+      .hamburger-btn:hover {
+        border-color: var(--accent);
+        background-color: var(--bg-elevated);
+      }
+    }
+
+    .hamburger-btn.is-open,
+    .hamburger-btn[aria-expanded="true"] {
       border-color: var(--border-focus);
       box-shadow: 0 0 0 3px var(--accent-glow);
     }
@@ -266,6 +422,7 @@
       padding: 3px;
       height: 44px;
       flex-shrink: 0;
+      transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .slot-pill-btn {
@@ -278,8 +435,10 @@
       color: var(--text-secondary);
     }
 
-    .slot-pill-btn:hover {
-      color: var(--text-primary);
+    @media (hover: hover) {
+      .slot-pill-btn:hover {
+        color: var(--text-primary);
+      }
     }
 
     .slot-pill-btn.active {
@@ -298,9 +457,11 @@
       flex-shrink: 0;
     }
 
-    .vault-btn:hover {
-      border-color: var(--accent);
-      background-color: var(--bg-elevated);
+    @media (hover: hover) {
+      .vault-btn:hover {
+        border-color: var(--accent);
+        background-color: var(--bg-elevated);
+      }
     }
 
     /* Compact Single-Screen Drawer Menu */
@@ -308,7 +469,7 @@
       position: absolute;
       top: calc(100% + 8px);
       inset-inline-start: 0;
-      width: min(334px, calc(100vw - 1.25rem));
+      width: min(344px, calc(100vw - 1.25rem));
       max-height: calc(100dvh - 72px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
       overflow-y: auto;
       overscroll-behavior: contain;
@@ -453,23 +614,39 @@
       background-color: var(--bg-card);
       border: 1px solid var(--border-color);
       color: var(--text-secondary);
+      outline: none;
     }
 
-    .profile-mini-btn:hover {
-      color: var(--text-primary);
-      border-color: var(--accent);
+    .profile-mini-btn:focus,
+    .profile-mini-btn:focus-visible {
+      outline: none;
     }
 
-    .profile-mini-btn.remove-avatar:hover {
+    @media (hover: hover) {
+      .profile-mini-btn:hover {
+        color: var(--text-primary);
+        border-color: var(--accent);
+      }
+    }
+
+    .profile-mini-btn.remove-avatar.is-confirming {
       color: var(--danger);
       border-color: var(--danger);
       background-color: var(--danger-bg);
     }
 
+    @media (hover: hover) {
+      .profile-mini-btn.remove-avatar:hover {
+        color: var(--danger);
+        border-color: var(--danger);
+        background-color: var(--danger-bg);
+      }
+    }
+
     .drawer-section {
       display: flex;
       flex-direction: column;
-      gap: 0.24rem;
+      gap: 0.26rem;
     }
 
     .drawer-section-title {
@@ -485,11 +662,81 @@
       margin: 0.02rem 0;
     }
 
-    /* Horizontal Pill Rows for Themes & Visual Glitch */
-    .pills-row-3 {
+    /* 2x2 Grid for the 4 Themes + Floating Icon Badge */
+    .themes-grid-2x2 {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.3rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.35rem;
+    }
+
+    .theme-grid-btn {
+      min-height: 40px;
+      min-width: 0;
+      padding: 0.28rem 0.45rem;
+      border-radius: 11px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      justify-content: flex-start;
+      gap: 0.42rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (hover: hover) {
+      .theme-grid-btn:hover {
+        border-color: var(--accent);
+      }
+    }
+
+    .theme-grid-btn.active {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-text);
+    }
+
+    .theme-floating-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      line-height: 1;
+      flex-shrink: 0;
+      direction: ltr;
+      unicode-bidi: isolate;
+    }
+
+    .theme-floating-icon.icon-soft {
+      background-color: #fceef4;
+      border-color: #eed8e3;
+    }
+
+    .theme-floating-icon.icon-navy {
+      background-color: #162238;
+      border-color: #263a5c;
+    }
+
+    .theme-floating-icon.icon-light {
+      background-color: #e0f2fe;
+      border-color: #bae6fd;
+    }
+
+    .theme-floating-icon.icon-dark {
+      background-color: #262930;
+      border-color: #3a3f4a;
+    }
+
+    .theme-grid-label {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .pills-row-5 {
@@ -513,9 +760,11 @@
       text-overflow: ellipsis;
     }
 
-    .pill-choice-btn:hover {
-      color: var(--text-primary);
-      border-color: var(--accent);
+    @media (hover: hover) {
+      .pill-choice-btn:hover {
+        color: var(--text-primary);
+        border-color: var(--accent);
+      }
     }
 
     .pill-choice-btn.active {
@@ -617,9 +866,11 @@
       color: var(--text-primary);
     }
 
-    .drawer-action-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
+    @media (hover: hover) {
+      .drawer-action-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
     }
 
     .backup-row {
@@ -648,7 +899,7 @@
       display: block;
     }
 
-    /* V2.2.8 Sidebar Footer (Developer Identity & Version Badge) */
+    /* Sidebar Footer (Developer Identity & Version Badge) */
     .drawer-footer {
       display: flex;
       align-items: center;
@@ -674,6 +925,8 @@
       direction: ltr;
       unicode-bidi: isolate;
       display: inline-block;
+      filter: var(--dev-emoji-halo);
+      transition: filter 0.18s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .drawer-version-badge {
@@ -737,7 +990,7 @@
       display: flex;
       flex-direction: column;
       gap: 1.1rem;
-      transition: border-color 0.25s ease, background-color 0.25s ease;
+      transition: border-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
       user-select: none;
     }
 
@@ -746,11 +999,11 @@
     }
 
     .focus-card.is-mandatory {
-      border-color: var(--warning);
+      border-color: var(--border-color);
     }
 
     .focus-card.is-overdue {
-      border-color: var(--danger);
+      border-color: var(--danger-border-soft);
     }
 
     .focus-card.glitch-blink-sequence {
@@ -814,9 +1067,11 @@
       color: var(--text-primary);
     }
 
-    .pos-choice-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
+    @media (hover: hover) {
+      .pos-choice-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
     }
 
     .pos-choice-btn.current-pos {
@@ -850,17 +1105,20 @@
     }
 
     .badge-deadline {
-      background-color: var(--bg-elevated);
-      color: var(--accent);
+      background-color: var(--badge-soft-bg);
+      border: 1px solid var(--badge-soft-border);
+      color: var(--badge-soft-text);
     }
 
     .badge-deadline.urgent {
       background-color: var(--warning-bg);
+      border-color: transparent;
       color: var(--warning);
     }
 
     .badge-deadline.overdue {
       background-color: var(--danger-bg);
+      border-color: transparent;
       color: var(--danger);
     }
 
@@ -870,6 +1128,7 @@
       line-height: 1.4;
       color: var(--text-primary);
       word-break: break-word;
+      overflow-wrap: anywhere;
       unicode-bidi: plaintext;
     }
 
@@ -879,6 +1138,7 @@
       line-height: 1.65;
       white-space: pre-line;
       word-break: break-word;
+      overflow-wrap: anywhere;
       unicode-bidi: plaintext;
     }
 
@@ -900,8 +1160,10 @@
       border-radius: 14px;
     }
 
-    .btn-done:hover {
-      background-color: var(--accent-hover);
+    @media (hover: hover) {
+      .btn-done:hover {
+        background-color: var(--accent-hover);
+      }
     }
 
     .btn-defer {
@@ -913,9 +1175,11 @@
       border-radius: 14px;
     }
 
-    .btn-defer:hover {
-      color: var(--text-primary);
-      border-color: var(--text-muted);
+    @media (hover: hover) {
+      .btn-defer:hover {
+        color: var(--text-primary);
+        border-color: var(--text-muted);
+      }
     }
 
     .rest-card {
@@ -928,6 +1192,7 @@
       flex-direction: column;
       align-items: center;
       gap: 0.85rem;
+      transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), color 0.18s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .rest-card.animate-enter {
@@ -938,28 +1203,33 @@
       width: 46px;
       height: 46px;
       border-radius: 50%;
-      background-color: var(--success-bg);
-      color: var(--success);
+      background-color: var(--badge-soft-bg);
+      border: 1px solid var(--badge-soft-border);
+      color: var(--badge-soft-text);
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .rest-icon.empty-vault-icon {
-      background-color: var(--bg-elevated);
-      color: var(--accent);
+      background-color: var(--badge-soft-bg);
+      border: 1px solid var(--badge-soft-border);
+      color: var(--badge-soft-text);
     }
 
     .rest-message {
       font-size: 1.12rem;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-primary);
+      unicode-bidi: plaintext;
     }
 
     .rest-sub {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: var(--text-secondary);
-      max-width: 360px;
+      max-width: 410px;
+      line-height: 1.6;
+      unicode-bidi: plaintext;
     }
 
     .btn-pull {
@@ -972,42 +1242,78 @@
       margin-top: 0.2rem;
     }
 
-    .btn-pull:hover {
-      background-color: var(--accent);
-      color: var(--accent-text);
+    @media (hover: hover) {
+      .btn-pull:hover {
+        background-color: var(--accent);
+        color: var(--accent-text);
+      }
     }
 
     /* =========================================
-       5. CALM TOAST BANNER
+       5. TOP CALM TOAST BANNER + UNDO BUTTON
        ========================================= */
     .calm-toast {
       position: fixed;
-      bottom: max(1.25rem, env(safe-area-inset-bottom));
+      top: calc(0.85rem + env(safe-area-inset-top));
       left: 50%;
-      transform: translateX(-50%) translateY(16px);
-      background-color: var(--bg-elevated);
+      transform: translateX(-50%) translateY(-18px);
+      background-color: var(--bg-card);
       color: var(--text-primary);
-      border: 1px solid var(--accent);
-      border-radius: 14px;
-      padding: 0.65rem 1.15rem;
+      border: 1.5px solid var(--accent);
+      border-radius: 16px;
+      padding: 0.55rem 0.85rem;
       font-size: 0.88rem;
-      font-weight: 600;
+      font-weight: 700;
       box-shadow: var(--shadow-dropdown);
-      z-index: 150;
+      z-index: 180;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      max-width: calc(100vw - 2rem);
+      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: calc(100vw - 1.5rem);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
       text-align: center;
     }
 
     .calm-toast.visible {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    .calm-toast-msg {
+      unicode-bidi: plaintext;
+      line-height: 1.4;
+    }
+
+    .toast-undo-btn {
+      min-height: 34px;
+      min-width: auto;
+      padding: 0.25rem 0.68rem;
+      border-radius: 10px;
+      background-color: var(--accent);
+      color: var(--accent-text);
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+      display: none;
+    }
+
+    .toast-undo-btn.visible {
+      display: inline-flex;
+    }
+
+    @media (hover: hover) {
+      .toast-undo-btn:hover {
+        background-color: var(--accent-hover);
+      }
     }
 
     /* =========================================
-       6. MODALS, THEME-ADAPTIVE CROPPER (V2.2.8) & EXPORT
+       6. MODALS, THEME-ADAPTIVE CROPPER & EXPORT
        ========================================= */
     .modal-backdrop {
       position: fixed;
@@ -1052,6 +1358,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      overflow-x: hidden;
       box-shadow: var(--shadow-card);
     }
 
@@ -1088,14 +1395,17 @@
     .btn-close {
       background-color: var(--bg-elevated);
       color: var(--text-secondary);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
     }
 
-    .btn-close:hover {
-      color: var(--text-primary);
+    @media (hover: hover) {
+      .btn-close:hover {
+        color: var(--text-primary);
+      }
     }
 
-    /* V2.2.8 Theme-Adaptive Full-Screen Cropper with Cropper.js + Offline Canvas Fallback */
+    /* Theme-Adaptive Cropper Shell (Matches Both Cropper.js & Offline Canvas Fallback) */
     .wa-crop-shell {
       width: 100vw;
       height: 100dvh;
@@ -1148,6 +1458,7 @@
       border: 1px solid var(--border-color);
       border-radius: 20px;
       min-height: 0;
+      touch-action: none;
     }
 
     .wa-crop-stage img#cropSourceImg {
@@ -1164,7 +1475,7 @@
       touch-action: none;
     }
 
-    /* Neutral circular preview ring & soft corner mask inside the 1:1 crop box */
+    /* Circular preview ring & soft mask inside the 1:1 crop box */
     .crop-circle-guide {
       position: absolute;
       width: var(--crop-ring-size, 240px);
@@ -1178,7 +1489,6 @@
       pointer-events: none;
       z-index: 6;
       display: none;
-      transition: width 0.06s linear, height 0.06s linear, left 0.06s linear, top 0.06s linear;
     }
 
     .crop-circle-guide.active {
@@ -1199,11 +1509,11 @@
     }
 
     .wa-crop-stage .cropper-dashed {
-      border-color: rgba(255, 255, 255, 0.5);
+      border-color: rgba(255, 255, 255, 0.55);
     }
 
     .wa-crop-stage .cropper-line {
-      background-color: rgba(255, 255, 255, 0.35);
+      background-color: rgba(255, 255, 255, 0.38);
     }
 
     .wa-crop-stage .cropper-point {
@@ -1268,18 +1578,22 @@
       text-overflow: ellipsis;
     }
 
-    .crop-capsule-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
+    @media (hover: hover) {
+      .crop-capsule-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
     }
 
     .crop-capsule-btn.reset-pill-btn {
       color: var(--text-secondary);
     }
 
-    .crop-capsule-btn.reset-pill-btn:hover {
-      color: var(--text-primary);
-      border-color: var(--accent);
+    @media (hover: hover) {
+      .crop-capsule-btn.reset-pill-btn:hover {
+        color: var(--text-primary);
+        border-color: var(--accent);
+      }
     }
 
     .crop-confirm-row {
@@ -1294,15 +1608,19 @@
       min-height: 46px;
       padding: 0 1.2rem;
       border-radius: 14px;
-      background-color: var(--success);
-      color: #ffffff;
+      background-color: var(--accent);
+      border: 1px solid var(--accent);
+      color: var(--accent-text);
       font-size: 0.98rem;
       font-weight: 700;
-      box-shadow: 0 6px 18px -4px rgba(22, 163, 74, 0.35);
+      box-shadow: 0 6px 18px -4px var(--accent-glow);
     }
 
-    .crop-confirm-btn:hover {
-      filter: brightness(1.06);
+    @media (hover: hover) {
+      .crop-confirm-btn:hover {
+        background-color: var(--accent-hover);
+        border-color: var(--accent-hover);
+      }
     }
 
     .crop-cancel-btn {
@@ -1316,9 +1634,11 @@
       font-weight: 700;
     }
 
-    .crop-cancel-btn:hover {
-      color: var(--text-primary);
-      border-color: var(--text-muted);
+    @media (hover: hover) {
+      .crop-cancel-btn:hover {
+        color: var(--text-primary);
+        border-color: var(--text-muted);
+      }
     }
 
     /* Export Backup Modal Body */
@@ -1412,6 +1732,8 @@
     .vault-body {
       flex: 1;
       overflow-y: auto;
+      overflow-x: hidden;
+      max-width: 100%;
       padding: 1.15rem 1.25rem;
       display: flex;
       flex-direction: column;
@@ -1427,12 +1749,14 @@
       display: flex;
       flex-direction: column;
       gap: 0.8rem;
+      max-width: 100%;
     }
 
     .form-row {
       display: flex;
       flex-direction: column;
       gap: 0.32rem;
+      min-width: 0;
     }
 
     .form-grid {
@@ -1458,7 +1782,6 @@
       color: var(--text-primary);
       font-size: 16px;
       outline: none;
-      transition: border-color 0.2s ease;
       unicode-bidi: plaintext;
     }
 
@@ -1507,7 +1830,7 @@
     }
 
     input[type="checkbox"]:checked + .switch-track {
-      background-color: var(--warning);
+      background-color: var(--accent);
     }
 
     [dir="rtl"] input[type="checkbox"]:checked + .switch-track .switch-thumb {
@@ -1540,8 +1863,10 @@
       font-size: 0.92rem;
     }
 
-    .btn-primary:hover {
-      background-color: var(--accent-hover);
+    @media (hover: hover) {
+      .btn-primary:hover {
+        background-color: var(--accent-hover);
+      }
     }
 
     .btn-secondary {
@@ -1552,9 +1877,11 @@
       font-size: 0.88rem;
     }
 
-    .btn-secondary:hover {
-      color: var(--text-primary);
-      border-color: var(--text-muted);
+    @media (hover: hover) {
+      .btn-secondary:hover {
+        color: var(--text-primary);
+        border-color: var(--text-muted);
+      }
     }
 
     .task-list {
@@ -1563,6 +1890,8 @@
       gap: 0.6rem;
       position: relative;
       border-radius: 14px;
+      max-width: 100%;
+      overflow-x: hidden;
     }
 
     .list-item {
@@ -1573,9 +1902,10 @@
       display: flex;
       align-items: center;
       gap: 0.55rem;
-      transition: border-color 0.2s ease, background-color 0.2s ease;
       user-select: none;
       position: relative;
+      max-width: 100%;
+      overflow-x: hidden;
     }
 
     .list-item.is-active-slot {
@@ -1618,6 +1948,7 @@
     .item-content {
       flex: 1;
       min-width: 0;
+      max-width: 100%;
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
@@ -1627,16 +1958,19 @@
       font-size: 0.96rem;
       font-weight: 600;
       color: var(--text-primary);
+      white-space: normal;
       word-break: break-word;
+      overflow-wrap: anywhere;
       unicode-bidi: plaintext;
     }
 
     .item-note {
-      font-size: 0.83rem;
+      font-size: 0.85rem;
       color: var(--text-secondary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.55;
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
       unicode-bidi: plaintext;
     }
 
@@ -1658,8 +1992,9 @@
     }
 
     .mini-tag.active-tag {
-      background-color: rgba(56, 189, 248, 0.15);
-      color: var(--accent);
+      background-color: var(--badge-soft-bg);
+      border: 1px solid var(--badge-soft-border);
+      color: var(--badge-soft-text);
     }
 
     .mini-tag.mandatory-tag {
@@ -1679,13 +2014,15 @@
       border-radius: 6px;
       font-size: 0.74rem;
       font-weight: 600;
-      background-color: var(--success-bg);
-      color: var(--success);
-      border: 1px solid transparent;
+      background-color: var(--badge-soft-bg);
+      border: 1px solid var(--badge-soft-border);
+      color: var(--badge-soft-text);
     }
 
-    .repeat-badge-btn:hover {
-      border-color: var(--success);
+    @media (hover: hover) {
+      .repeat-badge-btn:hover {
+        border-color: var(--accent);
+      }
     }
 
     .history-drawer {
@@ -1728,9 +2065,11 @@
       background-color: transparent;
     }
 
-    .ctrl-btn:hover:not(:disabled) {
-      background-color: var(--bg-elevated);
-      color: var(--text-primary);
+    @media (hover: hover) {
+      .ctrl-btn:hover:not(:disabled) {
+        background-color: var(--bg-elevated);
+        color: var(--text-primary);
+      }
     }
 
     .ctrl-btn:disabled {
@@ -1738,9 +2077,11 @@
       cursor: not-allowed;
     }
 
-    .ctrl-btn.danger:hover {
-      background-color: var(--danger-bg);
-      color: var(--danger);
+    @media (hover: hover) {
+      .ctrl-btn.danger:hover {
+        background-color: var(--danger-bg);
+        color: var(--danger);
+      }
     }
 
     .completed-toolbar {
@@ -1811,11 +2152,18 @@
       }
     }
   </style>
-<link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./icon.jpg">
-<meta name="theme-color" content="#0b1320">
 </head>
 <body>
+
+  <!-- SOFT THEME WELCOME OVERLAY (Stays Open Until Tapped / Escape) -->
+  <div class="soft-welcome-overlay" id="softWelcomeOverlay" role="dialog" aria-modal="true" aria-live="polite">
+    <div class="soft-welcome-card" id="softWelcomeCard">
+      <div class="soft-welcome-ribbon" aria-hidden="true">🎀</div>
+      <div class="soft-welcome-text" id="softWelcomeText">أهلاً بيكي في عالمك الخاص 🎀</div>
+      <div class="soft-welcome-tag" id="softWelcomeTag">ناعم • Soft</div>
+      <button type="button" class="soft-welcome-skip-btn" id="softWelcomeSkipBtn">انقر للتخطي</button>
+    </div>
+  </div>
 
   <!-- BACKDROP LAYER FOR DRAWER ISOLATION -->
   <div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
@@ -1855,10 +2203,10 @@
 
         <div class="drawer-divider"></div>
 
-        <!-- 2. Themes (Horizontal Pill Row) -->
+        <!-- 2. Themes (2x2 Grid: Soft | Calm Night / Frost | Dark Mode) -->
         <div class="drawer-section">
           <div class="drawer-section-title" id="menuThemesTitle">الثيمات</div>
-          <div class="pills-row-3" id="themeOptionsRow"></div>
+          <div class="themes-grid-2x2" id="themeOptionsGrid"></div>
         </div>
 
         <div class="drawer-divider"></div>
@@ -1917,12 +2265,12 @@
         <!-- 6. Sidebar Footer: Developer Identity & Version Badge -->
         <div class="drawer-footer" id="drawerFooter">
           <span class="drawer-dev-label" id="drawerDevLabel" dir="auto">تطوير MiniDev <span class="drawer-emoji-iso">🧑🏻‍💻</span></span>
-          <span class="drawer-version-badge" id="drawerVersionBadge" dir="ltr">v2.2.8</span>
+          <span class="drawer-version-badge" id="drawerVersionBadge" dir="ltr">v2.2.11</span>
         </div>
       </div>
     </div>
 
-    <!-- End Group: One-Tap Slot Selector [1 | 2 | 3] + The Vault Button -->
+    <!-- End Group: One-Tap Slot Selector [1 | 2 | 3] + Task Hub Button -->
     <div class="top-end-group">
       <div class="one-tap-slots" role="group" id="slotSelector">
         <button type="button" class="slot-pill-btn active" data-slots="1">1</button>
@@ -1932,7 +2280,7 @@
 
       <button type="button" id="openVaultBtn" class="vault-btn">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 15h6"/></svg>
-        <span id="vaultBtnText">الخزنة</span>
+        <span id="vaultBtnText">مستودع المهمات</span>
       </button>
     </div>
   </header>
@@ -1940,10 +2288,13 @@
   <!-- MAIN CALM FOCUS WORKSPACE -->
   <main class="focus-stage" id="focusStage" aria-live="polite"></main>
 
-  <!-- CALM TOAST BANNER -->
-  <div class="calm-toast" id="calmToast" role="status" aria-live="polite"></div>
+  <!-- TOP CALM TOAST BANNER WITH OPTIONAL UNDO BUTTON -->
+  <div class="calm-toast" id="calmToast" role="status" aria-live="polite">
+    <span class="calm-toast-msg" id="calmToastMsg"></span>
+    <button type="button" class="toast-undo-btn" id="toastUndoBtn">تراجع ↩️</button>
+  </div>
 
-  <!-- V2.2.8 THEME-ADAPTIVE CROPPER MODAL (Cropper.js + Offline Canvas Fallback) -->
+  <!-- V2.2.11 THEME-ADAPTIVE CROPPER MODAL (Cropper.js + Offline Canvas Fallback) -->
   <div class="modal-backdrop crop-backdrop" id="cropModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="cropTopTitle">
     <div class="wa-crop-shell" id="cropShell">
       <!-- Top Bar: Title Only -->
@@ -2014,13 +2365,13 @@
     </div>
   </div>
 
-  <!-- THE VAULT MODAL -->
+  <!-- TASK HUB MODAL -->
   <div class="modal-backdrop" id="vaultBackdrop" role="dialog" aria-modal="true" aria-labelledby="vaultHeaderTitle">
     <div class="vault-modal">
       <div class="vault-header">
         <h2 class="vault-title">
           <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 15h6"/></svg>
-          <span id="vaultHeaderTitle">الخزنة</span>
+          <span id="vaultHeaderTitle">مستودع المهمات</span>
         </h2>
         <button type="button" class="btn-close" id="closeVaultBtn" aria-label="Close">
           <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -2071,7 +2422,7 @@
 
             <div class="form-actions">
               <button type="button" class="btn-secondary" id="cancelEditBtn" style="display: none;">إلغاء</button>
-              <button type="submit" class="btn-primary" id="submitTaskBtn">إضافة للخزنة</button>
+              <button type="submit" class="btn-primary" id="submitTaskBtn">إضافة للمستودع</button>
             </div>
           </form>
 
@@ -2111,14 +2462,18 @@
           rotateLeftCropAria: 'تدوير يسار 90 درجة',
           saveCropBtn: '✓ تم',
           devByPrefix: 'تطوير MiniDev',
-          versionBadgeText: 'v2.2.8',
+          versionBadgeText: 'v2.2.11',
           menuAria: 'القائمة الرئيسية',
           menuThemesTitle: 'الثيمات',
           menuLangTitle: 'اللغة',
           menuGlitchTitle: 'منبه الرعشة البصري',
-          themeLight: 'نهاري',
-          themeDark: 'وضع مظلم',
+          themeSoft: 'ناعم',
           themeMidnight: 'ليلي هادئ',
+          themeLight: 'ثلجي',
+          themeDark: 'وضع مظلم',
+          softWelcomeText: 'أهلاً بيكي في عالمك الخاص 🎀',
+          softWelcomeTag: 'ناعم • Soft',
+          softWelcomeSkip: 'انقر للتخطي',
           glitchOff: 'إيقاف',
           glitch1m: '1 د',
           glitch2m: '2 د',
@@ -2141,18 +2496,28 @@
           exportSuccessMsg: 'تم حفظ نسخة المهام الاحتياطية بنجاح.',
           importSuccessMsg: 'تم استعادة بيانات المهام بنجاح.',
           importInvalidMsg: 'ملف النسخة الاحتياطية غير صالح أو تالف.',
-          restoredToQueueToast: 'تمت إعادة المهمة إلى أعلى المهام المنتظرة في الخزنة.',
+          restoredToQueueToast: 'تم استرجاع المهمة',
+          avatarChangedToast: 'تم تغيير الصورة',
+          taskAddedToast: 'تمت إضافة المهمة',
+          taskDeferredToast: 'تم تأجيل المهمة',
+          toastUndoLabel: 'تراجع ↩️',
+          completionCelebrations: [
+            'عاش! خطوة كمان قربتك من هدفك ✨',
+            'إنجاز رايق.. كمّل بنفس التركيز 🎯',
+            'مهمة خلصت! أداؤك هايل النهاردة 💙',
+            'قربت تخلّص كل اللي قدامك، استمر 🌟'
+          ],
           slotsAria: 'عدد المهام المعروضة',
-          vaultBtn: 'الخزنة',
+          vaultBtn: 'مستودع المهمات',
           doneBtn: 'تم',
           deferBtn: 'تأجيل',
           pullNextBtn: '+ اسحب المهمة التالية',
-          completedMsg: 'أنجزت مهمتك الحالية',
+          completedMsg: 'أنجزت مهامك الحالية بنجاح 🏆 افتح مستودع المهمات لو حابب تبدأ جولة جديدة',
           completedSubWithQueue: 'خذ نفساً عميقاً، واسحب المهمة التالية عندما تكون مستعداً.',
-          completedSubEmpty: 'أنهيت جميع المهام في الخزنة. مساحة هادئة بالكامل.',
+          completedSubEmpty: 'أنهيت جميع المهام في مستودع المهمات. مساحة هادئة بالكامل.',
           emptyVaultTitle: 'لا توجد مهام نشطة حالياً',
-          emptyVaultSub: 'افتح الخزنة لإضافة مهمة واحدة واضحة لتبدأ بها.',
-          openVaultAction: 'افتح الخزنة',
+          emptyVaultSub: 'افتح مستودع المهمات لإضافة مهمة واحدة واضحة لتبدأ بها.',
+          openVaultAction: 'افتح مستودع المهمات',
           moveToLabel: 'نقل إلى:',
           mandatoryManualBadge: '⚠️ إلزامية',
           mandatoryTimedBadge: '⚠️ إلزامية (موعد محدد)',
@@ -2167,7 +2532,7 @@
           labelTaskDeadline: 'الموعد النهائي (اختياري)',
           labelPriority: 'التصنيف',
           labelTaskMandatory: 'مهمة إلزامية',
-          addTaskBtn: 'إضافة للخزنة',
+          addTaskBtn: 'إضافة للمستودع',
           saveTaskBtn: 'حفظ التعديلات',
           cancelEditBtn: 'إلغاء',
           inFocusTag: 'معروضة الآن',
@@ -2176,7 +2541,7 @@
           dragAria: 'سحب لإعادة الترتيب',
           editAria: 'تعديل المهمة',
           deleteAria: 'حذف المهمة',
-          queueEmptyMsg: 'الخزنة فارغة حالياً. أضف أول مهمة بالأعلى.',
+          queueEmptyMsg: 'مستودع المهمات فارغ حالياً. أضف أول مهمة بالأعلى.',
           completedEmptyMsg: 'لا توجد مهام منجزة في السجل بعد.',
           completedAtPrefix: 'آخر إنجاز:',
           completedTimes: (n) => `أنجزت ${n} مرات`,
@@ -2206,14 +2571,18 @@
           rotateLeftCropAria: 'Rotate left 90 degrees',
           saveCropBtn: '✓ Done',
           devByPrefix: 'Developed by MiniDev',
-          versionBadgeText: 'v2.2.8',
+          versionBadgeText: 'v2.2.11',
           menuAria: 'Main Menu',
           menuThemesTitle: 'Themes',
           menuLangTitle: 'Language',
           menuGlitchTitle: 'Visual Glitch Alert',
-          themeLight: 'Daylight',
+          themeSoft: 'Soft',
+          themeMidnight: 'Calm Night',
+          themeLight: 'Frost',
           themeDark: 'Dark Mode',
-          themeMidnight: 'Midnight',
+          softWelcomeText: 'Welcome to your world 🎀',
+          softWelcomeTag: 'Soft • ناعم',
+          softWelcomeSkip: 'Tap to skip',
           glitchOff: 'Off',
           glitch1m: '1m',
           glitch2m: '2m',
@@ -2236,18 +2605,28 @@
           exportSuccessMsg: 'Tasks backup saved successfully.',
           importSuccessMsg: 'Tasks data restored successfully.',
           importInvalidMsg: 'Invalid or corrupted backup file.',
-          restoredToQueueToast: 'Task moved to the top of Queue in the Vault.',
+          restoredToQueueToast: 'Task restored',
+          avatarChangedToast: 'Photo updated',
+          taskAddedToast: 'Task added',
+          taskDeferredToast: 'Task deferred',
+          toastUndoLabel: 'Undo ↩️',
+          completionCelebrations: [
+            'Nice! Another step closer to your goal ✨',
+            'Smooth progress.. keep that focus 🎯',
+            'Task done! Great momentum today 💙',
+            'Getting through what is ahead, keep going 🌟'
+          ],
           slotsAria: 'Visible focus slots',
-          vaultBtn: 'The Vault',
+          vaultBtn: 'Task Hub',
           doneBtn: 'Done',
           deferBtn: 'Defer',
           pullNextBtn: '+ Pull Next Task',
-          completedMsg: 'Current task completed',
+          completedMsg: 'Current tasks completed 🏆 Open Task Hub whenever you are ready for a new round',
           completedSubWithQueue: 'Take a mental breath, then pull your next task when ready.',
-          completedSubEmpty: 'You cleared everything in the Vault. Enjoy the calm.',
+          completedSubEmpty: 'You cleared everything in Task Hub. Enjoy the calm.',
           emptyVaultTitle: 'No active tasks right now',
-          emptyVaultSub: 'Open the Vault to add a clear task when you are ready.',
-          openVaultAction: 'Open The Vault',
+          emptyVaultSub: 'Open Task Hub to add one clear task to start with.',
+          openVaultAction: 'Open Task Hub',
           moveToLabel: 'Move to:',
           mandatoryManualBadge: '⚠️ Must Do',
           mandatoryTimedBadge: '⚠️ Must Do (Timed)',
@@ -2262,7 +2641,7 @@
           labelTaskDeadline: 'Deadline (Optional)',
           labelPriority: 'Rule',
           labelTaskMandatory: 'Mandatory Task',
-          addTaskBtn: 'Add to Vault',
+          addTaskBtn: 'Add to Task Hub',
           saveTaskBtn: 'Save Changes',
           cancelEditBtn: 'Cancel',
           inFocusTag: 'In Focus',
@@ -2271,7 +2650,7 @@
           dragAria: 'Drag to reorder',
           editAria: 'Edit task',
           deleteAria: 'Delete task',
-          queueEmptyMsg: 'The Vault queue is empty. Add a task above.',
+          queueEmptyMsg: 'Task Hub queue is empty. Add a task above.',
           completedEmptyMsg: 'No completed tasks recorded yet.',
           completedAtPrefix: 'Last completed:',
           completedTimes: (n) => `Completed ${n} times`,
@@ -2287,10 +2666,12 @@
         }
       };
 
-      const THEME_OPTIONS = [
-        { id: 'light', labelKey: 'themeLight' },
-        { id: 'dark', labelKey: 'themeDark' },
-        { id: 'navy', labelKey: 'themeMidnight' }
+      /* Ordered 2x2 Grid: Row 1 = Soft | Calm Night, Row 2 = Frost | Dark Mode */
+      const THEME_GRID_OPTIONS = [
+        { id: 'soft', emoji: '🎀', iconClass: 'icon-soft', labelKey: 'themeSoft' },
+        { id: 'navy', emoji: '🌙', iconClass: 'icon-navy', labelKey: 'themeMidnight' },
+        { id: 'light', emoji: '❄️', iconClass: 'icon-light', labelKey: 'themeLight' },
+        { id: 'dark', emoji: '🌑', iconClass: 'icon-dark', labelKey: 'themeDark' }
       ];
 
       const GLITCH_PRESETS = [
@@ -2303,7 +2684,8 @@
       const THEME_META_COLORS = {
         navy: '#0b1320',
         dark: '#000000',
-        light: '#f8fafc'
+        light: '#e8eef5',
+        soft: '#f6eef2'
       };
 
       /* =========================================
@@ -2390,7 +2772,7 @@
         const restoredResting = [Boolean(rawResting[0]), Boolean(rawResting[1]), Boolean(rawResting[2])];
 
         return {
-          theme: ['navy', 'dark', 'light'].includes(parsed.theme) ? parsed.theme : 'navy',
+          theme: ['navy', 'dark', 'light', 'soft'].includes(parsed.theme) ? parsed.theme : 'navy',
           lang: parsed.lang === 'en' ? 'en' : 'ar',
           slotCount: restoredSlotCount,
           glitchMode: mode,
@@ -2431,14 +2813,17 @@
       let queueSortableInstance = null;
       let backupStatusTimeout = null;
       let toastTimer = null;
+      let undoToastTimer = null;
+      let pendingUndoAction = null;
+      let lastCelebrationIndex = -1;
 
-      /* Cropper.js + Offline Canvas Fallback state (image locked inside stage, crop box moves/resizes) */
+      /* Cropper.js + Offline Canvas Fallback state */
       let cropperInstance = null;
       let fallbackCropImage = null;
       let fallbackRotation = 0;
       let fallbackBox = { x: 0, y: 0, size: 180 };
       let fallbackBounds = { left: 0, top: 0, width: 240, height: 240 };
-      let fallbackAction = null; // 'move' | 'n' | 's' | 'e' | 'w' | 'nw' | 'ne' | 'sw' | 'se'
+      let fallbackAction = null;
       let fallbackPointerStart = { x: 0, y: 0, box: null };
       let cropSyncRaf = null;
 
@@ -2463,6 +2848,21 @@
 
       function generateId() {
         return 't_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
+      }
+
+      /* =========================================
+         2B. SOFT THEME WELCOME SPLASH (MANUAL DISMISS ONLY)
+         ========================================= */
+      function dismissSoftWelcomeOverlay() {
+        els.softWelcomeOverlay.classList.remove('open');
+      }
+
+      function triggerSoftWelcomeOverlay() {
+        if (state.theme !== 'soft') return;
+        els.softWelcomeText.textContent = t('softWelcomeText');
+        els.softWelcomeTag.textContent = t('softWelcomeTag');
+        els.softWelcomeSkipBtn.textContent = t('softWelcomeSkip');
+        els.softWelcomeOverlay.classList.add('open');
       }
 
       /* =========================================
@@ -2580,6 +2980,17 @@
         saveState();
       }
 
+      function nextCelebrationMessage() {
+        const list = I18N[state.lang].completionCelebrations || [];
+        if (list.length === 0) return t('completedMsg');
+        let idx = Math.floor(Math.random() * list.length);
+        if (list.length > 1 && idx === lastCelebrationIndex) {
+          idx = (idx + 1) % list.length;
+        }
+        lastCelebrationIndex = idx;
+        return list[idx];
+      }
+
       function completeSlotTask(slotIndex) {
         const taskId = state.slots[slotIndex];
         if (!taskId) return;
@@ -2587,19 +2998,21 @@
         openReorderSlot = null;
         const nowIso = new Date().toISOString();
         const idx = state.queue.findIndex(item => item.id === taskId);
+        if (idx === -1) return;
 
-        if (idx !== -1) {
-          const [task] = state.queue.splice(idx, 1);
-          const existingLog = Array.isArray(task.completionLog) ? task.completionLog.slice() : [];
-          existingLog.push(nowIso);
-          existingLog.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+        const prevSlots = state.slots.slice();
+        const prevResting = state.restingSlots.slice();
+        const [task] = state.queue.splice(idx, 1);
+        const existingLog = Array.isArray(task.completionLog) ? task.completionLog.slice() : [];
+        existingLog.push(nowIso);
+        existingLog.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
-          state.completed.unshift({
-            ...task,
-            completedAt: existingLog[existingLog.length - 1],
-            completionLog: existingLog
-          });
-        }
+        const completedEntry = {
+          ...task,
+          completedAt: existingLog[existingLog.length - 1],
+          completionLog: existingLog
+        };
+        state.completed.unshift(completedEntry);
 
         state.slots[slotIndex] = null;
         state.restingSlots[slotIndex] = true;
@@ -2607,6 +3020,25 @@
         saveState();
         renderAll(true);
         restartGlitchTimer();
+
+        const message = nextCelebrationMessage();
+        showCalmToast(message, () => {
+          const compIdx = state.completed.findIndex(c => c.id === task.id && c.completedAt === completedEntry.completedAt);
+          if (compIdx !== -1) {
+            state.completed.splice(compIdx, 1);
+          }
+          const restoredTask = {
+            ...task,
+            completionLog: existingLog.slice(0, -1)
+          };
+          const insertAt = Math.min(idx, state.queue.length);
+          state.queue.splice(insertAt, 0, restoredTask);
+          state.slots = prevSlots.slice();
+          state.restingSlots = prevResting.slice();
+          syncFocusSlots();
+          renderAll(false);
+          showCalmToast(t('restoredToQueueToast'));
+        });
       }
 
       function pullNextForSlot(slotIndex) {
@@ -2636,6 +3068,10 @@
         if (getTaskStatus(task).isMandatory) return;
 
         openReorderSlot = null;
+        const snapshotQueue = state.queue.map(item => ({ ...item, completionLog: (item.completionLog || []).slice() }));
+        const snapshotSlots = state.slots.slice();
+        const snapshotResting = state.restingSlots.slice();
+
         state.queue.splice(idx, 1);
         state.queue.push(task);
 
@@ -2643,6 +3079,15 @@
         state.restingSlots[slotIndex] = false;
         syncFocusSlots();
         pullNextForSlot(slotIndex);
+
+        showCalmToast(t('taskDeferredToast'), () => {
+          state.queue = snapshotQueue;
+          state.slots = snapshotSlots;
+          state.restingSlots = snapshotResting;
+          syncFocusSlots();
+          renderAll(false);
+          showCalmToast(t('restoredToQueueToast'));
+        });
       }
 
       function swapFocusSlotPositions(fromSlot, toSlot) {
@@ -2706,6 +3151,12 @@
          6. DOM REFERENCES, CROPPER, HISTORY STACK & SHARE
          ========================================= */
       const els = {
+        softWelcomeOverlay: document.getElementById('softWelcomeOverlay'),
+        softWelcomeCard: document.getElementById('softWelcomeCard'),
+        softWelcomeText: document.getElementById('softWelcomeText'),
+        softWelcomeTag: document.getElementById('softWelcomeTag'),
+        softWelcomeSkipBtn: document.getElementById('softWelcomeSkipBtn'),
+
         drawerBackdrop: document.getElementById('drawerBackdrop'),
         menuWrap: document.getElementById('menuWrap'),
         hamburgerBtn: document.getElementById('hamburgerBtn'),
@@ -2748,7 +3199,7 @@
         saveBackupFileText: document.getElementById('saveBackupFileText'),
 
         menuThemesTitle: document.getElementById('menuThemesTitle'),
-        themeOptionsRow: document.getElementById('themeOptionsRow'),
+        themeOptionsGrid: document.getElementById('themeOptionsGrid'),
         menuGlitchTitle: document.getElementById('menuGlitchTitle'),
         glitchPresetsRow: document.getElementById('glitchPresetsRow'),
         menuLangTitle: document.getElementById('menuLangTitle'),
@@ -2776,6 +3227,8 @@
 
         focusStage: document.getElementById('focusStage'),
         calmToast: document.getElementById('calmToast'),
+        calmToastMsg: document.getElementById('calmToastMsg'),
+        toastUndoBtn: document.getElementById('toastUndoBtn'),
 
         vaultBackdrop: document.getElementById('vaultBackdrop'),
         vaultHeaderTitle: document.getElementById('vaultHeaderTitle'),
@@ -2812,7 +3265,6 @@
       /* =========================================
          6B. BACK ONE STEP (HISTORY API LAYER STACK)
          ========================================= */
-      // Ordered stack of open layers: 'drawer', 'vault', 'crop', 'export'
       const openLayerStack = [];
       let suppressingPopstateClose = false;
 
@@ -2875,14 +3327,51 @@
           || els.vaultBackdrop.classList.contains('open');
       }
 
-      function showCalmToast(message) {
-        els.calmToast.textContent = message;
-        els.calmToast.classList.add('visible');
-        if (toastTimer) clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => {
-          els.calmToast.classList.remove('visible');
-        }, 2800);
+      function showCalmToast(message, undoCallback = null) {
+        if (toastTimer) {
+          clearTimeout(toastTimer);
+          toastTimer = null;
+        }
+        if (undoToastTimer) {
+          clearTimeout(undoToastTimer);
+          undoToastTimer = null;
+        }
+
+        els.calmToastMsg.textContent = message;
+        pendingUndoAction = typeof undoCallback === 'function' ? undoCallback : null;
+
+        if (pendingUndoAction) {
+          els.toastUndoBtn.textContent = t('toastUndoLabel');
+          els.toastUndoBtn.classList.add('visible');
+          els.calmToast.classList.add('visible');
+          undoToastTimer = setTimeout(() => {
+            pendingUndoAction = null;
+            els.toastUndoBtn.classList.remove('visible');
+            els.calmToast.classList.remove('visible');
+          }, 5000);
+        } else {
+          els.toastUndoBtn.classList.remove('visible');
+          els.calmToast.classList.add('visible');
+          toastTimer = setTimeout(() => {
+            els.calmToast.classList.remove('visible');
+          }, 3400);
+        }
       }
+
+      els.toastUndoBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (undoToastTimer) {
+          clearTimeout(undoToastTimer);
+          undoToastTimer = null;
+        }
+        const action = pendingUndoAction;
+        pendingUndoAction = null;
+        els.toastUndoBtn.classList.remove('visible');
+        els.calmToast.classList.remove('visible');
+        if (typeof action === 'function') {
+          action();
+        }
+      });
 
       function showBackupNotice(message, isError = false) {
         els.backupStatusMsg.textContent = message;
@@ -2894,8 +3383,18 @@
         }, 4000);
       }
 
+      function setAvatarConfirmState(active, shouldBlur = false) {
+        confirmRemoveAvatar = Boolean(active);
+        els.removeAvatarBtn.classList.toggle('is-confirming', confirmRemoveAvatar);
+        if (!confirmRemoveAvatar && shouldBlur) {
+          els.removeAvatarBtn.blur();
+        }
+        renderAvatarConfirmBar();
+      }
+
       function renderAvatarConfirmBar() {
         els.avatarConfirmSlot.innerHTML = '';
+        els.removeAvatarBtn.classList.toggle('is-confirming', confirmRemoveAvatar);
         if (!confirmRemoveAvatar || !state.profileAvatar) return;
 
         const bar = document.createElement('div');
@@ -2914,6 +3413,8 @@
           e.stopPropagation();
           state.profileAvatar = '';
           confirmRemoveAvatar = false;
+          els.removeAvatarBtn.classList.remove('is-confirming');
+          els.removeAvatarBtn.blur();
           saveState();
           renderProfileSection();
         });
@@ -2924,8 +3425,7 @@
         undoBtn.textContent = t('undoBtn');
         undoBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          confirmRemoveAvatar = false;
-          renderProfileSection();
+          setAvatarConfirmState(false, true);
         });
 
         actionPair.appendChild(confirmBtn);
@@ -2946,8 +3446,10 @@
         if (state.profileAvatar) {
           els.avatarCircle.innerHTML = `<img src="${state.profileAvatar}" alt="">`;
           els.removeAvatarBtn.style.display = 'inline-flex';
+          els.removeAvatarBtn.classList.toggle('is-confirming', confirmRemoveAvatar);
         } else {
           confirmRemoveAvatar = false;
+          els.removeAvatarBtn.classList.remove('is-confirming');
           const initialChar = Array.from(displayName)[0] || (state.lang === 'ar' ? 'ن' : 'F');
           els.avatarCircle.textContent = initialChar.toUpperCase();
           els.removeAvatarBtn.style.display = 'none';
@@ -2957,8 +3459,13 @@
       }
 
       /* =========================================
-         7. V2.2.8 LOCKED-IMAGE CROPPER + CIRCULAR RING
+         7. V2.2.11 LOCKED-ZOOM CROPPER + AUTO-FIT ROTATION + CORNER MAPPING
          ========================================= */
+      function getCssVar(name, fallback) {
+        const val = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        return val || fallback;
+      }
+
       function positionCircleRing(leftPx, topPx, sizePx) {
         if (!sizePx || sizePx <= 0) return;
         els.cropCircleGuide.style.setProperty('--crop-ring-left', `${leftPx}px`);
@@ -2967,30 +3474,107 @@
         els.cropCircleGuide.classList.add('active');
       }
 
-      function clampCropperBoxInsideImage() {
+      function fitAndCenterCropperCanvas(prevBoxRel = null) {
         if (!cropperInstance) return;
-        const canvasData = cropperInstance.getCanvasData();
-        const boxData = cropperInstance.getCropBoxData();
-        if (!canvasData || !boxData || canvasData.width <= 0 || canvasData.height <= 0) return;
+        const container = cropperInstance.getContainerData();
+        const imageData = cropperInstance.getImageData();
+        if (!container || !imageData || !imageData.naturalWidth || !imageData.naturalHeight) return;
 
-        const minSide = 48;
-        const maxSide = Math.max(minSide, Math.min(canvasData.width, canvasData.height));
-        let nextW = Math.min(maxSide, Math.max(minSide, boxData.width));
-        let nextH = nextW;
-        let nextL = Math.max(canvasData.left, Math.min(boxData.left, canvasData.left + canvasData.width - nextW));
-        let nextT = Math.max(canvasData.top, Math.min(boxData.top, canvasData.top + canvasData.height - nextH));
+        const normRot = ((imageData.rotate % 360) + 360) % 360;
+        const swap = normRot === 90 || normRot === 270;
+        const effNatW = swap ? imageData.naturalHeight : imageData.naturalWidth;
+        const effNatH = swap ? imageData.naturalWidth : imageData.naturalHeight;
 
-        if (
-          Math.abs(nextW - boxData.width) > 0.5 ||
-          Math.abs(nextL - boxData.left) > 0.5 ||
-          Math.abs(nextT - boxData.top) > 0.5
-        ) {
+        const fitRatio = Math.min(container.width / effNatW, container.height / effNatH);
+        const fittedW = Math.max(20, effNatW * fitRatio);
+        const fittedH = Math.max(20, effNatH * fitRatio);
+        const fittedLeft = (container.width - fittedW) / 2;
+        const fittedTop = (container.height - fittedH) / 2;
+
+        cropperInstance.setCanvasData({
+          left: fittedLeft,
+          top: fittedTop,
+          width: fittedW,
+          height: fittedH
+        });
+
+        const minSide = Math.min(48, fittedW, fittedH);
+        const maxSide = Math.max(minSide, Math.min(fittedW, fittedH));
+
+        if (prevBoxRel) {
+          const nextSize = Math.min(maxSide, Math.max(minSide, prevBoxRel.sizeNorm * maxSide));
+          const leftOffsetNorm = Math.max(0, Math.min(1 - prevBoxRel.sizeNorm, prevBoxRel.leftNorm));
+          const topOffsetNorm = Math.max(0, Math.min(1 - prevBoxRel.sizeNorm, prevBoxRel.topNorm));
+          let nextLeft = fittedLeft + leftOffsetNorm * fittedW;
+          let nextTop = fittedTop + topOffsetNorm * fittedH;
+          nextLeft = Math.max(fittedLeft, Math.min(nextLeft, fittedLeft + fittedW - nextSize));
+          nextTop = Math.max(fittedTop, Math.min(nextTop, fittedTop + fittedH - nextSize));
           cropperInstance.setCropBoxData({
-            left: nextL,
-            top: nextT,
-            width: nextW,
-            height: nextH
+            left: nextLeft,
+            top: nextTop,
+            width: nextSize,
+            height: nextSize
           });
+        } else {
+          const initSize = Math.max(minSide, Math.round(maxSide * 0.85));
+          cropperInstance.setCropBoxData({
+            left: Math.round(fittedLeft + (fittedW - initSize) / 2),
+            top: Math.round(fittedTop + (fittedH - initSize) / 2),
+            width: initSize,
+            height: initSize
+          });
+        }
+      }
+
+      function lockCropperMinZoomAndBounds() {
+        if (!cropperInstance) return;
+        const container = cropperInstance.getContainerData();
+        const imageData = cropperInstance.getImageData();
+        let canvasData = cropperInstance.getCanvasData();
+        if (!container || !imageData || !canvasData || !imageData.naturalWidth || !imageData.naturalHeight) return;
+
+        const normRot = ((imageData.rotate % 360) + 360) % 360;
+        const swap = normRot === 90 || normRot === 270;
+        const effNatW = swap ? imageData.naturalHeight : imageData.naturalWidth;
+        const effNatH = swap ? imageData.naturalWidth : imageData.naturalHeight;
+
+        const fitRatio = Math.min(container.width / effNatW, container.height / effNatH);
+        const minWidth = Math.max(20, effNatW * fitRatio);
+        const minHeight = Math.max(20, effNatH * fitRatio);
+
+        if (canvasData.width < minWidth - 0.5 || canvasData.height < minHeight - 0.5) {
+          const nextLeft = (container.width - minWidth) / 2;
+          const nextTop = (container.height - minHeight) / 2;
+          cropperInstance.setCanvasData({
+            left: nextLeft,
+            top: nextTop,
+            width: minWidth,
+            height: minHeight
+          });
+          canvasData = cropperInstance.getCanvasData();
+        }
+
+        const boxData = cropperInstance.getCropBoxData();
+        if (boxData && canvasData && canvasData.width > 0 && canvasData.height > 0) {
+          const minSide = Math.min(48, canvasData.width, canvasData.height);
+          const maxSide = Math.max(minSide, Math.min(canvasData.width, canvasData.height));
+          let nextW = Math.min(maxSide, Math.max(minSide, boxData.width));
+          let nextH = nextW;
+          let nextL = Math.max(canvasData.left, Math.min(boxData.left, canvasData.left + canvasData.width - nextW));
+          let nextT = Math.max(canvasData.top, Math.min(boxData.top, canvasData.top + canvasData.height - nextH));
+
+          if (
+            Math.abs(nextW - boxData.width) > 0.5 ||
+            Math.abs(nextL - boxData.left) > 0.5 ||
+            Math.abs(nextT - boxData.top) > 0.5
+          ) {
+            cropperInstance.setCropBoxData({
+              left: nextL,
+              top: nextT,
+              width: nextW,
+              height: nextH
+            });
+          }
         }
       }
 
@@ -2998,7 +3582,7 @@
         if (!els.cropModalBackdrop.classList.contains('open')) return;
 
         if (cropperInstance) {
-          clampCropperBoxInsideImage();
+          lockCropperMinZoomAndBounds();
           const box = cropperInstance.getCropBoxData();
           const container = cropperInstance.getContainerData();
           if (box && container && box.width > 0 && box.height > 0) {
@@ -3020,9 +3604,11 @@
           const stageRect = els.cropStage.getBoundingClientRect();
           const canvasRect = els.cropFallbackCanvas.getBoundingClientRect();
           if (canvasRect.width > 0 && canvasRect.height > 0) {
-            const centerX = (canvasRect.left - stageRect.left) + (fallbackBounds.left + fallbackBox.x + fallbackBox.size / 2);
-            const centerY = (canvasRect.top - stageRect.top) + (fallbackBounds.top + fallbackBox.y + fallbackBox.size / 2);
-            positionCircleRing(centerX, centerY, fallbackBox.size);
+            const scaleX = canvasRect.width / Math.max(1, els.cropFallbackCanvas.width);
+            const scaleY = canvasRect.height / Math.max(1, els.cropFallbackCanvas.height);
+            const centerX = (canvasRect.left - stageRect.left) + (fallbackBounds.left + fallbackBox.x + fallbackBox.size / 2) * scaleX;
+            const centerY = (canvasRect.top - stageRect.top) + (fallbackBounds.top + fallbackBox.y + fallbackBox.size / 2) * scaleY;
+            positionCircleRing(centerX, centerY, fallbackBox.size * Math.min(scaleX, scaleY));
           }
         }
       }
@@ -3071,14 +3657,62 @@
 
         const left = Math.round((canvasW - drawW) / 2);
         const top = Math.round((canvasH - drawH) / 2);
-        return { left, top, width: drawW, height: drawH, drawW, drawH };
+        return { left, top, width: drawW, height: drawH };
       }
 
-      function renderOfflineCanvasView(resetBox = false) {
+      function mapBoxAcrossRotation(prevBox, prevBounds, nextBounds, deg) {
+        const normDeg = ((deg % 360) + 360) % 360;
+        const prevW = Math.max(1, prevBounds.width);
+        const prevH = Math.max(1, prevBounds.height);
+        const nextW = Math.max(1, nextBounds.width);
+        const nextH = Math.max(1, nextBounds.height);
+
+        const prevMax = Math.max(1, Math.min(prevW, prevH));
+        const nextMax = Math.max(1, Math.min(nextW, nextH));
+        const minSide = Math.min(48, nextW, nextH);
+        const sizeNorm = prevBox.size / prevMax;
+        const nextSize = Math.min(nextMax, Math.max(minSide, sizeNorm * nextMax));
+
+        const u0 = prevBox.x / prevW;
+        const v0 = prevBox.y / prevH;
+        const u1 = (prevBox.x + prevBox.size) / prevW;
+        const v1 = (prevBox.y + prevBox.size) / prevH;
+
+        let nu0 = u0;
+        let nv0 = v0;
+        let nu1 = u1;
+        let nv1 = v1;
+
+        if (normDeg === 90) {
+          nu0 = 1 - v1;
+          nv0 = u0;
+          nu1 = 1 - v0;
+          nv1 = u1;
+        } else if (normDeg === 270) {
+          nu0 = v0;
+          nv0 = 1 - u1;
+          nu1 = v1;
+          nv1 = 1 - u0;
+        }
+
+        const mappedX = Math.min(nu0, nu1) * nextW;
+        const mappedY = Math.min(nv0, nv1) * nextH;
+
+        return {
+          x: Math.max(0, Math.min(mappedX, nextW - nextSize)),
+          y: Math.max(0, Math.min(mappedY, nextH - nextSize)),
+          size: nextSize
+        };
+      }
+
+      function renderOfflineCanvasView(resetBox = false, rotationDelta = 0) {
         if (!fallbackCropImage) return;
         const canvas = els.cropFallbackCanvas;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
+
+        const prevBoxSnapshot = { ...fallbackBox };
+        const prevBoundsSnapshot = { ...fallbackBounds };
 
         const stageRect = els.cropStage.getBoundingClientRect();
         const side = Math.min(360, Math.max(220, Math.floor(Math.min(stageRect.width || 340, stageRect.height || 340) * 0.86)));
@@ -3088,24 +3722,29 @@
         const bounds = computeFallbackImageBounds(side, side);
         fallbackBounds = bounds;
 
-        const minBox = 48;
+        const minBox = Math.min(48, bounds.width, bounds.height);
         const maxBox = Math.max(minBox, Math.min(bounds.width, bounds.height));
-        if (resetBox || fallbackBox.size <= 0) {
-          const initSize = Math.max(minBox, Math.round(maxBox * 0.82));
+
+        if (resetBox || prevBoxSnapshot.size <= 0) {
+          const initSize = Math.max(minBox, Math.round(maxBox * 0.85));
           fallbackBox = {
             size: initSize,
             x: Math.round((bounds.width - initSize) / 2),
             y: Math.round((bounds.height - initSize) / 2)
           };
+        } else if (rotationDelta !== 0) {
+          fallbackBox = mapBoxAcrossRotation(prevBoxSnapshot, prevBoundsSnapshot, bounds, rotationDelta);
         } else {
-          fallbackBox.size = Math.min(maxBox, Math.max(minBox, fallbackBox.size));
-          fallbackBox.x = Math.max(0, Math.min(fallbackBox.x, bounds.width - fallbackBox.size));
-          fallbackBox.y = Math.max(0, Math.min(fallbackBox.y, bounds.height - fallbackBox.size));
+          const nextSize = Math.min(maxBox, Math.max(minBox, prevBoxSnapshot.size));
+          fallbackBox = {
+            size: nextSize,
+            x: Math.max(0, Math.min(prevBoxSnapshot.x, bounds.width - nextSize)),
+            y: Math.max(0, Math.min(prevBoxSnapshot.y, bounds.height - nextSize))
+          };
         }
 
         ctx.clearRect(0, 0, side, side);
 
-        // Draw locked image centered inside bounds
         ctx.save();
         ctx.translate(side / 2, side / 2);
         ctx.rotate((fallbackRotation * Math.PI) / 180);
@@ -3116,21 +3755,19 @@
         ctx.drawImage(fallbackCropImage, -rotW / 2, -rotH / 2, rotW, rotH);
         ctx.restore();
 
-        // Draw 1:1 crop rectangle, rule-of-thirds guides, and corner/edge handles
         const bx = bounds.left + fallbackBox.x;
         const by = bounds.top + fallbackBox.y;
         const bs = fallbackBox.size;
 
-        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#38bdf8';
-        const cardColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-card').trim() || '#131e30';
+        const accentColor = getCssVar('--accent', '#38bdf8');
+        const cardColor = getCssVar('--bg-card', '#131e30');
 
         ctx.save();
         ctx.strokeStyle = accentColor;
         ctx.lineWidth = 2;
         ctx.strokeRect(bx, by, bs, bs);
 
-        // Rule of thirds
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.42)';
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(bx + bs / 3, by);
@@ -3143,7 +3780,6 @@
         ctx.lineTo(bx + bs, by + (2 * bs) / 3);
         ctx.stroke();
 
-        // Corner handles
         const hSize = 12;
         const corners = [
           [bx, by],
@@ -3167,7 +3803,7 @@
 
       function resetFallbackTransform() {
         fallbackRotation = 0;
-        renderOfflineCanvasView(true);
+        renderOfflineCanvasView(true, 0);
       }
 
       function openCropModalWithFile(file) {
@@ -3205,7 +3841,7 @@
                 cropBoxMovable: true,
                 cropBoxResizable: true,
                 ready() {
-                  clampCropperBoxInsideImage();
+                  fitAndCenterCropperCanvas(null);
                   scheduleCircularGuideSync();
                 },
                 crop() {
@@ -3243,21 +3879,61 @@
         }
       }
 
+      function getCropperRotatedBoxRel(deg) {
+        if (!cropperInstance) return null;
+        const canvasData = cropperInstance.getCanvasData();
+        const boxData = cropperInstance.getCropBoxData();
+        if (!canvasData || !boxData || canvasData.width <= 0 || canvasData.height <= 0) return null;
+
+        const normDeg = ((deg % 360) + 360) % 360;
+        const maxSide = Math.max(1, Math.min(canvasData.width, canvasData.height));
+        const sizeNorm = Math.min(boxData.width, boxData.height) / maxSide;
+
+        const u0 = (boxData.left - canvasData.left) / canvasData.width;
+        const v0 = (boxData.top - canvasData.top) / canvasData.height;
+        const u1 = (boxData.left + boxData.width - canvasData.left) / canvasData.width;
+        const v1 = (boxData.top + boxData.height - canvasData.top) / canvasData.height;
+
+        let nu0 = u0;
+        let nv0 = v0;
+        let nu1 = u1;
+        let nv1 = v1;
+
+        if (normDeg === 90) {
+          nu0 = 1 - v1;
+          nv0 = u0;
+          nu1 = 1 - v0;
+          nv1 = u1;
+        } else if (normDeg === 270) {
+          nu0 = v0;
+          nv0 = 1 - u1;
+          nu1 = v1;
+          nv1 = 1 - u0;
+        }
+
+        return {
+          leftNorm: Math.min(nu0, nu1),
+          topNorm: Math.min(nv0, nv1),
+          sizeNorm
+        };
+      }
+
       function rotateCropperBy(deg) {
         if (cropperInstance) {
+          const nextRel = getCropperRotatedBoxRel(deg);
           cropperInstance.rotate(deg);
-          clampCropperBoxInsideImage();
+          fitAndCenterCropperCanvas(nextRel);
           scheduleCircularGuideSync();
         } else if (fallbackCropImage) {
           fallbackRotation = (((fallbackRotation + deg) % 360) + 360) % 360;
-          renderOfflineCanvasView(false);
+          renderOfflineCanvasView(false, deg);
         }
       }
 
       function resetCropperView() {
         if (cropperInstance) {
           cropperInstance.reset();
-          clampCropperBoxInsideImage();
+          fitAndCenterCropperCanvas(null);
           scheduleCircularGuideSync();
         } else if (fallbackCropImage) {
           resetFallbackTransform();
@@ -3310,7 +3986,6 @@
         return '';
       }
 
-      /* Offline Canvas Crop Box Move & Resize Handlers (Image Remains Stationary) */
       function detectFallbackHitZone(px, py) {
         const bx = fallbackBounds.left + fallbackBox.x;
         const by = fallbackBounds.top + fallbackBox.y;
@@ -3367,7 +4042,7 @@
         const dx = px - fallbackPointerStart.x;
         const dy = py - fallbackPointerStart.y;
         const startBox = fallbackPointerStart.box;
-        const minSide = 48;
+        const minSide = Math.min(48, fallbackBounds.width, fallbackBounds.height);
         const maxSide = Math.max(minSide, Math.min(fallbackBounds.width, fallbackBounds.height));
 
         if (fallbackAction === 'move') {
@@ -3401,7 +4076,7 @@
           fallbackBox = { x: nextX, y: nextY, size: nextSize };
         }
 
-        renderOfflineCanvasView(false);
+        renderOfflineCanvasView(false, 0);
       });
 
       const endFallbackAction = () => {
@@ -3421,6 +4096,9 @@
         const metaTheme = clone.querySelector('meta[name="theme-color"]');
         if (metaTheme) metaTheme.setAttribute('content', '#0b1320');
 
+        const welcomeOverlay = clone.querySelector('#softWelcomeOverlay');
+        if (welcomeOverlay) welcomeOverlay.classList.remove('open');
+
         const slots = clone.querySelectorAll('.slot-pill-btn');
         slots.forEach(btn => {
           btn.classList.toggle('active', btn.dataset.slots === '1');
@@ -3431,6 +4109,12 @@
 
         const drawer = clone.querySelector('#drawerMenu');
         if (drawer) drawer.classList.remove('open');
+
+        const hamb = clone.querySelector('#hamburgerBtn');
+        if (hamb) {
+          hamb.classList.remove('is-open');
+          hamb.setAttribute('aria-expanded', 'false');
+        }
 
         const vault = clone.querySelector('#vaultBackdrop');
         if (vault) vault.classList.remove('open');
@@ -3448,7 +4132,10 @@
         if (avatarCircle) avatarCircle.textContent = 'ن';
 
         const removeBtn = clone.querySelector('#removeAvatarBtn');
-        if (removeBtn) removeBtn.style.display = 'none';
+        if (removeBtn) {
+          removeBtn.style.display = 'none';
+          removeBtn.classList.remove('is-confirming');
+        }
 
         const nameInput = clone.querySelector('#profileNameInput');
         if (nameInput) nameInput.removeAttribute('value');
@@ -3563,7 +4250,7 @@
           state.slots[2] || null
         ];
         const payload = {
-          version: '2.2.8',
+          version: '2.2.11',
           scope: 'tasks-only',
           exportedAt: new Date().toISOString(),
           slotCount: state.slotCount,
@@ -3685,8 +4372,14 @@
 
       function closeDrawerMenu(fromPopstate = false) {
         confirmRemoveAvatar = false;
+        els.removeAvatarBtn.classList.remove('is-confirming');
+        els.removeAvatarBtn.blur();
+        renderAvatarConfirmBar();
+
         els.hamburgerBtn.classList.remove('is-open');
         els.hamburgerBtn.setAttribute('aria-expanded', 'false');
+        els.hamburgerBtn.blur();
+
         els.drawerBackdrop.classList.remove('open');
         els.drawerMenu.classList.remove('open');
         document.body.classList.remove('menu-scroll-locked');
@@ -3723,21 +4416,37 @@
         els.langArBtn.classList.toggle('active', state.lang === 'ar');
         els.langEnBtn.classList.toggle('active', state.lang === 'en');
 
-        /* Horizontal Theme Pills */
-        els.themeOptionsRow.innerHTML = '';
-        THEME_OPTIONS.forEach(opt => {
+        /* 2x2 Theme Grid with Floating Icon Badges */
+        els.themeOptionsGrid.innerHTML = '';
+        THEME_GRID_OPTIONS.forEach(opt => {
           const isSelected = opt.id === state.theme;
           const btn = document.createElement('button');
           btn.type = 'button';
-          btn.className = 'pill-choice-btn' + (isSelected ? ' active' : '');
-          btn.textContent = t(opt.labelKey);
+          btn.className = 'theme-grid-btn' + (isSelected ? ' active' : '');
+
+          const badge = document.createElement('span');
+          badge.className = `theme-floating-icon ${opt.iconClass}`;
+          badge.setAttribute('aria-hidden', 'true');
+          badge.textContent = opt.emoji;
+
+          const labelSpan = document.createElement('span');
+          labelSpan.className = 'theme-grid-label';
+          labelSpan.textContent = t(opt.labelKey);
+
+          btn.appendChild(badge);
+          btn.appendChild(labelSpan);
+
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
+            const prevTheme = state.theme;
             state.theme = opt.id;
             saveState();
             applyThemeAndLang();
+            if (opt.id === 'soft' && prevTheme !== 'soft') {
+              triggerSoftWelcomeOverlay();
+            }
           });
-          els.themeOptionsRow.appendChild(btn);
+          els.themeOptionsGrid.appendChild(btn);
         });
 
         /* Horizontal Glitch Pills (Off | 1m | 2m | 5m | Custom) */
@@ -3811,6 +4520,12 @@
         els.exportModalTitle.textContent = t('exportModalTitle');
         els.exportFilenameLabel.textContent = t('exportFilenameLabel');
         els.saveBackupFileText.textContent = t('saveBackupFileText');
+
+        if (els.softWelcomeOverlay.classList.contains('open')) {
+          els.softWelcomeText.textContent = t('softWelcomeText');
+          els.softWelcomeTag.textContent = t('softWelcomeTag');
+          els.softWelcomeSkipBtn.textContent = t('softWelcomeSkip');
+        }
       }
 
       function syncThemeMetaAndBody() {
@@ -3854,7 +4569,7 @@
         renderDrawerMenu();
         if (els.cropModalBackdrop.classList.contains('open')) {
           if (fallbackCropImage && !cropperInstance) {
-            renderOfflineCanvasView(false);
+            renderOfflineCanvasView(false, 0);
           } else {
             scheduleCircularGuideSync();
           }
@@ -3913,6 +4628,7 @@
         const queueMap = new Map(state.queue.map(item => [item.id, item]));
         const allAssignedIds = new Set(state.slots.filter(Boolean));
         const unpulledTasksExist = state.queue.some(task => !allAssignedIds.has(task.id));
+        const vaultQueueCompletelyEmpty = state.queue.length === 0 && allAssignedIds.size === 0;
 
         for (let i = 0; i < state.slotCount; i++) {
           const taskId = state.slots[i];
@@ -4037,7 +4753,7 @@
             restCard.appendChild(pullBtn);
 
             els.focusStage.appendChild(restCard);
-          } else if (state.restingSlots[i] && allAssignedIds.size === 0) {
+          } else if (vaultQueueCompletelyEmpty) {
             const restCard = document.createElement('div');
             restCard.className = 'rest-card' + (animateEntrance ? ' animate-enter' : '');
 
@@ -4048,6 +4764,13 @@
               <p class="rest-message">${t('completedMsg')}</p>
               <p class="rest-sub">${t('completedSubEmpty')}</p>
             `;
+
+            const openBtn = document.createElement('button');
+            openBtn.type = 'button';
+            openBtn.className = 'btn-pull';
+            openBtn.textContent = t('openVaultAction');
+            openBtn.addEventListener('click', openVaultModal);
+            restCard.appendChild(openBtn);
 
             els.focusStage.appendChild(restCard);
           } else {
@@ -4077,7 +4800,7 @@
       }
 
       /* =========================================
-         9. RENDER VAULT QUEUE & COMPLETED LISTS
+         9. RENDER TASK HUB QUEUE & COMPLETED LISTS
          ========================================= */
       function destroyQueueSortable() {
         if (queueSortableInstance) {
@@ -4158,6 +4881,7 @@
             topRow.style.alignItems = 'center';
             topRow.style.gap = '0.55rem';
             topRow.style.flexWrap = 'wrap';
+            topRow.style.minWidth = '0';
 
             const dragHandle = document.createElement('div');
             dragHandle.className = 'drag-handle';
@@ -4378,6 +5102,7 @@
             topRow.style.alignItems = 'center';
             topRow.style.gap = '0.55rem';
             topRow.style.flexWrap = 'wrap';
+            topRow.style.minWidth = '0';
 
             const content = document.createElement('div');
             content.className = 'item-content';
@@ -4387,6 +5112,14 @@
             title.setAttribute('dir', 'auto');
             title.textContent = task.title;
             content.appendChild(title);
+
+            if (task.note && task.note.trim()) {
+              const note = document.createElement('div');
+              note.className = 'item-note';
+              note.setAttribute('dir', 'auto');
+              note.textContent = task.note;
+              content.appendChild(note);
+            }
 
             const meta = document.createElement('div');
             meta.className = 'item-meta';
@@ -4569,6 +5302,15 @@
       /* =========================================
          11. EVENT LISTENERS & LAYER ISOLATION
          ========================================= */
+      els.softWelcomeOverlay.addEventListener('click', () => {
+        dismissSoftWelcomeOverlay();
+      });
+
+      els.softWelcomeSkipBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dismissSoftWelcomeOverlay();
+      });
+
       els.hamburgerBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         if (hasAnySubModalOpen()) return;
@@ -4602,8 +5344,7 @@
 
       els.pickAvatarBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        confirmRemoveAvatar = false;
-        renderAvatarConfirmBar();
+        setAvatarConfirmState(false, false);
         els.avatarFileInput.click();
       });
 
@@ -4618,8 +5359,11 @@
       els.removeAvatarBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         if (!state.profileAvatar) return;
-        confirmRemoveAvatar = !confirmRemoveAvatar;
-        renderAvatarConfirmBar();
+        if (confirmRemoveAvatar) {
+          setAvatarConfirmState(false, true);
+        } else {
+          setAvatarConfirmState(true, false);
+        }
       });
 
       /* Keep drawer menu open when closing crop modal & stop propagation inside crop modal */
@@ -4655,8 +5399,13 @@
         if (cropped) {
           state.profileAvatar = cropped;
           confirmRemoveAvatar = false;
+          els.removeAvatarBtn.classList.remove('is-confirming');
+          els.removeAvatarBtn.blur();
           saveState();
           renderProfileSection();
+          closeCropModalOnly(false);
+          showCalmToast(t('avatarChangedToast'));
+          return;
         }
         closeCropModalOnly(false);
       });
@@ -4669,7 +5418,7 @@
       window.addEventListener('resize', () => {
         if (els.cropModalBackdrop.classList.contains('open')) {
           if (fallbackCropImage && !cropperInstance) {
-            renderOfflineCanvasView(false);
+            renderOfflineCanvasView(false, 0);
           } else {
             scheduleCircularGuideSync();
           }
@@ -4823,6 +5572,10 @@
 
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
+          if (els.softWelcomeOverlay.classList.contains('open')) {
+            dismissSoftWelcomeOverlay();
+            return;
+          }
           if (els.cropModalBackdrop.classList.contains('open')) {
             e.stopPropagation();
             closeCropModalOnly(false);
@@ -4884,6 +5637,7 @@
           }
           resetTaskForm();
           syncFocusSlots();
+          renderAll(false);
         } else {
           state.queue.push({
             id: generateId(),
@@ -4901,9 +5655,9 @@
             state.slots[0] = state.queue[0].id;
             saveState();
           }
+          renderAll(false);
+          showCalmToast(t('taskAddedToast'));
         }
-
-        renderAll(false);
       });
 
       /* =========================================
@@ -4923,6 +5677,9 @@
       }
       renderAll(true);
       restartGlitchTimer();
+      if (state.theme === 'soft') {
+        triggerSoftWelcomeOverlay();
+      }
 
       window.addEventListener('load', () => {
         if (els.vaultBackdrop.classList.contains('open') && els.queueView.style.display !== 'none') {
@@ -4932,9 +5689,9 @@
     })();
   </script>
 <script>
-  if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js');
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
     });
   }
 </script>

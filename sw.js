@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nuqtat-tarkiz-v2.2.8';
+const CACHE_NAME = 'nuqtat-tarkiz-v2.2.11';
 const ASSETS = [
   './',
   './index.html',
